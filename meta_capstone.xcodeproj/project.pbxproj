@@ -76,6 +76,7 @@
 		7E2996252874D70B00940B99 /* SelfProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelfProfileViewController.m; sourceTree = "<group>"; };
 		7E2996272874D71C00940B99 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		7E2996282874D71C00940B99 /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		7E29962A2874E8DF00940B99 /* meta_capstone.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = meta_capstone.entitlements; sourceTree = "<group>"; };
 		8C8C0553A4D2C202E659169C /* Pods_meta_capstone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_meta_capstone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C42136471466BBEC7967B215 /* Pods-meta_capstoneTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-meta_capstoneTests.debug.xcconfig"; path = "Target Support Files/Pods-meta_capstoneTests/Pods-meta_capstoneTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -156,6 +157,7 @@
 		7E07F3C42874B95C008DFE55 /* meta_capstone */ = {
 			isa = PBXGroup;
 			children = (
+				7E29962A2874E8DF00940B99 /* meta_capstone.entitlements */,
 				7E07F3C52874B95C008DFE55 /* AppDelegate.h */,
 				7E07F3C62874B95C008DFE55 /* AppDelegate.m */,
 				7E07F3C82874B95C008DFE55 /* SceneDelegate.h */,
@@ -613,6 +615,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = meta_capstone/meta_capstone.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = U8WH5D6D56;
@@ -641,6 +644,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = meta_capstone/meta_capstone.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = U8WH5D6D56;

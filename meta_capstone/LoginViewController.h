@@ -6,10 +6,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LoginViewController : UIViewController
+@interface LoginViewController : UIViewController <FBSDKLoginButtonDelegate>
+@property (strong, nonatomic) IBOutlet UIButton *tempLoginButton;
 
 @end
 

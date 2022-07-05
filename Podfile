@@ -7,6 +7,7 @@ target 'meta_capstone' do
 
   # Pods for meta_capstone
   pod 'AFNetworking'
+  pod 'FBSDKLoginKit'
 
   target 'meta_capstoneTests' do
     inherit! :search_paths
