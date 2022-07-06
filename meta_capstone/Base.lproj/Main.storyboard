@@ -8,10 +8,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Login View Controller-->
+        <!--LoginViewController-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="LoginViewController" sceneMemberID="viewController">
+                <viewController restorationIdentifier="LoginViewController" storyboardIdentifier="LoginViewController" title="LoginViewController" id="BYZ-38-t0r" customClass="LoginViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -23,21 +23,18 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="tempLoginButton" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MJ7-Vt-t39">
-                                <rect key="frame" x="88" y="415" width="238" height="42"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fw8-6V-Vd7">
+                                <rect key="frame" x="87" y="415" width="240" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Temp Login Button"/>
-                                <connections>
-                                    <action selector="didTapConnect:" destination="BYZ-38-t0r" eventType="touchUpInside" id="218-v2-gPs"/>
-                                </connections>
-                            </button>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <accessibility key="accessibilityConfiguration" identifier="LoginViewController"/>
                     </view>
                     <connections>
-                        <outlet property="tempLoginButton" destination="MJ7-Vt-t39" id="jIO-3e-dbd"/>
+                        <outlet property="loginButtonView" destination="fw8-6V-Vd7" id="s4n-MY-I9s"/>
                         <segue destination="wLL-Ns-BQa" kind="presentation" identifier="loginSegue" id="odO-G0-ImQ"/>
                     </connections>
                 </viewController>
@@ -45,7 +42,7 @@
             </objects>
             <point key="canvasLocation" x="28.985507246376812" y="83.705357142857139"/>
         </scene>
-        <!--Leaderboard View Controller-->
+        <!--Leaderboard-->
         <scene sceneID="Dh1-FD-IwP">
             <objects>
                 <viewController id="7nU-jn-GSw" customClass="LeaderboardViewController" sceneMemberID="viewController">
@@ -55,48 +52,70 @@
                         <viewLayoutGuide key="safeArea" id="lgf-wq-Fec"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="Li7-3V-eEM"/>
+                    <navigationItem key="navigationItem" title="Leaderboard" id="Li7-3V-eEM"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nJW-ge-eQ9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2728.985507246377" y="-205.58035714285714"/>
         </scene>
-        <!--Self Profile View Controller-->
+        <!--username-->
         <scene sceneID="fFc-xh-qxt">
             <objects>
                 <viewController id="mIS-io-gVy" customClass="SelfProfileViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1qM-Bh-emI">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5fo-ec-5oo">
+                                <rect key="frame" x="20" y="56" width="128" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="Tvb-2K-ZWp"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="wxl-C5-1bG"/>
+                    <navigationItem key="navigationItem" title="username" id="wxl-C5-1bG">
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="OoP-EQ-VTF">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="qjP-D1-VGw">
+                                <rect key="frame" x="20" y="12.5" width="92" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Logout"/>
+                                <connections>
+                                    <action selector="didTapLogout:" destination="mIS-io-gVy" eventType="touchUpInside" id="CFp-5l-boZ"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="selfProfileImage" destination="5fo-ec-5oo" id="XDn-Ke-Jlx"/>
+                        <outlet property="selfProfileTitle" destination="wxl-C5-1bG" id="ARp-Oj-PQv"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="00b-0s-Io8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2729" y="439"/>
+            <point key="canvasLocation" x="2728.985507246377" y="438.61607142857139"/>
         </scene>
-        <!--Games View Controller-->
+        <!--Games-->
         <scene sceneID="hZD-8w-Zu6">
             <objects>
-                <viewController id="aQi-9w-LCy" customClass="GamesViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GamesViewController" id="aQi-9w-LCy" customClass="GamesViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="qCO-lp-oJX">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="Xsf-DX-OVI"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="SiI-84-FbT"/>
+                    <navigationItem key="navigationItem" title="Games" id="SiI-84-FbT"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X9z-IN-6yy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2728.985507246377" y="-858.48214285714278"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--TabBarController-->
         <scene sceneID="6pg-pc-aMX">
             <objects>
-                <tabBarController id="wLL-Ns-BQa" sceneMemberID="viewController">
+                <tabBarController restorationIdentifier="TabBarController" storyboardIdentifier="TabBarController" title="TabBarController" id="wLL-Ns-BQa" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="IC0-Dw-anc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -151,10 +170,10 @@
             </objects>
             <point key="canvasLocation" x="1818.840579710145" y="-205.58035714285714"/>
         </scene>
-        <!--Profile-->
+        <!--gamesNavigationController-->
         <scene sceneID="eok-Oy-G3A">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="CFZ-yl-Epr" sceneMemberID="viewController">
+                <navigationController title="gamesNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="CFZ-yl-Epr" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Profile" image="person.fill" catalog="system" id="NTZ-DT-drr"/>
                     <toolbarItems/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
@@ -171,7 +190,7 @@
             </objects>
             <point key="canvasLocation" x="1819" y="439"/>
         </scene>
-        <!--Settings View Controller-->
+        <!--Settings-->
         <scene sceneID="xrB-0H-8dt">
             <objects>
                 <viewController id="PTt-gL-EXa" customClass="SettingsViewController" sceneMemberID="viewController">
@@ -181,7 +200,7 @@
                         <viewLayoutGuide key="safeArea" id="UGa-2W-3va"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="MXa-up-Tvb"/>
+                    <navigationItem key="navigationItem" title="Settings" id="MXa-up-Tvb"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6M7-8b-WlM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

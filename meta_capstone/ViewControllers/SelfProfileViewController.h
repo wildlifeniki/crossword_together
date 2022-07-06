@@ -10,6 +10,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SelfProfileViewController : UIViewController
+@property (strong, nonatomic) IBOutlet UINavigationItem *selfProfileTitle;
+@property (strong, nonatomic) IBOutlet UIImageView *selfProfileImage;
 
 @end
 

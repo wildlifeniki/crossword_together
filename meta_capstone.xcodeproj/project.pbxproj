@@ -22,6 +22,7 @@
 		7E2996232874D6EB00940B99 /* LeaderboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E2996222874D6EB00940B99 /* LeaderboardViewController.m */; };
 		7E2996262874D70B00940B99 /* SelfProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E2996252874D70B00940B99 /* SelfProfileViewController.m */; };
 		7E2996292874D71C00940B99 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E2996282874D71C00940B99 /* SettingsViewController.m */; };
+		7E29962D2876415500940B99 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E29962C2876415500940B99 /* User.m */; };
 		807BDA1571383951FC66A50C /* Pods_meta_capstoneTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 392B41199053CF98C3CA7144 /* Pods_meta_capstoneTests.framework */; };
 		8D69A46299E92FF3E94639A9 /* Pods_meta_capstone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C8C0553A4D2C202E659169C /* Pods_meta_capstone.framework */; };
 /* End PBXBuildFile section */
@@ -77,6 +78,8 @@
 		7E2996272874D71C00940B99 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		7E2996282874D71C00940B99 /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		7E29962A2874E8DF00940B99 /* meta_capstone.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = meta_capstone.entitlements; sourceTree = "<group>"; };
+		7E29962B2876415500940B99 /* User.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		7E29962C2876415500940B99 /* User.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		8C8C0553A4D2C202E659169C /* Pods_meta_capstone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_meta_capstone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C42136471466BBEC7967B215 /* Pods-meta_capstoneTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-meta_capstoneTests.debug.xcconfig"; path = "Target Support Files/Pods-meta_capstoneTests/Pods-meta_capstoneTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -162,21 +165,13 @@
 				7E07F3C62874B95C008DFE55 /* AppDelegate.m */,
 				7E07F3C82874B95C008DFE55 /* SceneDelegate.h */,
 				7E07F3C92874B95C008DFE55 /* SceneDelegate.m */,
-				7E29961B2874BF0D00940B99 /* LoginViewController.h */,
-				7E29961C2874BF0D00940B99 /* LoginViewController.m */,
-				7E29961E2874D6CD00940B99 /* GamesViewController.h */,
-				7E29961F2874D6CD00940B99 /* GamesViewController.m */,
 				7E07F3CE2874B95C008DFE55 /* Main.storyboard */,
-				7E2996272874D71C00940B99 /* SettingsViewController.h */,
-				7E2996282874D71C00940B99 /* SettingsViewController.m */,
-				7E2996242874D70B00940B99 /* SelfProfileViewController.h */,
-				7E2996252874D70B00940B99 /* SelfProfileViewController.m */,
-				7E2996212874D6EB00940B99 /* LeaderboardViewController.h */,
-				7E2996222874D6EB00940B99 /* LeaderboardViewController.m */,
 				7E07F3D12874B95D008DFE55 /* Assets.xcassets */,
 				7E07F3D32874B95D008DFE55 /* LaunchScreen.storyboard */,
 				7E07F3D62874B95D008DFE55 /* Info.plist */,
 				7E07F3D72874B95D008DFE55 /* main.m */,
+				7E29962F2876419500940B99 /* ViewControllers */,
+				7E29962E2876416100940B99 /* Models */,
 			);
 			path = meta_capstone;
 			sourceTree = "<group>";
@@ -196,6 +191,32 @@
 				7E07F3ED2874B95D008DFE55 /* meta_capstoneUITestsLaunchTests.m */,
 			);
 			path = meta_capstoneUITests;
+			sourceTree = "<group>";
+		};
+		7E29962E2876416100940B99 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7E29962B2876415500940B99 /* User.h */,
+				7E29962C2876415500940B99 /* User.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		7E29962F2876419500940B99 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				7E29961B2874BF0D00940B99 /* LoginViewController.h */,
+				7E29961C2874BF0D00940B99 /* LoginViewController.m */,
+				7E29961E2874D6CD00940B99 /* GamesViewController.h */,
+				7E29961F2874D6CD00940B99 /* GamesViewController.m */,
+				7E2996212874D6EB00940B99 /* LeaderboardViewController.h */,
+				7E2996222874D6EB00940B99 /* LeaderboardViewController.m */,
+				7E2996242874D70B00940B99 /* SelfProfileViewController.h */,
+				7E2996252874D70B00940B99 /* SelfProfileViewController.m */,
+				7E2996272874D71C00940B99 /* SettingsViewController.h */,
+				7E2996282874D71C00940B99 /* SettingsViewController.m */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -438,6 +459,7 @@
 			files = (
 				7E2996232874D6EB00940B99 /* LeaderboardViewController.m in Sources */,
 				7E29961D2874BF0D00940B99 /* LoginViewController.m in Sources */,
+				7E29962D2876415500940B99 /* User.m in Sources */,
 				7E07F3C72874B95C008DFE55 /* AppDelegate.m in Sources */,
 				7E2996292874D71C00940B99 /* SettingsViewController.m in Sources */,
 				7E07F3D82874B95D008DFE55 /* main.m in Sources */,
@@ -621,6 +643,7 @@
 				DEVELOPMENT_TEAM = U8WH5D6D56;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = meta_capstone/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = crossword;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -650,6 +673,7 @@
 				DEVELOPMENT_TEAM = U8WH5D6D56;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = meta_capstone/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = crossword;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

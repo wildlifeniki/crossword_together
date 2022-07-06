@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface LoginViewController : UIViewController <FBSDKLoginButtonDelegate>
-@property (strong, nonatomic) IBOutlet UIButton *tempLoginButton;
+@property (strong, nonatomic) IBOutlet UIView *loginButtonView;
 
 @end
 
