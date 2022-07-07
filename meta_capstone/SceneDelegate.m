@@ -7,6 +7,7 @@
 
 #import "SceneDelegate.h"
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import "Parse/Parse.h"
 
 @interface SceneDelegate ()
 
@@ -19,6 +20,17 @@
     // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
     // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
     // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+    
+    ParseClientConfiguration *config = [ParseClientConfiguration  configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
+
+        configuration.applicationId = @"EeN1Wkryoazn9PU7RiSnGwmvUgSUyicPVZ1ggbsU";
+        configuration.clientKey = @"21dYsQdc2ObMbLHcTg007PzPDVw5lqewyPDDjdlS";
+        configuration.server = @"https://parseapi.back4app.com";
+    }];
+
+    [Parse initializeWithConfiguration:config];
+    
+    
     if (!FBSDKAccessToken.currentAccessToken.isExpired) {
         NSLog(@"skip login screen");
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
