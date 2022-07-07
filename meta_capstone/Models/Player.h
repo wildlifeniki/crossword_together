@@ -14,8 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *player_id;
 @property (nonatomic, strong) User *user;
-@property (nonatomic, assign) BOOL *isHost;
-@property (nonatomic, assign) BOOL *isRequestingHost;
+@property (nonatomic, assign) Boolean *isHost;
+@property (nonatomic, assign) Boolean *isRequestingHost;
 @property (nonatomic, strong) NSString *color;
 
 @end

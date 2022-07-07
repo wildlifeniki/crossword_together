@@ -19,21 +19,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    if (!FBSDKAccessToken.currentAccessToken.isExpired) {
-        //not working
-        
-        UIViewController *top = [UIApplication sharedApplication].keyWindow.rootViewController;
-        
-        
-        NSLog(@"skip login screen");
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        GamesViewController *gamesViewController = [storyboard instantiateViewControllerWithIdentifier:@"GamesViewController"];
-        
-        
-        //[top performSegueWithIdentifier:@"loginSegue" sender:nil];
-
-        //[top presentViewController:gamesViewController animated:NO completion:nil];
-    }
     
     FBSDKLoginButton *loginButton = [[FBSDKLoginButton alloc] init];
     loginButton.delegate = self;
