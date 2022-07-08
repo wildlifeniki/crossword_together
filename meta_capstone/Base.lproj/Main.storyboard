@@ -58,7 +58,7 @@
             </objects>
             <point key="canvasLocation" x="2728.985507246377" y="-205.58035714285714"/>
         </scene>
-        <!--username-->
+        <!--Profile-->
         <scene sceneID="fFc-xh-qxt">
             <objects>
                 <viewController id="mIS-io-gVy" customClass="SelfProfileViewController" sceneMemberID="viewController">
@@ -81,7 +81,7 @@
                             <constraint firstItem="5fo-ec-5oo" firstAttribute="top" secondItem="Tvb-2K-ZWp" secondAttribute="top" id="elT-kk-tLU"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="username" id="wxl-C5-1bG">
+                    <navigationItem key="navigationItem" title="Profile" id="wxl-C5-1bG">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="OoP-EQ-VTF">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="qjP-D1-VGw">
                                 <rect key="frame" x="20" y="11" width="92" height="34.5"/>
@@ -177,10 +177,10 @@
             </objects>
             <point key="canvasLocation" x="1818.840579710145" y="-205.58035714285714"/>
         </scene>
-        <!--gamesNavigationController-->
+        <!--Profile-->
         <scene sceneID="eok-Oy-G3A">
             <objects>
-                <navigationController title="gamesNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="CFZ-yl-Epr" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="CFZ-yl-Epr" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Profile" image="person.fill" catalog="system" id="NTZ-DT-drr"/>
                     <toolbarItems/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>

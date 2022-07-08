@@ -11,9 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Gameboard : NSObject
 
-@property (nonatomic, strong) NSString *board_id;
-@property (nonatomic, strong) NSArray *players;
-@property (nonatomic, strong) NSArray *words;
+@property (nonatomic, strong) NSString *boardId;
+@property (nonatomic, strong) NSMutableArray *players;
+@property (nonatomic, strong) NSMutableArray *words;
 @property (nonatomic, strong) NSNumber *time;
 @property (nonatomic, assign) BOOL *isCorrect;
 

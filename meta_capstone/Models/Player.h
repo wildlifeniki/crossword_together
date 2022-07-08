@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Player : NSObject
 
-@property (nonatomic, strong) NSString *player_id;
+@property (nonatomic, strong) NSString *playerId;
 @property (nonatomic, strong) User *user;
 @property (nonatomic, assign) Boolean *isHost;
 @property (nonatomic, assign) Boolean *isRequestingHost;

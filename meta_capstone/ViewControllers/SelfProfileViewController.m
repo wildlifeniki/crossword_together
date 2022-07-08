@@ -11,6 +11,7 @@
 #import "SceneDelegate.h"
 #import "AppDelegate.h"
 #import "LoginViewController.h"
+#import "Parse/Parse.h"
 
 @interface SelfProfileViewController ()
 
@@ -18,19 +19,32 @@
 
 @implementation SelfProfileViewController
 
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     
-    dispatch_async(dispatch_get_main_queue(), ^{[FBSDKProfile loadCurrentProfileWithCompletion:^(FBSDKProfile *profile, NSError *error) {
-        if (profile) {
-            self.selfProfileTitle.title = [NSString stringWithFormat:@"%@ %@", profile.firstName, profile.lastName];
-            NSURL *pfpURL = [profile imageURLForPictureMode:FBSDKProfilePictureModeSquare size:CGSizeMake(128, 128)];
-            self.selfProfileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:pfpURL]];
-        }
-    }];
+    
         
-    });
+    PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
+    NSArray *idObjects = [idQuery findObjects];
+    if ([idObjects count] != 0) {
+        self.currUserID = idObjects.firstObject[@"fbID"];
+        NSLog(@"%@", self.currUserID);
+    }
+
+    
+
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
+    [query whereKey:@"fbID" equalTo:self.currUserID];
+    NSArray *userObjects = [query findObjects];
+    if ([userObjects count] != 0) {
+        self.selfProfileTitle.title = userObjects.firstObject[@"name"];
+        NSURL *url = [NSURL URLWithString:userObjects.firstObject[@"pfpURLString"]];
+        self.selfProfileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+    }
+    
 }
 - (IBAction)didTapLogout:(id)sender {
     NSLog(@"tapped logout");

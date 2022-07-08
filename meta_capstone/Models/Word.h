@@ -11,9 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Word : NSObject
 
-@property (nonatomic, strong) NSString *word_id;
+@property (nonatomic, strong) NSString *wordId;
 @property (nonatomic, strong) NSString *clue;
-@property (nonatomic, strong) NSArray *tiles;
+@property (nonatomic, strong) NSMutableArray *tiles;
 @property (nonatomic, assign) BOOL *isCorrect;
 
 @end

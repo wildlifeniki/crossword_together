@@ -8,7 +8,8 @@
 #import "LoginViewController.h"
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import "GamesViewController.h"
+#import "SelfProfileViewController.h"
+#import "Parse/Parse.h"
 
 @interface LoginViewController ()
 
@@ -16,6 +17,7 @@
 
 @implementation LoginViewController
 @synthesize loginButtonView;
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -31,16 +33,66 @@
     if (error) {
         NSLog(@"%@", error.localizedDescription);
     }
+    
     if (result.isCancelled) {
         NSLog(@"User cancelled login");
-    }
-    else if (result.declinedPermissions.count > 0) {
+    } else if (result.declinedPermissions.count > 0) {
         NSLog(@"User declined permissions");
-    }
-    else {
-        [self performSegueWithIdentifier:@"loginSegue" sender:nil];
-    }
+    } else {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{[FBSDKProfile loadCurrentProfileWithCompletion:^(FBSDKProfile *profile, NSError *error) {
+            if (profile) {
+                NSLog(@"profile exists");
+                
+                
+                //check whether user exists in database
+                PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
+                [query whereKey:@"fbID" equalTo:profile.userID];
+                NSArray *userObjects = [query findObjects];
+                if ([userObjects count] == 0) {
+                    //user doesnt exist, create user
 
+                    PFObject *user = [PFObject objectWithClassName:@"AppUser"]; //this contains data for each user
+
+                    NSLog(@"user doesn't exist yet, creating user");
+                
+                    user[@"fbID"] = [NSString stringWithFormat:@"%@", profile.userID];
+                    user[@"name"] = [NSString stringWithFormat:@"%@ %@", profile.firstName, profile.lastName];
+                    user[@"pfpURLString"] = [NSString stringWithFormat:@"%@", [profile imageURLForPictureMode:FBSDKProfilePictureModeSquare size:CGSizeMake(128, 128)]];
+                    user[@"totalGames"] = @0;
+                    user[@"bestTime"] = @0;
+                    user[@"avgTime"] = @0;
+                    user[@"recentlyPlayedWith"] = [NSMutableArray new];
+                
+                    [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                        if (succeeded) { NSLog(@"user saved"); }
+                        else { NSLog(@"user did not save"); }
+                    }];
+                
+                    NSLog(@"%@", user);
+                }
+                
+                //create one object to track current active user id (use this id to get info about current user)
+                PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
+                NSArray *idObjects = [idQuery findObjects];
+                if ([idObjects count] == 0) {
+                    //set current active id
+                    PFObject *currUserID = [PFObject objectWithClassName:@"ID"]; //this is how we know what information to show on selfProfile
+                    currUserID[@"fbID"] = [NSString stringWithFormat:@"%@", profile.userID];
+                    [currUserID saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                        if (succeeded) { NSLog(@"ID saved"); }
+                        else { NSLog(@"ID did not save"); }
+                    }];
+                    
+                }
+                
+            }
+        }];
+        });
+        
+        [self performSegueWithIdentifier:@"loginSegue" sender:nil];
+
+    }
 }
 
 - (void)loginButtonDidLogOut:(FBSDKLoginButton *)loginButton {
@@ -57,5 +109,6 @@
     // Pass the selected object to the new view controller.
 }
 */
+
 
 @end

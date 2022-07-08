@@ -13,10 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSURL *pfpURL;
-@property (nonatomic, strong) NSNumber *total_games;
-@property (nonatomic, strong) NSNumber *best_time;
-@property (nonatomic, strong) NSNumber *avg_time;
-@property (nonatomic, strong) NSArray *recently_played_with;
+@property (nonatomic, strong) NSNumber *totalGames;
+@property (nonatomic, strong) NSNumber *bestTime;
+@property (nonatomic, strong) NSNumber *avgTime;
+@property (nonatomic, strong) NSMutableArray *recentlyPlayedWith;
 
 @end
 
