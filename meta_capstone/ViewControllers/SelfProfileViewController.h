@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) IBOutlet UIImageView *selfProfileImage;
 @property (strong, nonatomic) NSString *currUserID;
 @property (strong, nonatomic) User *selfUser;
-//@property (strong, nonatomic) LoginViewController *login;
 
 @end
 

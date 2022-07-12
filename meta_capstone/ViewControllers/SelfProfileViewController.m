@@ -46,11 +46,26 @@
     }
     
 }
+
 - (IBAction)didTapLogout:(id)sender {
     NSLog(@"tapped logout");
     
+    
+    
+    [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me/permissions" parameters:nil HTTPMethod:@"DELETE"] startWithCompletion:^(id<FBSDKGraphRequestConnecting>  _Nullable connection, id  _Nullable result, NSError * _Nullable error) {
+        NSLog(@"%@", result);
+        if (error) { NSLog(@"%@", error.localizedDescription); }
+    }];
+    
+    
+    
+    
+    NSLog(@"logging out, %@", FBSDKAccessToken.currentAccessToken);
     FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
     [loginManager logOut];
+    
+    
+    NSLog(@"logged out, %@", FBSDKAccessToken.currentAccessToken);
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];

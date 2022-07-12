@@ -39,7 +39,7 @@
     } else if (result.declinedPermissions.count > 0) {
         NSLog(@"User declined permissions");
     } else {
-        
+        NSLog(@"user accepted permissions");
         dispatch_async(dispatch_get_main_queue(), ^{[FBSDKProfile loadCurrentProfileWithCompletion:^(FBSDKProfile *profile, NSError *error) {
             if (profile) {
                 NSLog(@"profile exists");
@@ -61,7 +61,7 @@
                     user[@"pfpURLString"] = [NSString stringWithFormat:@"%@", [profile imageURLForPictureMode:FBSDKProfilePictureModeSquare size:CGSizeMake(128, 128)]];
                     user[@"totalGames"] = @0;
                     user[@"bestTime"] = @0;
-                    user[@"avgTime"] = @0;
+                    user[@"avgTime"] = @-1;
                     user[@"recentlyPlayedWith"] = [NSMutableArray new];
                 
                     [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
@@ -75,16 +75,21 @@
                 //create one object to track current active user id (use this id to get info about current user)
                 PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
                 NSArray *idObjects = [idQuery findObjects];
+                PFObject *currUserID;
                 if ([idObjects count] == 0) {
                     //set current active id
-                    PFObject *currUserID = [PFObject objectWithClassName:@"ID"]; //this is how we know what information to show on selfProfile
-                    currUserID[@"fbID"] = [NSString stringWithFormat:@"%@", profile.userID];
-                    [currUserID saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                        if (succeeded) { NSLog(@"ID saved"); }
-                        else { NSLog(@"ID did not save"); }
-                    }];
-                    
+                    currUserID = [PFObject objectWithClassName:@"ID"]; //this is how we know what information to show on selfProfile
                 }
+                else {
+                    currUserID = idObjects.firstObject;
+                }
+                
+                NSLog(@"profile id: %@", profile.userID);
+                currUserID[@"fbID"] = [NSString stringWithFormat:@"%@", profile.userID];
+                [currUserID saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    if (succeeded) { NSLog(@"ID saved"); }
+                    else { NSLog(@"ID did not save"); }
+                }];
                 
             }
         }];
