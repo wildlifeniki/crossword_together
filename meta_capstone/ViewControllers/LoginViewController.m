@@ -49,6 +49,7 @@
                 PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
                 [query whereKey:@"fbID" equalTo:profile.userID];
                 NSArray *userObjects = [query findObjects];
+
                 if ([userObjects count] == 0) {
                     //user doesnt exist, create user
 
@@ -58,10 +59,9 @@
                 
                     user[@"fbID"] = [NSString stringWithFormat:@"%@", profile.userID];
                     user[@"name"] = [NSString stringWithFormat:@"%@ %@", profile.firstName, profile.lastName];
-                    user[@"pfpURLString"] = [NSString stringWithFormat:@"%@", [profile imageURLForPictureMode:FBSDKProfilePictureModeSquare size:CGSizeMake(128, 128)]];
                     user[@"totalGames"] = @0;
                     user[@"bestTime"] = @0;
-                    user[@"avgTime"] = @-1;
+                    user[@"avgTime"] = [NSNumber numberWithInt:arc4random_uniform(100)];
                     user[@"recentlyPlayedWith"] = [NSMutableArray new];
                 
                     [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {

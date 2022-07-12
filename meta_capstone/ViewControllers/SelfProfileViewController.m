@@ -32,33 +32,26 @@
         self.currUserID = idObjects.firstObject[@"fbID"];
         NSLog(@"%@", self.currUserID);
     }
-
-    
-
-    
     PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
     [query whereKey:@"fbID" equalTo:self.currUserID];
     NSArray *userObjects = [query findObjects];
     if ([userObjects count] != 0) {
         self.selfProfileTitle.title = userObjects.firstObject[@"name"];
-        NSURL *url = [NSURL URLWithString:userObjects.firstObject[@"pfpURLString"]];
-        self.selfProfileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
+        initWithGraphPath:[NSString stringWithFormat:@"/%@?fields=picture.type(large)", self.currUserID]
+            parameters:nil
+            HTTPMethod:@"GET"];
+        [request startWithCompletion:^(id<FBSDKGraphRequestConnecting>  _Nullable connection, id  _Nullable result, NSError * _Nullable error) {
+            NSURL *url = [NSURL URLWithString:[[[(NSDictionary*) result objectForKey:@"picture"] objectForKey:@"data"] objectForKey:@"url"]];
+            self.selfProfileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+        }];
+        
     }
     
 }
 
 - (IBAction)didTapLogout:(id)sender {
     NSLog(@"tapped logout");
-    
-    
-    
-    [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me/permissions" parameters:nil HTTPMethod:@"DELETE"] startWithCompletion:^(id<FBSDKGraphRequestConnecting>  _Nullable connection, id  _Nullable result, NSError * _Nullable error) {
-        NSLog(@"%@", result);
-        if (error) { NSLog(@"%@", error.localizedDescription); }
-    }];
-    
-    
-    
     
     NSLog(@"logging out, %@", FBSDKAccessToken.currentAccessToken);
     FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
