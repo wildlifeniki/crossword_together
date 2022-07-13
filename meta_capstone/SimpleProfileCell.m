@@ -22,7 +22,6 @@
 }
 
 - (void)setCellInfo:(PFObject *)user {
-    NSLog(@"%@", user[@"avgTime"]);
     self.profileUserLabel.text = user[@"name"];
     
     //get profile picture

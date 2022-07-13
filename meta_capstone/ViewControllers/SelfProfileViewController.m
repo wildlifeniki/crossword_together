@@ -18,7 +18,7 @@
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *recentsArray;
-@property (strong, nonatomic) NSMutableArray *recentsIDs;
+//@property (strong, nonatomic) NSMutableArray *recentsIDs;
 
 @end
 
@@ -31,17 +31,18 @@
     
     self.tableView.dataSource = self;
     
+    NSMutableArray *recentsIDs;
+    
     PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
     NSArray *idObjects = [idQuery findObjects];
     if ([idObjects count] != 0) {
         self.currUserID = idObjects.firstObject[@"fbID"];
-        NSLog(@"%@", self.currUserID);
     }
     PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
     [query whereKey:@"fbID" equalTo:self.currUserID];
     NSArray *userObjects = [query findObjects];
     if ([userObjects count] != 0) {
-        self.recentsIDs = userObjects.firstObject[@"recentlyPlayedWith"];
+        recentsIDs = userObjects.firstObject[@"recentlyPlayedWith"];
         self.selfProfileTitle.title = userObjects.firstObject[@"name"];
         self.totalGamesLabel.text = [NSString stringWithFormat:@"Total Games: %@", userObjects.firstObject[@"totalGames"]];
         self.bestTimeLabel.text = [NSString stringWithFormat:@"Best Time: %@s", userObjects.firstObject[@"bestTime"]];
@@ -60,18 +61,16 @@
         
     }
     
-    [self getRecentlyPlayedWith];
+    [self getRecentlyPlayedWith: recentsIDs];
     
 }
 
-- (void)getRecentlyPlayedWith {
-    NSLog(@"check array: %@", _recentsIDs.firstObject);
+- (void)getRecentlyPlayedWith : (NSMutableArray *)recentsIDs {
     PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
-    [query whereKey:@"fbID" containedIn: self.recentsIDs];
+    [query whereKey:@"fbID" containedIn: recentsIDs];
     
     NSArray *users = [query findObjects];
     self.recentsArray = [NSMutableArray arrayWithArray:users];
-    NSLog(@"check array: %@", _recentsArray);
 
 }
 

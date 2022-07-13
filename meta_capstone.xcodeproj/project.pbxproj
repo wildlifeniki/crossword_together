@@ -29,6 +29,8 @@
 		7E901B15287654CF00C34BEA /* Word.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E901B14287654CF00C34BEA /* Word.m */; };
 		7E901B1E287CC90700C34BEA /* LeaderboardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E901B1D287CC90700C34BEA /* LeaderboardCell.m */; };
 		7E901B24287E37C500C34BEA /* SimpleProfileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E901B23287E37C500C34BEA /* SimpleProfileCell.m */; };
+		7E901B27287F5FBD00C34BEA /* ActiveGameCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E901B26287F5FBD00C34BEA /* ActiveGameCell.m */; };
+		7E901B2A287F5FDE00C34BEA /* PendingInviteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E901B29287F5FDE00C34BEA /* PendingInviteCell.m */; };
 		807BDA1571383951FC66A50C /* Pods_meta_capstoneTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 392B41199053CF98C3CA7144 /* Pods_meta_capstoneTests.framework */; };
 		8D69A46299E92FF3E94639A9 /* Pods_meta_capstone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C8C0553A4D2C202E659169C /* Pods_meta_capstone.framework */; };
 /* End PBXBuildFile section */
@@ -98,6 +100,10 @@
 		7E901B1D287CC90700C34BEA /* LeaderboardCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LeaderboardCell.m; sourceTree = "<group>"; };
 		7E901B22287E37C500C34BEA /* SimpleProfileCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleProfileCell.h; sourceTree = "<group>"; };
 		7E901B23287E37C500C34BEA /* SimpleProfileCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SimpleProfileCell.m; sourceTree = "<group>"; };
+		7E901B25287F5FBD00C34BEA /* ActiveGameCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActiveGameCell.h; sourceTree = "<group>"; };
+		7E901B26287F5FBD00C34BEA /* ActiveGameCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActiveGameCell.m; sourceTree = "<group>"; };
+		7E901B28287F5FDE00C34BEA /* PendingInviteCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PendingInviteCell.h; sourceTree = "<group>"; };
+		7E901B29287F5FDE00C34BEA /* PendingInviteCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PendingInviteCell.m; sourceTree = "<group>"; };
 		8C8C0553A4D2C202E659169C /* Pods_meta_capstone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_meta_capstone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C42136471466BBEC7967B215 /* Pods-meta_capstoneTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-meta_capstoneTests.debug.xcconfig"; path = "Target Support Files/Pods-meta_capstoneTests/Pods-meta_capstoneTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -188,6 +194,10 @@
 				7E07F3D32874B95D008DFE55 /* LaunchScreen.storyboard */,
 				7E07F3D62874B95D008DFE55 /* Info.plist */,
 				7E07F3D72874B95D008DFE55 /* main.m */,
+				7E901B28287F5FDE00C34BEA /* PendingInviteCell.h */,
+				7E901B29287F5FDE00C34BEA /* PendingInviteCell.m */,
+				7E901B25287F5FBD00C34BEA /* ActiveGameCell.h */,
+				7E901B26287F5FBD00C34BEA /* ActiveGameCell.m */,
 				7E901B22287E37C500C34BEA /* SimpleProfileCell.h */,
 				7E901B23287E37C500C34BEA /* SimpleProfileCell.m */,
 				7E901B1C287CC90700C34BEA /* LeaderboardCell.h */,
@@ -488,6 +498,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E901B15287654CF00C34BEA /* Word.m in Sources */,
+				7E901B27287F5FBD00C34BEA /* ActiveGameCell.m in Sources */,
 				7E2996232874D6EB00940B99 /* LeaderboardViewController.m in Sources */,
 				7E29961D2874BF0D00940B99 /* LoginViewController.m in Sources */,
 				7E901B24287E37C500C34BEA /* SimpleProfileCell.m in Sources */,
@@ -500,6 +511,7 @@
 				7E2996202874D6CD00940B99 /* GamesViewController.m in Sources */,
 				7E901B0F287654B500C34BEA /* Gameboard.m in Sources */,
 				7E2996262874D70B00940B99 /* SelfProfileViewController.m in Sources */,
+				7E901B2A287F5FDE00C34BEA /* PendingInviteCell.m in Sources */,
 				7E07F3CA2874B95C008DFE55 /* SceneDelegate.m in Sources */,
 				7E901B1E287CC90700C34BEA /* LeaderboardCell.m in Sources */,
 			);
