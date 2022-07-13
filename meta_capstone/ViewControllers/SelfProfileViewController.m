@@ -12,8 +12,13 @@
 #import "AppDelegate.h"
 #import "LoginViewController.h"
 #import "Parse/Parse.h"
+#import "SimpleProfileCell.h"
 
-@interface SelfProfileViewController ()
+@interface SelfProfileViewController () <UITableViewDelegate, UITableViewDataSource>
+
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) NSMutableArray *recentsArray;
+@property (strong, nonatomic) NSMutableArray *recentsIDs;
 
 @end
 
@@ -24,8 +29,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.tableView.dataSource = self;
     
-        
     PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
     NSArray *idObjects = [idQuery findObjects];
     if ([idObjects count] != 0) {
@@ -36,7 +41,14 @@
     [query whereKey:@"fbID" equalTo:self.currUserID];
     NSArray *userObjects = [query findObjects];
     if ([userObjects count] != 0) {
+        self.recentsIDs = userObjects.firstObject[@"recentlyPlayedWith"];
         self.selfProfileTitle.title = userObjects.firstObject[@"name"];
+        self.totalGamesLabel.text = [NSString stringWithFormat:@"Total Games: %@", userObjects.firstObject[@"totalGames"]];
+        self.bestTimeLabel.text = [NSString stringWithFormat:@"Best Time: %@s", userObjects.firstObject[@"bestTime"]];
+        self.avgTimeLabel.text = [NSString stringWithFormat:@"Average Time: %@s", userObjects.firstObject[@"avgTime"]];
+
+        
+        //get profile picture
         FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
         initWithGraphPath:[NSString stringWithFormat:@"/%@?fields=picture.type(large)", self.currUserID]
             parameters:nil
@@ -48,7 +60,33 @@
         
     }
     
+    [self getRecentlyPlayedWith];
+    
 }
+
+- (void)getRecentlyPlayedWith {
+    NSLog(@"check array: %@", _recentsIDs.firstObject);
+    PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
+    [query whereKey:@"fbID" containedIn: self.recentsIDs];
+    
+    NSArray *users = [query findObjects];
+    self.recentsArray = [NSMutableArray arrayWithArray:users];
+    NSLog(@"check array: %@", _recentsArray);
+
+}
+
+
+
+- (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.recentsArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    SimpleProfileCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell2" forIndexPath:indexPath];
+    [cell setCellInfo:self.recentsArray[indexPath.row]];
+    return cell;
+}
+
 
 - (IBAction)didTapLogout:(id)sender {
     NSLog(@"tapped logout");

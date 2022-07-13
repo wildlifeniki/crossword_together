@@ -26,7 +26,7 @@
     [self getLeaderboard];
 }
 
-- (void) getLeaderboard {
+- (void)getLeaderboard {
     PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
     [query orderByAscending:@"avgTime"];
     

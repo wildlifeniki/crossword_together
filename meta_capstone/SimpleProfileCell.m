@@ -1,15 +1,14 @@
 //
-//  LeaderboardCell.m
+//  SimpleProfileCell.m
 //  meta_capstone
 //
-//  Created by Nikita Singh on 7/11/22.
+//  Created by Nikita Singh on 7/12/22.
 //
 
-#import "LeaderboardCell.h"
-#import "Parse/Parse.h"
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "SimpleProfileCell.h"
+#import "FBSDKCoreKit/FBSDKCoreKit.h"
 
-@implementation LeaderboardCell
+@implementation SimpleProfileCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -22,11 +21,9 @@
     // Configure the view for the selected state
 }
 
-- (void)setCellInfo:(PFObject *)user : (NSInteger)rank{
+- (void)setCellInfo:(PFObject *)user {
     NSLog(@"%@", user[@"avgTime"]);
-    self.userNameLabel.text = user[@"name"];
-    self.userTimeLabel.text = [NSString stringWithFormat:@"Avg time: %@s", user[@"avgTime"]];
-    self.rankLabel.text = [NSString stringWithFormat:@"#%ld", (long) rank];
+    self.profileUserLabel.text = user[@"name"];
     
     //get profile picture
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
@@ -35,7 +32,7 @@
         HTTPMethod:@"GET"];
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting>  _Nullable connection, id  _Nullable result, NSError * _Nullable error) {
         NSURL *url = [NSURL URLWithString:[[[(NSDictionary*) result objectForKey:@"picture"] objectForKey:@"data"] objectForKey:@"url"]];
-        self.userImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+        self.profileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
         NSLog(@"pfpurl: %@", url);
     }];
 }

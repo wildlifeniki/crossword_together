@@ -15,6 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) IBOutlet UINavigationItem *selfProfileTitle;
 @property (strong, nonatomic) IBOutlet UIImageView *selfProfileImage;
+@property (strong, nonatomic) IBOutlet UILabel *totalGamesLabel;
+@property (strong, nonatomic) IBOutlet UILabel *bestTimeLabel;
+@property (strong, nonatomic) IBOutlet UILabel *avgTimeLabel;
+
 @property (strong, nonatomic) NSString *currUserID;
 @property (strong, nonatomic) User *selfUser;
 
