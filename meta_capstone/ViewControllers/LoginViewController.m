@@ -42,7 +42,7 @@
         NSLog(@"user accepted permissions");
         dispatch_async(dispatch_get_main_queue(), ^{[FBSDKProfile loadCurrentProfileWithCompletion:^(FBSDKProfile *profile, NSError *error) {
             if (profile) {
-                                
+                NSLog(@"%@", profile.name);
                 //check whether user exists in database
                 PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
                 [query whereKey:@"fbID" equalTo:profile.userID];
