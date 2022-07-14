@@ -162,7 +162,7 @@
                                 <rect key="frame" x="0.0" y="268" width="414" height="628"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell2" rowHeight="83" id="qt3-9f-qXE" customClass="SimpleProfileCell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="recentCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="recentCell" rowHeight="83" id="qt3-9f-qXE" customClass="SimpleProfileCell">
                                         <rect key="frame" x="0.0" y="44.5" width="414" height="83"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qt3-9f-qXE" id="MB7-dD-Sww">
@@ -268,7 +268,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="eSt-oD-6P4">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="gameTable" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="eSt-oD-6P4">
                                 <rect key="frame" x="0.0" y="132" width="414" height="323"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -327,18 +327,50 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="z8L-ml-34K">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="inviteTable" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="z8L-ml-34K">
                                 <rect key="frame" x="0.0" y="507" width="414" height="389"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="inviteCell" rowHeight="111" id="7wm-SK-dpP">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="inviteCell" rowHeight="111" id="7wm-SK-dpP" customClass="PendingInviteCell">
                                         <rect key="frame" x="0.0" y="44.5" width="414" height="111"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7wm-SK-dpP" id="eFU-aR-08x">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="111"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Invitation from: username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0TS-sD-Xmq">
+                                                    <rect key="frame" x="20" y="11" width="194" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZWc-1A-Bfd">
+                                                    <rect key="frame" x="20" y="40" width="58" height="60"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="plain" title="Deny"/>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t5W-gY-waA">
+                                                    <rect key="frame" x="324" y="54.5" width="70" height="31"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="filled" title="Accept"/>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="t5W-gY-waA" firstAttribute="centerY" secondItem="ZWc-1A-Bfd" secondAttribute="centerY" id="0fI-Ku-pSb"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="ZWc-1A-Bfd" secondAttribute="bottom" id="2co-YM-VCA"/>
+                                                <constraint firstItem="ZWc-1A-Bfd" firstAttribute="top" secondItem="0TS-sD-Xmq" secondAttribute="bottom" constant="8" symbolic="YES" id="6qA-ve-a3A"/>
+                                                <constraint firstItem="t5W-gY-waA" firstAttribute="trailing" secondItem="eFU-aR-08x" secondAttribute="trailingMargin" id="AKA-vO-eFu"/>
+                                                <constraint firstItem="ZWc-1A-Bfd" firstAttribute="leading" secondItem="eFU-aR-08x" secondAttribute="leadingMargin" id="St2-rZ-bXG"/>
+                                                <constraint firstItem="0TS-sD-Xmq" firstAttribute="leading" secondItem="eFU-aR-08x" secondAttribute="leadingMargin" id="n98-22-VTS"/>
+                                                <constraint firstItem="0TS-sD-Xmq" firstAttribute="top" secondItem="eFU-aR-08x" secondAttribute="topMargin" id="nGG-cn-lsL"/>
+                                            </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="didTapAccept" destination="0fI-Ku-pSb" id="kLd-h4-8ot"/>
+                                            <outlet property="didTapDeny" destination="ZWc-1A-Bfd" id="PxC-vu-rFf"/>
+                                            <outlet property="inviteFromLabel" destination="0TS-sD-Xmq" id="Uw6-Ag-lYO"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -353,6 +385,7 @@
                     <navigationItem key="navigationItem" title="Games" id="SiI-84-FbT"/>
                     <connections>
                         <outlet property="gamesTableView" destination="eSt-oD-6P4" id="Hcg-b9-WnU"/>
+                        <outlet property="invitesTableView" destination="z8L-ml-34K" id="h3a-RX-63A"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X9z-IN-6yy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -68,7 +68,7 @@
 - (void)getRecentlyPlayedWith : (NSMutableArray *)recentsIDs {
     PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
     [query whereKey:@"fbID" containedIn: recentsIDs];
-    
+
     NSArray *users = [query findObjects];
     self.recentsArray = [NSMutableArray arrayWithArray:users];
 
@@ -81,7 +81,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    SimpleProfileCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell2" forIndexPath:indexPath];
+    SimpleProfileCell *cell = [tableView dequeueReusableCellWithIdentifier:@"recentCell" forIndexPath:indexPath];
     [cell setCellInfo:self.recentsArray[indexPath.row]];
     return cell;
 }

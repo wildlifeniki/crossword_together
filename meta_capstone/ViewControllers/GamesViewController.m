@@ -18,9 +18,9 @@
 @interface GamesViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) IBOutlet UITableView *gamesTableView;
-//@property (strong, nonatomic) IBOutlet UITableView *invitesTableView;
+@property (strong, nonatomic) IBOutlet UITableView *invitesTableView;
 @property (strong, nonatomic) NSMutableArray *gamesArray;
-//@property (strong, nonatomic) NSMutableArray *invitesArray;
+@property (strong, nonatomic) NSMutableArray *invitesArray;
 
 
 @end
@@ -31,7 +31,10 @@
     // Do any additional setup after loading the view.
     
     self.gamesTableView.dataSource = self;
+    self.invitesTableView.dataSource = self;
+
     [self getActiveGames];
+    [self getPendingInvites];
 }
 
 - (void)getActiveGames {
@@ -43,23 +46,54 @@
         [query whereKey:@"fbID" equalTo:idObjects.firstObject[@"fbID"]];
         gameIDs = [NSMutableArray arrayWithArray:[query findObjects].firstObject[@"activeGames"]];
     }
-    NSLog(@"ids: %@", gameIDs);
 
     PFQuery *gameQuery = [PFQuery queryWithClassName:@"Game"];
     [gameQuery whereKey:@"objectId" containedIn:gameIDs];
     self.gamesArray = [NSMutableArray arrayWithArray:[gameQuery findObjects]];
-    NSLog(@"game objects: %@", self.gamesArray);
+}
 
+- (void)getPendingInvites {
+    NSMutableArray *inviteGameIDs;
+    PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
+    NSArray *idObjects = [idQuery findObjects];
+    if ([idObjects count] != 0) {
+        PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
+        [query whereKey:@"fbID" equalTo:idObjects.firstObject[@"fbID"]];
+        inviteGameIDs = [NSMutableArray arrayWithArray:[query findObjects].firstObject[@"pendingInvites"]];
+    }
+
+    PFQuery *gameQuery = [PFQuery queryWithClassName:@"Game"];
+    [gameQuery whereKey:@"objectId" containedIn:inviteGameIDs];
+    self.invitesArray = [NSMutableArray arrayWithArray:[gameQuery findObjects]];
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.gamesArray.count;
+    if ([tableView.restorationIdentifier isEqualToString:@"gameTable"]) {
+        return self.gamesArray.count;
+    }
+    if ([tableView.restorationIdentifier isEqualToString:@"inviteTable"]) {
+        return self.invitesArray.count;
+    }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ActiveGameCell *cell = [tableView dequeueReusableCellWithIdentifier:@"gameCell" forIndexPath:indexPath];
-    [cell setCellInfo:self.gamesArray[indexPath.row]];
-    return cell;
+    if ([tableView.restorationIdentifier isEqualToString:@"gameTable"]) {
+        ActiveGameCell *cell = [tableView dequeueReusableCellWithIdentifier:@"gameCell" forIndexPath:indexPath];
+        [cell setCellInfo:self.gamesArray[indexPath.row]];
+        return cell;
+    }
+    if ([tableView.restorationIdentifier isEqualToString:@"inviteTable"]) {
+        PendingInviteCell *cell = [tableView dequeueReusableCellWithIdentifier:@"inviteCell" forIndexPath:indexPath];
+        [cell setCellInfo:self.invitesArray[indexPath.row]];
+        return cell;
+    }
+    else {
+        NSLog(@"neither cell");
+        ActiveGameCell *cell = [tableView dequeueReusableCellWithIdentifier:@"gameCell" forIndexPath:indexPath];
+        [cell setCellInfo:self.gamesArray[indexPath.row]];
+        return cell;
+    }
 }
 
 /*

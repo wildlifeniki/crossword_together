@@ -23,7 +23,6 @@
 }
 
 - (void)setCellInfo:(PFObject *)user : (NSInteger)rank{
-    NSLog(@"%@", user[@"avgTime"]);
     self.userNameLabel.text = user[@"name"];
     self.userTimeLabel.text = [NSString stringWithFormat:@"Avg time: %@s", user[@"avgTime"]];
     self.rankLabel.text = [NSString stringWithFormat:@"#%ld", (long) rank];
@@ -36,7 +35,6 @@
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting>  _Nullable connection, id  _Nullable result, NSError * _Nullable error) {
         NSURL *url = [NSURL URLWithString:[[[(NSDictionary*) result objectForKey:@"picture"] objectForKey:@"data"] objectForKey:@"url"]];
         self.userImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-        NSLog(@"pfpurl: %@", url);
     }];
 }
 

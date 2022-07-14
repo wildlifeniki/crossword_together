@@ -42,9 +42,7 @@
         NSLog(@"user accepted permissions");
         dispatch_async(dispatch_get_main_queue(), ^{[FBSDKProfile loadCurrentProfileWithCompletion:^(FBSDKProfile *profile, NSError *error) {
             if (profile) {
-                NSLog(@"profile exists");
-                
-                
+                                
                 //check whether user exists in database
                 PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
                 [query whereKey:@"fbID" equalTo:profile.userID];
@@ -68,9 +66,7 @@
                         if (succeeded) { NSLog(@"user saved"); }
                         else { NSLog(@"user did not save"); }
                     }];
-                
-                    NSLog(@"%@", user);
-                }
+                                }
                 
                 //create one object to track current active user id (use this id to get info about current user)
                 PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
@@ -84,7 +80,6 @@
                     currUserID = idObjects.firstObject;
                 }
                 
-                NSLog(@"profile id: %@", profile.userID);
                 currUserID[@"fbID"] = [NSString stringWithFormat:@"%@", profile.userID];
                 [currUserID saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                     if (succeeded) { NSLog(@"ID saved"); }

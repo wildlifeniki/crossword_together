@@ -35,7 +35,6 @@
     
     if (FBSDKAccessToken.currentAccessToken != nil) {
         //if token is not expired, all data should be updated, so no need to have check here
-        NSLog(@"%@", FBSDKAccessToken.currentAccessToken);
         NSLog(@"skip login screen");
 
         
