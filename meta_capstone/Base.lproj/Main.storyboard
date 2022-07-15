@@ -269,7 +269,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="gameTable" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="eSt-oD-6P4">
-                                <rect key="frame" x="0.0" y="132" width="414" height="323"/>
+                                <rect key="frame" x="0.0" y="132" width="414" height="270"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
@@ -321,14 +321,14 @@
                                 </prototypes>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Pending Invites:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oft-ag-U2A">
-                                <rect key="frame" x="20" y="463" width="223" height="36"/>
+                                <rect key="frame" x="20" y="410" width="223" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="inviteTable" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="z8L-ml-34K">
-                                <rect key="frame" x="0.0" y="507" width="414" height="389"/>
+                                <rect key="frame" x="0.0" y="454" width="414" height="270"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
@@ -378,6 +378,17 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2zw-iV-LLa">
+                                <rect key="frame" x="20" y="732" width="374" height="80"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="tinted" title="New Game">
+                                    <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="32"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <segue destination="K39-7d-p0e" kind="presentation" id="Hod-gC-dd1"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Xsf-DX-OVI"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -395,6 +406,35 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X9z-IN-6yy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2728.985507246377" y="-858.48214285714278"/>
+        </scene>
+        <!--New Game-->
+        <scene sceneID="VLD-PA-sR9">
+            <objects>
+                <viewController title="New Game" id="fe4-Zq-3V1" customClass="NewGameViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="vFb-74-vMw">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gdu-WZ-Hq0">
+                                <rect key="frame" x="20" y="728" width="374" height="80"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="tinted" title="Start Game">
+                                    <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="32"/>
+                                </buttonConfiguration>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="sth-Zb-FDi"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="New Game" id="iLJ-qa-TMg">
+                        <barButtonItem key="backBarButtonItem" title="back" id="29Y-gg-fcY"/>
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="wR7-Bh-hW4"/>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="skR-d0-JQk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4586" y="-858"/>
         </scene>
         <!--TabBarController-->
         <scene sceneID="6pg-pc-aMX">
@@ -510,6 +550,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ysA-JS-fhA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1819" y="1088"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Nay-be-Qsb">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="K39-7d-p0e" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="XMH-vm-lOr">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="fe4-Zq-3V1" kind="relationship" relationship="rootViewController" id="H4A-wt-KSA"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6Wm-nK-mIo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3690" y="-858"/>
         </scene>
     </scenes>
     <resources>

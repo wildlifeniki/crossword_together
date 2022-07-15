@@ -19,8 +19,12 @@
 
 @property (strong, nonatomic) IBOutlet UITableView *gamesTableView;
 @property (strong, nonatomic) IBOutlet UITableView *invitesTableView;
+
 @property (strong, nonatomic) NSMutableArray *gamesArray;
 @property (strong, nonatomic) NSMutableArray *invitesArray;
+
+@property (strong, nonatomic) UIRefreshControl *gameRefreshControl;
+@property (strong, nonatomic) UIRefreshControl *inviteRefreshControl;
 
 
 @end
@@ -35,6 +39,17 @@
 
     [self getActiveGames];
     [self getPendingInvites];
+    
+    self.gameRefreshControl = [[UIRefreshControl alloc] init];
+    [self.gameRefreshControl addTarget:self action:@selector(getActiveGames) forControlEvents:UIControlEventValueChanged];
+    [self.gamesTableView insertSubview:self.gameRefreshControl atIndex:0];
+    [self.gamesTableView addSubview:self.gameRefreshControl];
+    
+    self.inviteRefreshControl = [[UIRefreshControl alloc] init];
+    [self.inviteRefreshControl addTarget:self action:@selector(getPendingInvites) forControlEvents:UIControlEventValueChanged];
+    [self.invitesTableView insertSubview:self.inviteRefreshControl atIndex:0];
+    [self.invitesTableView addSubview:self.inviteRefreshControl];
+
 }
 
 - (void)getActiveGames {
@@ -50,6 +65,9 @@
     PFQuery *gameQuery = [PFQuery queryWithClassName:@"Game"];
     [gameQuery whereKey:@"objectId" containedIn:gameIDs];
     self.gamesArray = [NSMutableArray arrayWithArray:[gameQuery findObjects]];
+    
+    [self.gamesTableView reloadData];
+    [self.gameRefreshControl endRefreshing];
 }
 
 - (void)getPendingInvites {
@@ -65,6 +83,9 @@
     PFQuery *gameQuery = [PFQuery queryWithClassName:@"Game"];
     [gameQuery whereKey:@"objectId" containedIn:inviteGameIDs];
     self.invitesArray = [NSMutableArray arrayWithArray:[gameQuery findObjects]];
+    
+    [self.invitesTableView reloadData];
+    [self.inviteRefreshControl endRefreshing];
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

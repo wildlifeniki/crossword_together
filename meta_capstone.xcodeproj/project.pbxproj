@@ -31,6 +31,7 @@
 		7E901B24287E37C500C34BEA /* SimpleProfileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E901B23287E37C500C34BEA /* SimpleProfileCell.m */; };
 		7E901B27287F5FBD00C34BEA /* ActiveGameCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E901B26287F5FBD00C34BEA /* ActiveGameCell.m */; };
 		7E901B2A287F5FDE00C34BEA /* PendingInviteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E901B29287F5FDE00C34BEA /* PendingInviteCell.m */; };
+		7E901B2D2881E2AC00C34BEA /* NewGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E901B2C2881E2AC00C34BEA /* NewGameViewController.m */; };
 		807BDA1571383951FC66A50C /* Pods_meta_capstoneTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 392B41199053CF98C3CA7144 /* Pods_meta_capstoneTests.framework */; };
 		8D69A46299E92FF3E94639A9 /* Pods_meta_capstone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C8C0553A4D2C202E659169C /* Pods_meta_capstone.framework */; };
 /* End PBXBuildFile section */
@@ -104,6 +105,8 @@
 		7E901B26287F5FBD00C34BEA /* ActiveGameCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActiveGameCell.m; sourceTree = "<group>"; };
 		7E901B28287F5FDE00C34BEA /* PendingInviteCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PendingInviteCell.h; sourceTree = "<group>"; };
 		7E901B29287F5FDE00C34BEA /* PendingInviteCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PendingInviteCell.m; sourceTree = "<group>"; };
+		7E901B2B2881E2AC00C34BEA /* NewGameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewGameViewController.h; sourceTree = "<group>"; };
+		7E901B2C2881E2AC00C34BEA /* NewGameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewGameViewController.m; sourceTree = "<group>"; };
 		8C8C0553A4D2C202E659169C /* Pods_meta_capstone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_meta_capstone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C42136471466BBEC7967B215 /* Pods-meta_capstoneTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-meta_capstoneTests.debug.xcconfig"; path = "Target Support Files/Pods-meta_capstoneTests/Pods-meta_capstoneTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -245,6 +248,8 @@
 		7E29962F2876419500940B99 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				7E901B2B2881E2AC00C34BEA /* NewGameViewController.h */,
+				7E901B2C2881E2AC00C34BEA /* NewGameViewController.m */,
 				7E29961B2874BF0D00940B99 /* LoginViewController.h */,
 				7E29961C2874BF0D00940B99 /* LoginViewController.m */,
 				7E29961E2874D6CD00940B99 /* GamesViewController.h */,
@@ -498,6 +503,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E901B15287654CF00C34BEA /* Word.m in Sources */,
+				7E901B2D2881E2AC00C34BEA /* NewGameViewController.m in Sources */,
 				7E901B27287F5FBD00C34BEA /* ActiveGameCell.m in Sources */,
 				7E2996232874D6EB00940B99 /* LeaderboardViewController.m in Sources */,
 				7E29961D2874BF0D00940B99 /* LoginViewController.m in Sources */,
