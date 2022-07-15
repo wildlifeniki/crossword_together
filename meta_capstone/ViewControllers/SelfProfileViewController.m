@@ -18,7 +18,6 @@
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *recentsArray;
-//@property (strong, nonatomic) NSMutableArray *recentsIDs;
 
 @end
 
@@ -73,8 +72,6 @@
     self.recentsArray = [NSMutableArray arrayWithArray:users];
 
 }
-
-
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.recentsArray.count;
