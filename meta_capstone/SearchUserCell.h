@@ -14,6 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) IBOutlet UIImageView *profileImage;
 @property (strong, nonatomic) IBOutlet UILabel *profileUserLabel;
+@property (strong, nonatomic) IBOutlet UIButton *inviteButton;
+
+@property (strong, nonatomic) PFObject *currUser;
+@property (nonatomic) BOOL invited;
+
 
 - (void)setCellInfo:(PFObject *)user;
 

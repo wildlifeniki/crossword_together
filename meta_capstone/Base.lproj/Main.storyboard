@@ -473,6 +473,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="inviteButton" destination="N8d-Ee-1ww" id="5Uh-09-jhU"/>
                                             <outlet property="profileImage" destination="yRu-sw-0iD" id="NAK-Kb-ul2"/>
                                             <outlet property="profileUserLabel" destination="cQW-sU-TgT" id="axg-yI-uI1"/>
                                         </connections>

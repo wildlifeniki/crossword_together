@@ -13,6 +13,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
+    self.invited = NO;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -33,12 +34,35 @@
         NSURL *url = [NSURL URLWithString:[[[(NSDictionary*) result objectForKey:@"picture"] objectForKey:@"data"] objectForKey:@"url"]];
         self.profileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
     }];
+    self.currUser = user;
 }
 
 - (IBAction)didTapAdd:(id)sender {
-    //add user object to array (stored in view controller, holds all users invites) limit 4
-    //if already added, symbol should change and remove from array
-    NSLog(@"pressed add");
+    if (self.invited) {
+        self.invited = NO;
+        NSLog(@"removing %@", self.currUser[@"name"]);
+        [self.inviteButton setImage:[UIImage systemImageNamed:@"plus"] forState:UIControlStateNormal];
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:self.currUser forKey:@"cellUser"];
+        [[NSNotificationCenter defaultCenter]
+            postNotificationName:@"removeUser"
+            object:self
+            userInfo:userInfo];
+        [self setCellInfo:self.currUser];
+    }
+    else {
+        self.invited = YES;
+        NSLog(@"adding %@", self.currUser[@"name"]);
+        [self.inviteButton setImage:[UIImage systemImageNamed:@"minus"] forState:UIControlStateNormal];
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:self.currUser forKey:@"cellUser"];
+        [[NSNotificationCenter defaultCenter]
+            postNotificationName:@"addUser"
+            object:self
+            userInfo:userInfo];
+    }
+    [self setCellInfo:self.currUser];
+
 }
+
+
 
 @end

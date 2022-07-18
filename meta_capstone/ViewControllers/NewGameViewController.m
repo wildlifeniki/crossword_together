@@ -17,6 +17,7 @@
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (strong, nonatomic) NSMutableArray *usersArray;
 @property (strong, nonatomic) NSMutableArray *filteredUsersArray;
+@property (strong, nonatomic) NSMutableArray *inviteUsers;
 
 @end
 
@@ -27,7 +28,20 @@
     // Do any additional setup after loading the view.
     
     self.tableView.dataSource = self;
+    self.tableView.delegate = self;
     self.searchBar.delegate = self;
+    
+    self.inviteUsers = [NSMutableArray arrayWithArray:@[]];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(removeUserNotification:)
+                                                 name:@"removeUser"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(addUserNotification:)
+                                                 name:@"addUser"
+                                               object:nil];
     
     [self getUsers];
 }
@@ -51,6 +65,17 @@
     return cell;
 }
 
+- (void)removeUserNotification:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    [self.inviteUsers addObject:userInfo[@"cellUser"]];
+    [self.inviteUsers removeObject:userInfo[@"cellUser"]];
+}
+
+- (void)addUserNotification:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    [self.inviteUsers addObject:userInfo[@"cellUser"]];
+}
+
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(nonnull NSString *)searchText {
     if (searchText.length != 0) {
         
@@ -67,6 +92,8 @@
 }
 
 - (IBAction)didTapCancel:(id)sender {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
     [self dismissViewControllerAnimated:true completion:nil];
 }
 
