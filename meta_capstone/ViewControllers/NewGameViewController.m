@@ -11,10 +11,12 @@
 #import "Parse/Parse.h"
 #import "SearchUserCell.h"
 
-@interface NewGameViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface NewGameViewController () <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (strong, nonatomic) NSMutableArray *usersArray;
+@property (strong, nonatomic) NSMutableArray *filteredUsersArray;
 
 @end
 
@@ -25,6 +27,8 @@
     // Do any additional setup after loading the view.
     
     self.tableView.dataSource = self;
+    self.searchBar.delegate = self;
+    
     [self getUsers];
 }
 
@@ -33,17 +37,33 @@
     PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
     PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
     [query whereKey:@"fbID" notEqualTo:[idQuery findObjects].firstObject[@"fbID"]];
-    self.usersArray = [query findObjects];
+    self.usersArray = [NSMutableArray arrayWithArray:[query findObjects]];
+    self.filteredUsersArray = self.usersArray;
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.usersArray.count;
+    return self.filteredUsersArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SearchUserCell *cell = [tableView dequeueReusableCellWithIdentifier:@"searchCell" forIndexPath:indexPath];
-    [cell setCellInfo:self.usersArray[indexPath.row]];
+    [cell setCellInfo:self.filteredUsersArray[indexPath.row]];
     return cell;
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(nonnull NSString *)searchText {
+    if (searchText.length != 0) {
+        
+        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(PFObject *evaluatedObject, NSDictionary *bindings) {
+            return [evaluatedObject[@"name"] containsString:searchText];
+        }];
+        self.filteredUsersArray = [NSMutableArray arrayWithArray:[self.usersArray filteredArrayUsingPredicate:predicate]];
+    }
+    else {
+        self.filteredUsersArray = self.usersArray;
+    }
+    
+    [self.tableView reloadData];
 }
 
 - (IBAction)didTapCancel:(id)sender {
