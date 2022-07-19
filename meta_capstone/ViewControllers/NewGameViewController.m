@@ -90,10 +90,8 @@
         [alert addAction:defaultAction];
         [self presentViewController:alert animated:YES completion:nil];
         
-        NSLog(@"max players invited: %@", userInfo);
         NSIndexPath *indexPath = userInfo[@"indexPath"];
         SearchUserCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        NSLog(@"user at path: %@", cell.currUser);
         [cell setCellInfo:userInfo[@"cellUser"] : indexPath : NO];
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:nil];
     }
@@ -101,7 +99,6 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(nonnull NSString *)searchText {
     if (searchText.length != 0) {
-        
         NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(PFObject *evaluatedObject, NSDictionary *bindings) {
             return [evaluatedObject[@"name"] containsString:searchText];
         }];
@@ -116,7 +113,43 @@
 
 - (IBAction)didTapCancel:(id)sender {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self dismissViewControllerAnimated:true completion:nil];
+}
 
+- (IBAction)didTapStartGame:(id)sender {
+    PFObject *game = [PFObject objectWithClassName:@"Game"]; //this contains data for each user
+    
+    //find current user
+    PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
+    PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
+    [query whereKey:@"fbID" equalTo:[idQuery findObjects].firstObject[@"fbID"]];
+    
+    //create game object with current user as active player, invite, and host
+    PFObject *currUser = [query findObjects].firstObject;
+    NSString *currUserID = currUser[@"fbID"];
+    game[@"activePlayerIDs"] = [NSMutableArray arrayWithArray:@[currUserID]];
+    game[@"hostID"] = currUserID;
+    game[@"inviteID"] = currUserID;
+    game[@"percentComplete"] = @0;
+    
+    [game save];
+    
+    //get game id
+    PFQuery *gameQuery = [PFQuery queryWithClassName:@"Game"];
+    [gameQuery orderByDescending:@"createdAt"];
+    game = [gameQuery findObjects].firstObject;
+
+    //add game id to active games list of current user
+    [currUser addObject:game.objectId forKey:@"activeGames"];
+    [currUser save];
+
+    //add game id to pending invites list of invite users
+    for (PFObject *user in self.inviteUsers) {
+        [user addObject:game.objectId forKey:@"pendingInvites"];
+        [user save];
+    }
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self dismissViewControllerAnimated:true completion:nil];
 }
 

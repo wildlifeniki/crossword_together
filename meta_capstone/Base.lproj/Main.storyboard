@@ -422,6 +422,9 @@
                                 <buttonConfiguration key="configuration" style="tinted" title="Start Game">
                                     <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="32"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <action selector="didTapStartGame:" destination="fe4-Zq-3V1" eventType="touchUpInside" id="ilF-A0-UFd"/>
+                                </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="XJV-la-oin">
                                 <rect key="frame" x="0.0" y="56" width="414" height="664"/>
@@ -495,11 +498,34 @@
                     <connections>
                         <outlet property="searchBar" destination="VVe-Yp-te0" id="69D-qc-way"/>
                         <outlet property="tableView" destination="XJV-la-oin" id="rmS-bb-5Pf"/>
+                        <segue destination="vxr-NB-JqP" kind="presentation" identifier="startGame" modalPresentationStyle="fullScreen" id="hsP-hP-1KY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="skR-d0-JQk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4632" y="-858"/>
+        </scene>
+        <!--Board-->
+        <scene sceneID="jot-Ib-OPk">
+            <objects>
+                <viewController id="F4t-Ew-nr1" customClass="InGameViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ztn-BM-Vsn">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="9mi-YL-VxH"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Board" id="yGu-xP-JJf">
+                        <barButtonItem key="leftBarButtonItem" title="Close" id="27O-2Q-IsB">
+                            <connections>
+                                <action selector="didTapClose:" destination="F4t-Ew-nr1" id="jE7-jG-WpK"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="a5z-g0-ERq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6404" y="-858"/>
         </scene>
         <!--TabBarController-->
         <scene sceneID="6pg-pc-aMX">
@@ -633,6 +659,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Wm-nK-mIo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3690" y="-858"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="vgN-fz-84d">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="vxr-NB-JqP" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="QZB-Wd-A8p">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="F4t-Ew-nr1" kind="relationship" relationship="rootViewController" id="RTC-2t-HNh"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Vyg-5P-4pW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5484" y="-858"/>
         </scene>
     </scenes>
     <resources>

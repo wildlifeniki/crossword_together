@@ -49,7 +49,6 @@
     [self.inviteRefreshControl addTarget:self action:@selector(getPendingInvites) forControlEvents:UIControlEventValueChanged];
     [self.invitesTableView insertSubview:self.inviteRefreshControl atIndex:0];
     [self.invitesTableView addSubview:self.inviteRefreshControl];
-
 }
 
 - (void)getActiveGames {
@@ -62,8 +61,10 @@
         gameIDs = [NSMutableArray arrayWithArray:[query findObjects].firstObject[@"activeGames"]];
     }
 
+    //get table of games
     PFQuery *gameQuery = [PFQuery queryWithClassName:@"Game"];
     [gameQuery whereKey:@"objectId" containedIn:gameIDs];
+    [gameQuery orderByDescending:@"updatedAt"];
     self.gamesArray = [NSMutableArray arrayWithArray:[gameQuery findObjects]];
     
     [self.gamesTableView reloadData];
@@ -80,8 +81,10 @@
         inviteGameIDs = [NSMutableArray arrayWithArray:[query findObjects].firstObject[@"pendingInvites"]];
     }
 
+    //get table of invites
     PFQuery *gameQuery = [PFQuery queryWithClassName:@"Game"];
     [gameQuery whereKey:@"objectId" containedIn:inviteGameIDs];
+    [gameQuery orderByDescending:@"updatedAt"];
     self.invitesArray = [NSMutableArray arrayWithArray:[gameQuery findObjects]];
     
     [self.invitesTableView reloadData];
