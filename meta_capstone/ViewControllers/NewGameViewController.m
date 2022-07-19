@@ -61,7 +61,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SearchUserCell *cell = [tableView dequeueReusableCellWithIdentifier:@"searchCell" forIndexPath:indexPath];
-    [cell setCellInfo:self.filteredUsersArray[indexPath.row]];
+    [cell setCellInfo:self.filteredUsersArray[indexPath.row] : indexPath : NO];
     return cell;
 }
 
@@ -73,7 +73,30 @@
 
 - (void)addUserNotification:(NSNotification *)notification {
     NSDictionary *userInfo = notification.userInfo;
-    [self.inviteUsers addObject:userInfo[@"cellUser"]];
+    if (self.inviteUsers.count <= 1) {
+        [self.inviteUsers addObject:userInfo[@"cellUser"]];
+    }
+    else {
+        //reset cell if unable to add
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Limit Reached"
+                                       message:@"The maximum number of players alotted is 4"
+                                       preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+           handler:^(UIAlertAction * action) {
+            [alert dismissViewControllerAnimated:YES completion:nil];
+            
+        }];
+        
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
+        
+        NSLog(@"max players invited: %@", userInfo);
+        NSIndexPath *indexPath = userInfo[@"indexPath"];
+        SearchUserCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        NSLog(@"user at path: %@", cell.currUser);
+        [cell setCellInfo:userInfo[@"cellUser"] : indexPath : NO];
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:nil];
+    }
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(nonnull NSString *)searchText {

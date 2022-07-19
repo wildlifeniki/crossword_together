@@ -13,7 +13,6 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
-    self.invited = NO;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -22,7 +21,12 @@
     // Configure the view for the selected state
 }
 
-- (void)setCellInfo:(PFObject *)user {
+- (void)setCellInfo:(PFObject *)user : (NSIndexPath *)indexPath : (BOOL)invited {
+    if (invited)
+        [self.inviteButton setImage:[UIImage systemImageNamed:@"minus"] forState:UIControlStateNormal];
+    else
+        [self.inviteButton setImage:[UIImage systemImageNamed:@"plus"] forState:UIControlStateNormal];
+    
     self.profileUserLabel.text = user[@"name"];
     
     //get profile picture
@@ -35,31 +39,32 @@
         self.profileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
     }];
     self.currUser = user;
+    self.indexPath = indexPath;
+    self.invited = invited;
 }
 
 - (IBAction)didTapAdd:(id)sender {
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.currUser, @"cellUser", self.indexPath, @"indexPath", nil];
+
     if (self.invited) {
         self.invited = NO;
         NSLog(@"removing %@", self.currUser[@"name"]);
         [self.inviteButton setImage:[UIImage systemImageNamed:@"plus"] forState:UIControlStateNormal];
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:self.currUser forKey:@"cellUser"];
         [[NSNotificationCenter defaultCenter]
             postNotificationName:@"removeUser"
             object:self
             userInfo:userInfo];
-        [self setCellInfo:self.currUser];
     }
     else {
         self.invited = YES;
         NSLog(@"adding %@", self.currUser[@"name"]);
         [self.inviteButton setImage:[UIImage systemImageNamed:@"minus"] forState:UIControlStateNormal];
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:self.currUser forKey:@"cellUser"];
         [[NSNotificationCenter defaultCenter]
             postNotificationName:@"addUser"
             object:self
             userInfo:userInfo];
     }
-    [self setCellInfo:self.currUser];
+    [self setCellInfo:self.currUser : self.indexPath: self.invited];
 
 }
 

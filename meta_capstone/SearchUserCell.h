@@ -18,9 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) PFObject *currUser;
 @property (nonatomic) BOOL invited;
+@property (strong, nonatomic) NSIndexPath *indexPath;
 
 
-- (void)setCellInfo:(PFObject *)user;
+- (void)setCellInfo:(PFObject *)user : (NSIndexPath *)indexPath : (BOOL)invited;
+
 
 @end
 
