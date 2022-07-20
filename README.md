@@ -26,17 +26,20 @@ Crossword app that allows people to collaborate on puzzles by inviting people to
 **Required Must-have Stories**
 
 * User logs in to view profile or start new game
-* Profile page for every user
+* Can view profile stats and log out from profile page
 * Leaderboard ranked by in-app stats
 * Start new crossword game, option to check validity of board and autochecks when puzzle is complete
-* Invite users to play in active game (username search function to add users, recently played with at top)
+* Start new game and send invites to other users (username search function to add users)
+* Tap on active game to enter game
 * Allow player to request control of board and only active host can make changes on board
 * Any player can tap on tiles to view clue for corresponding word
 * Zoom in and out of board
-* Settings to opt in/out of push notifications
 
 **Optional Nice-to-have Stories**
-
+* Have recently played with users showing when search bar is empty in invite screen
+* Swipe to accept/deny invites
+* Profile page for every user (Tap on recently played with or leaderboard)
+* Settings to opt in/out of push notifications
 * Additional competetive game option with slightly different mechanics
 * Different difficulties of crosswords
 * Different languages for crosswords
@@ -44,54 +47,86 @@ Crossword app that allows people to collaborate on puzzles by inviting people to
 
 ### 2. Screen Archetypes
 
-* Login (option to log in with facebook)
-* Register - User signs up or logs into their account
+* Login (with facebook, if acccount has not been linked yet, creates app account automatically)
 * Games Screen
-  * Shows active invites (can accept to jump into game or deny to remove invite)
+  * Shows active games (Shows host name and profile picture, shows percent fill of board)
+  * Shows pending invites (Shows who invite is from, can accept to move game to active games or deny to remove invite)
   * New game button takes to new game screen
 * New Game Screen
   * Option to invite players
-  * Users recently played with automatically show before searching
   * Search bar to add players
+  * Later: Users recently played with automatically show before searching
 * Self Profile Screen 
-   * View profile picture, users recently played with, time/score statistics, rank
-   * Edit Settings
-* Other Profiles
-  * View profile picture, rank, statistics
+   * View profile picture, users recently played with, time/score statistics
 * Game Board Screen
   * Visual of game board
   * Tap on tiles for clues
   * Indicator for which person is host/way to request host
-  * Ability to invite players
 * Leaderboard Screen/User Search Screen
-  * Shows all users ranked by time/score
-  * Search bar to view other profiles (essentially same search function)
+  * Shows all users ranked by average time
+  * Later: Search bar to view other profiles (essentially same search function)
+
+Later:
 * Settings Screen
    * App notification settings
+* Other Profiles
+  * View profile picture, statistics
 
 ### 3. Navigation
 
 **Tab Navigation** (Tab to Screen)
 
-* New Game
+* Games
+* Leaderboard
 * Profile
-* Settings
+* Settings (fill later)
 
-Optional:
+Later:
 * Game options (Collaborative/Competetive)
 
 **Flow Navigation** (Screen to Screen)
-* Forced Log-in -> Sign up/account creation if log in is unavailable
-* Leaderboard -> Other Profiles (tap on profile)
-* Profile -> Settings (tap on settings) OR Other Profiles (tap on recent players profile)
-* Games -> Game board (tap on active invite) OR New game -> Game board (start new game from screen)
+* Forced Log-in -> Games -> Game board (tap on active invite) OR New game (Instantiates game, returns to Games, auto-open game later)
 
-## Wireframes
-<img src="https://i.imgur.com/a/d4ey914.jpg" width=800><br>
+Later:
+* Leaderboard -> Other Profiles (tap on profile)
+* Profile -> Other Profiles (tap on recent players profile)
+
+## Wireframes!
+![alt text](https://user-images.githubusercontent.com/22784306/180065208-8f7bcec5-2126-4245-bc16-12e8d6353919.png)
 
 ## Schema 
 ### Models
+Note: all parse models come with unique objectId, updatedAt date, createdAt date
 
+#### AppUser (Parse)
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | name | String | first and last name of user |
+   | fbID | String | unique id that connects user to facebook api |
+   | totalGames | Number | number of total games played|
+   | bestTime | Number | best time of completion |
+   | avgTime | Number | average time of completion |
+   | recentlyPlayedWith | Array | list of ids of recent users played with |
+   | activeGames | Array | list of game obectIds the user has accepted an invite for |
+   | pendingInvites | Array | list of game object Ids the user has been invited to |
+
+#### Game (Parse)
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | activePlayerIDs | Array | list of ids of players who have accepted invites (allowed to enter board) |
+   | hostID | String | id of current host (starts as creator of game) |
+   | inviteID | String | id of user who created the game (and therefore sent invites) |
+   | Words | Array | list of words on gameboard |
+   | Time | Number | current time |
+   | percentComplete | Number | how full the board is |
+   | isCorrect | Boolean | indication if all words correct|
+
+#### AppInfo (Parse)
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | fbID | String | id of user logged in |
+   | invitedIDs | Array | array of ids of users invited to new game being created (cleared when canceled/invites sent)|
+   
 #### Player
    | Property      | Type     | Description |
    | ------------- | -------- | ------------|
@@ -100,26 +135,6 @@ Optional:
    | isHost | Boolean | indication whether player has control over board |
    | color | String | color of word once shared to entire game |
    | isRequestingHost | Boolean | indication if player is trying to get control over board |
-
-
-#### User 
-   | Property      | Type     | Description |
-   | ------------- | -------- | ------------|
-   | Username | String | unique id for the user |
-   | profile_pic | Image | profile picture for user|
-   | total_games | Number | number of total games played|
-   | best_time | Number | best time of completion |
-   | avg_time | Number | average time of completion |
-   | recent_players | Array | List of recent user objects played with|
-
-#### Gameboard 
-   | Property      | Type     | Description |
-   | ------------- | -------- | ------------|
-   | Id | String | unique id for the game board |
-   | Players | Array | list of player objects in gameboard |
-   | Words | Array | list of words on gameboard |
-   | Time | Number | current time |
-   | isCorrect | Boolean | indication if all words correct|
 
 #### Pieces/tiles in board
    | Property      | Type     | Description |
@@ -138,19 +153,14 @@ Optional:
    | Tiles | Array | list of tile objects (letters that make up word)|
    | isCorrect | Boolean | indication if all tiles correct |
 
-#### Leaderboard 
-   | Property      | Type     | Description |
-   | ------------- | -------- | ------------|
-   | Users | Array | list of user objects |
 
-### Networking
-#### List of network requests by screen
-   - Game Board Screen
-      - (Update) Host finishes entering a word
-   - New Game Screen
-      - (Send) Send invite to other users
-   - Games Screen
-      - (Join) Join game board llobby
-   - Profile Screen
-      - (Update/PUT) Update user profile image
+### Technically Ambiguous Problems
+#### Game Board Screen
+   - Creating a custom view that depicts tiles in a grid pattern for a crossword. Making it so a user can enter a letter in a tile and move along a word seamlessly to continue entering letters.
+   - Allow changes from host to be updated and shown to all users present in the game
+   - Display different clues based on selecting different words 
 
+#### Crossword Algorithm
+ - Implement a database of word/clue pairs
+ - Write an alogrithm that can take words and assign them to tiles in basic crossword format
+ - Be able to generate words that cross on certain tiles
