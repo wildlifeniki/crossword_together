@@ -21,8 +21,24 @@
     // Configure the view for the selected state
 }
 
-- (void)setCellInfo:(PFObject *)user : (NSIndexPath *)indexPath : (BOOL)invited {
-    if (invited)
+- (BOOL)arrayContainsPFObject :(NSMutableArray *)array :(PFObject *)object {
+    BOOL found = NO;
+    for (PFObject *element in array) {
+        if ([element.objectId isEqual:object.objectId])
+            found = YES;
+    }
+    return found;
+}
+
+- (void)setCellInfo:(PFObject *)user : (NSIndexPath *)indexPath {
+    self.currUser = user;
+    self.indexPath = indexPath;
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"ID"];
+    PFObject *info = [query findObjects].firstObject;
+    self.invitedArray = [NSMutableArray arrayWithArray:info[@"invitedArray"]];
+        
+    if ([self arrayContainsPFObject:self.invitedArray :self.currUser])
         [self.inviteButton setImage:[UIImage systemImageNamed:@"minus"] forState:UIControlStateNormal];
     else
         [self.inviteButton setImage:[UIImage systemImageNamed:@"plus"] forState:UIControlStateNormal];
@@ -38,17 +54,14 @@
         NSURL *url = [NSURL URLWithString:[[[(NSDictionary*) result objectForKey:@"picture"] objectForKey:@"data"] objectForKey:@"url"]];
         self.profileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
     }];
-    self.currUser = user;
-    self.indexPath = indexPath;
-    self.invited = invited;
+
 }
 
 - (IBAction)didTapAdd:(id)sender {
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.currUser, @"cellUser", self.indexPath, @"indexPath", nil];
 
-    if (self.invited) {
-        self.invited = NO;
-        NSLog(@"removing %@", self.currUser[@"name"]);
+    if ([self arrayContainsPFObject:self.invitedArray :self.currUser]) {
+        NSLog(@"removing %@", self.currUser[@"name"]); //removing from backend is also done in view controller
         [self.inviteButton setImage:[UIImage systemImageNamed:@"plus"] forState:UIControlStateNormal];
         [[NSNotificationCenter defaultCenter]
             postNotificationName:@"removeUser"
@@ -56,18 +69,15 @@
             userInfo:userInfo];
     }
     else {
-        self.invited = YES;
-        NSLog(@"adding %@", self.currUser[@"name"]);
+        NSLog(@"adding %@", self.currUser[@"name"]); //adding to backend is also done in view controller
         [self.inviteButton setImage:[UIImage systemImageNamed:@"minus"] forState:UIControlStateNormal];
         [[NSNotificationCenter defaultCenter]
             postNotificationName:@"addUser"
             object:self
             userInfo:userInfo];
     }
-    [self setCellInfo:self.currUser : self.indexPath: self.invited];
-
+    
+    [self setCellInfo:self.currUser : self.indexPath];
 }
-
-
 
 @end

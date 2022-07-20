@@ -46,6 +46,8 @@
     [self getUsers];
 }
 
+
+
 - (void)getUsers {
     //get array of all users (except the person signed in)
     PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
@@ -61,14 +63,26 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SearchUserCell *cell = [tableView dequeueReusableCellWithIdentifier:@"searchCell" forIndexPath:indexPath];
-    [cell setCellInfo:self.filteredUsersArray[indexPath.row] : indexPath : NO];
+    //instead of passing no, check whether user is contained in array and pass accordingly
+    [cell setCellInfo:self.filteredUsersArray[indexPath.row] : indexPath];
     return cell;
+}
+
+- (void)updateParseInvites : (BOOL)clear {
+    PFQuery *query = [PFQuery queryWithClassName:@"ID"];
+    PFObject *info = [query findObjects].firstObject;
+    if (clear)
+        info[@"invitedArray"] = [NSMutableArray arrayWithArray:@[]];
+    else
+        info[@"invitedArray"] = self.inviteUsers;
+    [info save];
 }
 
 - (void)removeUserNotification:(NSNotification *)notification {
     NSDictionary *userInfo = notification.userInfo;
-    [self.inviteUsers addObject:userInfo[@"cellUser"]];
+    //[self.inviteUsers addObject:userInfo[@"cellUser"]];
     [self.inviteUsers removeObject:userInfo[@"cellUser"]];
+    [self updateParseInvites : NO];
 }
 
 - (void)addUserNotification:(NSNotification *)notification {
@@ -92,9 +106,10 @@
         
         NSIndexPath *indexPath = userInfo[@"indexPath"];
         SearchUserCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        [cell setCellInfo:userInfo[@"cellUser"] : indexPath : NO];
+        [cell setCellInfo:userInfo[@"cellUser"] : indexPath];
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:nil];
     }
+    [self updateParseInvites : NO];
 }
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(nonnull NSString *)searchText {
@@ -113,6 +128,7 @@
 
 - (IBAction)didTapCancel:(id)sender {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self updateParseInvites : YES];
     [self dismissViewControllerAnimated:true completion:nil];
 }
 
@@ -151,6 +167,7 @@
     }
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self updateParseInvites : YES];
     [self dismissViewControllerAnimated:true completion:nil];
 }
 

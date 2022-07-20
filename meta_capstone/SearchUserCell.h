@@ -17,11 +17,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) IBOutlet UIButton *inviteButton;
 
 @property (strong, nonatomic) PFObject *currUser;
-@property (nonatomic) BOOL invited;
+@property (strong, nonatomic) NSMutableArray *invitedArray;
 @property (strong, nonatomic) NSIndexPath *indexPath;
 
 
-- (void)setCellInfo:(PFObject *)user : (NSIndexPath *)indexPath : (BOOL)invited;
+- (void)setCellInfo:(PFObject *)user : (NSIndexPath *)indexPath;
 
 
 @end

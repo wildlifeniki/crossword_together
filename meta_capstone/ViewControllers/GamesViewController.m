@@ -51,6 +51,12 @@
     [self.invitesTableView addSubview:self.inviteRefreshControl];
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    NSLog(@"games screen appeared");
+    if ([self.presentedViewController isBeingDismissed])
+        NSLog(@"new games view dismissed");
+}
+
 - (void)getRespectiveTable: (NSMutableArray *)IDArray : (BOOL) isGame {
     PFQuery *query = [PFQuery queryWithClassName:@"Game"];
     [query whereKey:@"objectId" containedIn:IDArray];
@@ -121,6 +127,10 @@
         [cell setCellInfo:self.gamesArray[indexPath.row]];
         return cell;
     }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
 }
 
 @end

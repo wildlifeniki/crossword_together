@@ -316,7 +316,7 @@
                                             <outlet property="boardFillLabel" destination="kJb-Zx-Rb9" id="J1j-j4-vmW"/>
                                             <outlet property="hostProfileImage" destination="Zk9-yn-xvH" id="bYe-VE-vD3"/>
                                             <outlet property="hostUserLabel" destination="BMw-Hd-81S" id="Vo9-Ka-Tqi"/>
-                                            <segue destination="vxr-NB-JqP" kind="presentation" modalPresentationStyle="fullScreen" id="KRi-kH-YYG"/>
+                                            <segue destination="vxr-NB-JqP" kind="presentation" identifier="openGame" modalPresentationStyle="fullScreen" id="KRi-kH-YYG"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
