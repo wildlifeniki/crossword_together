@@ -123,14 +123,15 @@
     PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
     PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
     [query whereKey:@"fbID" equalTo:[idQuery findObjects].firstObject[@"fbID"]];
-    
-    //create game object with current user as active player, invite, and host
     PFObject *currUser = [query findObjects].firstObject;
+
+    //create game object with current user as active player, invite, and host
     NSString *currUserID = currUser[@"fbID"];
     game[@"activePlayerIDs"] = [NSMutableArray arrayWithArray:@[currUserID]];
     game[@"hostID"] = currUserID;
     game[@"inviteID"] = currUserID;
     game[@"percentComplete"] = @0;
+    game[@"time"] = @0;
     
     [game save];
     
@@ -152,15 +153,5 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self dismissViewControllerAnimated:true completion:nil];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

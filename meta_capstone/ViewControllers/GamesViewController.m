@@ -51,6 +51,17 @@
     [self.invitesTableView addSubview:self.inviteRefreshControl];
 }
 
+- (void)getRespectiveTable: (NSMutableArray *)IDArray : (BOOL) isGame {
+    PFQuery *query = [PFQuery queryWithClassName:@"Game"];
+    [query whereKey:@"objectId" containedIn:IDArray];
+    [query orderByDescending:@"updatedAt"];
+    
+    if (isGame)
+        self.gamesArray = [NSMutableArray arrayWithArray:[query findObjects]];
+    else
+        self.invitesArray = [NSMutableArray arrayWithArray:[query findObjects]];
+}
+
 - (void)getActiveGames {
     NSMutableArray *gameIDs;
     PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
@@ -61,11 +72,7 @@
         gameIDs = [NSMutableArray arrayWithArray:[query findObjects].firstObject[@"activeGames"]];
     }
 
-    //get table of games
-    PFQuery *gameQuery = [PFQuery queryWithClassName:@"Game"];
-    [gameQuery whereKey:@"objectId" containedIn:gameIDs];
-    [gameQuery orderByDescending:@"updatedAt"];
-    self.gamesArray = [NSMutableArray arrayWithArray:[gameQuery findObjects]];
+    [self getRespectiveTable:gameIDs :YES];
     
     [self.gamesTableView reloadData];
     [self.gameRefreshControl endRefreshing];
@@ -81,11 +88,7 @@
         inviteGameIDs = [NSMutableArray arrayWithArray:[query findObjects].firstObject[@"pendingInvites"]];
     }
 
-    //get table of invites
-    PFQuery *gameQuery = [PFQuery queryWithClassName:@"Game"];
-    [gameQuery whereKey:@"objectId" containedIn:inviteGameIDs];
-    [gameQuery orderByDescending:@"updatedAt"];
-    self.invitesArray = [NSMutableArray arrayWithArray:[gameQuery findObjects]];
+    [self getRespectiveTable:inviteGameIDs :NO];
     
     [self.invitesTableView reloadData];
     [self.inviteRefreshControl endRefreshing];
@@ -119,15 +122,5 @@
         return cell;
     }
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
