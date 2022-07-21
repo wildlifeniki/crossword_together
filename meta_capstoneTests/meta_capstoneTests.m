@@ -6,6 +6,9 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "LoginViewController.h"
+#import "LeaderboardViewController.h"
+#import "Parse/Parse.h"
 
 @interface meta_capstoneTests : XCTestCase
 
@@ -31,6 +34,15 @@
     [self measureBlock:^{
         // Put the code you want to measure the time of here.
     }];
+}
+
+- (void)testLeaderboard {
+    LeaderboardViewController *leaderboardViewController = [[LeaderboardViewController alloc] init];
+    [leaderboardViewController getLeaderboard];
+    NSNumber *first = leaderboardViewController.usersArray.firstObject[@"avgTime"];
+    NSNumber *last = leaderboardViewController.usersArray.lastObject[@"avgTime"];
+    
+    XCTAssertTrue(first.intValue <= last.intValue);
 }
 
 @end

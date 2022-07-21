@@ -12,7 +12,6 @@
 @interface LeaderboardViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
-@property (strong, nonatomic) NSMutableArray *usersArray;
 
 @end
 
