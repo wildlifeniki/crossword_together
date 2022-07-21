@@ -50,7 +50,8 @@
 
 - (void)getUsers {
     //get array of all users (except the person signed in)
-    PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
+    PFQuery *idQuery = [PFQuery queryWithClassName:@"AppInfo"];
+    [idQuery fromLocalDatastore];
     PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
     [query whereKey:@"fbID" notEqualTo:[idQuery findObjects].firstObject[@"fbID"]];
     self.usersArray = [NSMutableArray arrayWithArray:[query findObjects]];
@@ -69,7 +70,8 @@
 }
 
 - (void)updateParseInvites : (BOOL)clear {
-    PFQuery *query = [PFQuery queryWithClassName:@"ID"];
+    PFQuery *query = [PFQuery queryWithClassName:@"AppInfo"];
+    [query fromLocalDatastore];
     PFObject *info = [query findObjects].firstObject;
     if (clear)
         info[@"invitedArray"] = [NSMutableArray arrayWithArray:@[]];
@@ -136,7 +138,8 @@
     PFObject *game = [PFObject objectWithClassName:@"Game"]; //this contains data for each user
     
     //find current user
-    PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
+    PFQuery *idQuery = [PFQuery queryWithClassName:@"AppInfo"];
+    [idQuery fromLocalDatastore];
     PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
     [query whereKey:@"fbID" equalTo:[idQuery findObjects].firstObject[@"fbID"]];
     PFObject *currUser = [query findObjects].firstObject;

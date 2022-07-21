@@ -66,24 +66,13 @@
                         if (succeeded) { NSLog(@"user saved"); }
                         else { NSLog(@"user did not save"); }
                     }];
-                                }
-                
-                //create one object to track current active user id (use this id to get info about current user)
-                PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
-                NSArray *idObjects = [idQuery findObjects];
-                PFObject *currUserID;
-                if ([idObjects count] == 0) {
-                    //set current active id
-                    currUserID = [PFObject objectWithClassName:@"ID"]; //this is how we know what information to show on selfProfile
-                }
-                else {
-                    currUserID = idObjects.firstObject;
                 }
                 
-                currUserID[@"fbID"] = [NSString stringWithFormat:@"%@", profile.userID];
-                [currUserID saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                    if (succeeded) { NSLog(@"ID saved"); }
-                    else { NSLog(@"ID did not save"); }
+                PFObject *info = [PFObject objectWithClassName:@"AppInfo"];
+                info[@"fbID"] = [NSString stringWithFormat:@"%@", profile.userID];
+                [info pinInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    if (succeeded) { NSLog(@"pin success"); }
+                    else { NSLog(@"pin failed"); }
                 }];
                 
             }

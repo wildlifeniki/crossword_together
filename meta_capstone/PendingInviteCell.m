@@ -28,7 +28,8 @@
     [query whereKey:@"fbID" equalTo:game[@"inviteID"]];
     self.inviteFromLabel.text = [NSString stringWithFormat:@"Invitation from: %@", [query findObjects].firstObject[@"name"]];
     
-    PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
+    PFQuery *idQuery = [PFQuery queryWithClassName:@"AppInfo"];
+    [idQuery fromLocalDatastore];
     NSArray *idObjects = [idQuery findObjects];
     NSString *currUserID;
     if ([idObjects count] != 0) {

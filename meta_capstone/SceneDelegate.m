@@ -26,6 +26,8 @@
         configuration.applicationId = @"EeN1Wkryoazn9PU7RiSnGwmvUgSUyicPVZ1ggbsU";
         configuration.clientKey = @"21dYsQdc2ObMbLHcTg007PzPDVw5lqewyPDDjdlS";
         configuration.server = @"https://parseapi.back4app.com";
+        configuration.localDatastoreEnabled = true;
+        
     }];
 
     [Parse initializeWithConfiguration:config];

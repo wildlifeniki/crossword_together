@@ -70,7 +70,8 @@
 
 - (void)getActiveGames {
     NSMutableArray *gameIDs;
-    PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
+    PFQuery *idQuery = [PFQuery queryWithClassName:@"AppInfo"];
+    [idQuery fromLocalDatastore];
     NSArray *idObjects = [idQuery findObjects];
     if ([idObjects count] != 0) {
         PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
@@ -86,7 +87,8 @@
 
 - (void)getPendingInvites {
     NSMutableArray *inviteGameIDs;
-    PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
+    PFQuery *idQuery = [PFQuery queryWithClassName:@"AppInfo"];
+    [idQuery fromLocalDatastore];
     NSArray *idObjects = [idQuery findObjects];
     if ([idObjects count] != 0) {
         PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];

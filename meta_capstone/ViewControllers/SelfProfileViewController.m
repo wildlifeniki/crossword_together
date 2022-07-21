@@ -23,8 +23,6 @@
 
 @implementation SelfProfileViewController
 
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -32,7 +30,8 @@
     
     NSMutableArray *recentsIDs;
     
-    PFQuery *idQuery = [PFQuery queryWithClassName:@"ID"];
+    PFQuery *idQuery = [PFQuery queryWithClassName:@"AppInfo"];
+    [idQuery fromLocalDatastore];
     NSArray *idObjects = [idQuery findObjects];
     if ([idObjects count] != 0) {
         self.currUserID = idObjects.firstObject[@"fbID"];

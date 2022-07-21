@@ -34,7 +34,8 @@
     self.currUser = user;
     self.indexPath = indexPath;
     
-    PFQuery *query = [PFQuery queryWithClassName:@"ID"];
+    PFQuery *query = [PFQuery queryWithClassName:@"AppInfo"];
+    [query fromLocalDatastore];
     PFObject *info = [query findObjects].firstObject;
     self.invitedArray = [NSMutableArray arrayWithArray:info[@"invitedArray"]];
         
