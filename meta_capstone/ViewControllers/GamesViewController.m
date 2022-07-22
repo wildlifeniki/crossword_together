@@ -51,12 +51,6 @@
     [self.invitesTableView addSubview:self.inviteRefreshControl];
 }
 
-- (void)viewDidAppear:(BOOL)animated{
-    NSLog(@"games screen appeared");
-    if ([self.presentedViewController isBeingDismissed])
-        NSLog(@"new games view dismissed");
-}
-
 - (void)getRespectiveTable: (NSMutableArray *)IDArray : (BOOL) isGame {
     PFQuery *query = [PFQuery queryWithClassName:@"Game"];
     [query whereKey:@"objectId" containedIn:IDArray];

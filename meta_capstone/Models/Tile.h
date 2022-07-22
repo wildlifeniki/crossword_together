@@ -11,11 +11,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Tile : NSObject
 
-@property (nonatomic, strong) NSString *tileId;
-@property (nonatomic, strong) NSString *input;
-@property (nonatomic, strong) NSString *goalInput;
-@property (nonatomic, assign) BOOL *isCorrect;
-@property (nonatomic, assign) BOOL *acceptsInput;
+@property (nonatomic, strong) NSNumber *xIndex;
+@property (nonatomic, strong) NSNumber *yIndex;
+@property (nonatomic, strong) NSString *correctLetter;
+@property (nonatomic, strong) NSString *inputLetter;
+@property (nonatomic, strong) NSString *acrossClue;
+@property (nonatomic, strong) NSString *downClue;
+@property (assign) BOOL fillable;
 
 @end
 
