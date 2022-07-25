@@ -7,20 +7,32 @@
 
 #import "InGameViewController.h"
 #import "Tile.h"
+#import "BoardTileCell.h"
 
-@interface InGameViewController ()
+@interface InGameViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 
+@property (strong, nonatomic) IBOutlet UICollectionView *boardCollectionView;
 @property (nonatomic, strong) NSDictionary *wordCluePairs;
 @property (nonatomic, strong) NSMutableArray *tilesArray;
+@property (assign, nonatomic) int xIndex;
+@property (assign, nonatomic) int yIndex;
+
 
 @end
 
 @implementation InGameViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.boardCollectionView.delegate = self;
+    self.boardCollectionView.dataSource = self;
+    
+    //initialize dictionary
     self.wordCluePairs = [NSDictionary dictionaryWithObject:@"clue: cross____" forKey:@"word"];
+    
+    //initalize indexes for collectionview
+    self.xIndex = 0;
+    self.yIndex = 0;
     
     //initialize tilesArray with all unfillable tiles
     int size = 4; //to make square grid
@@ -83,11 +95,38 @@
         }
         print = [print stringByAppendingString:@"\n"];
     }
-    NSLog(print);
+    NSLog(@"%@", print);
 }
+
+
 
 - (IBAction)didTapClose:(id)sender {
     [self dismissViewControllerAnimated:true completion:nil];
 }
+
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    BoardTileCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"tile" forIndexPath:indexPath];
+    
+    NSMutableArray *innerArray = [self.tilesArray objectAtIndex:self.yIndex];
+    Tile *tile = [innerArray objectAtIndex:self.xIndex];
+    [cell setTileInfo:tile];
+    
+    //always increment x index
+    //if x index reaches array count reset and increment y index
+    self.xIndex++;
+    if (self.xIndex >= self.tilesArray.count) {
+        self.xIndex = 0;
+        self.yIndex++;
+    }
+    
+    return cell;
+}
+
+- (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    int numTiles = (int)(self.tilesArray.count * self.tilesArray.count);
+    NSLog(@"number of tiles: %d", numTiles);
+    return numTiles;
+}
+
 
 @end
