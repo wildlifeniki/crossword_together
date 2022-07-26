@@ -94,7 +94,6 @@
         if (across) { xIndex++; }
         else { yIndex++; }
     }
-    //[self printSquareArray:self.tilesArray];
 }
 
 - (Tile *) getTileAtIndex : (int) xIndex : (int) yIndex {
@@ -124,10 +123,8 @@
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     BoardTileCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"tile" forIndexPath:indexPath];
-    
     cell.inputView.userInteractionEnabled = NO;
-    NSMutableArray *innerArray = [self.tilesArray objectAtIndex:self.yIndex];
-    Tile *tile = [innerArray objectAtIndex:self.xIndex];
+    cell.inputView.backgroundColor = [UIColor whiteColor];    Tile *tile = [self getTileAtIndex:self.xIndex :self.yIndex];
     [cell setTileInfo:tile];
     
     //always increment x index
@@ -137,21 +134,22 @@
         self.xIndex = 0;
         self.yIndex++;
     }
-    
     return cell;
-    
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     BoardTileCell *cell = (BoardTileCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    [cell.inputView becomeFirstResponder];
     cell.inputView.userInteractionEnabled = YES;
+    cell.inputView.backgroundColor = [UIColor systemGray5Color];
+    
     NSString *clues = @"";
-    if (cell.tile.acrossClue != nil) {
-        clues = [clues stringByAppendingString:[NSString stringWithFormat:@"Across: %@ \n", cell.tile.acrossClue]];
-    }
-    if (cell.tile.downClue != nil) {
+    if (cell.tile.acrossClue != nil)
+        clues = [clues stringByAppendingString:[NSString stringWithFormat:@"Across: %@", cell.tile.acrossClue]];
+    if (cell.tile.acrossClue != nil && cell.tile.downClue != nil)
+        clues = [clues stringByAppendingString:@"\n"];
+    if (cell.tile.downClue != nil)
         clues = [clues stringByAppendingString:[NSString stringWithFormat:@"Down: %@", cell.tile.downClue]];
-    }
     self.clueLabel.text = clues;
 }
 

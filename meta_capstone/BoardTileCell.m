@@ -35,6 +35,9 @@
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
     self.tile.inputLetter = self.inputView.text;
+    self.inputView.userInteractionEnabled = NO;
+    self.inputView.backgroundColor = [UIColor whiteColor];
+    [self.inputView resignFirstResponder];
 }
 
 @end

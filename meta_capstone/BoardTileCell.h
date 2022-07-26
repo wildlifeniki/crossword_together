@@ -17,6 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setTileInfo:(Tile *)tile;
 
+- (void)textViewDidEndEditing:(UITextView *)textView;
+
+
 @end
 
 NS_ASSUME_NONNULL_END
