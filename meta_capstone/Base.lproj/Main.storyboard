@@ -548,9 +548,20 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4AX-u7-GsN">
+                                <rect key="frame" x="20" y="862" width="374" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="9mi-YL-VxH"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="4AX-u7-GsN" secondAttribute="trailing" constant="20" id="h0E-d9-VTm"/>
+                            <constraint firstItem="4AX-u7-GsN" firstAttribute="bottom" secondItem="9mi-YL-VxH" secondAttribute="bottom" id="xJZ-31-VP5"/>
+                            <constraint firstItem="4AX-u7-GsN" firstAttribute="leading" secondItem="ztn-BM-Vsn" secondAttribute="leading" constant="20" id="yL1-ce-T2S"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Board" id="yGu-xP-JJf">
                         <barButtonItem key="leftBarButtonItem" title="Close" id="27O-2Q-IsB">
@@ -558,9 +569,15 @@
                                 <action selector="didTapClose:" destination="F4t-Ew-nr1" id="jE7-jG-WpK"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Check" image="checkmark" catalog="system" id="OAb-mD-1CG">
+                            <connections>
+                                <action selector="didTapCheck:" destination="F4t-Ew-nr1" id="CL9-xV-jYP"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="boardCollectionView" destination="UhI-Fb-p0g" id="fBc-k5-lPP"/>
+                        <outlet property="clueLabel" destination="4AX-u7-GsN" id="TnA-Kv-LaZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a5z-g0-ERq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -720,6 +737,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="checkmark" catalog="system" width="128" height="114"/>
         <image name="gamecontroller" catalog="system" width="128" height="80"/>
         <image name="gearshape" catalog="system" width="128" height="121"/>
         <image name="person.circle" catalog="system" width="128" height="121"/>

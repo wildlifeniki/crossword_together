@@ -34,7 +34,6 @@
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
     self.tile.inputLetter = self.inputView.text;
-
 }
 
 @end

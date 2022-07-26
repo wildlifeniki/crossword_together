@@ -11,6 +11,7 @@
 
 @interface InGameViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 
+@property (strong, nonatomic) IBOutlet UILabel *clueLabel;
 @property (strong, nonatomic) IBOutlet UICollectionView *boardCollectionView;
 @property (nonatomic, strong) NSDictionary *wordCluePairs;
 @property (nonatomic, strong) NSMutableArray *tilesArray;
@@ -27,7 +28,7 @@
     self.boardCollectionView.dataSource = self;
     
     //initialize dictionary
-    self.wordCluePairs = [NSDictionary dictionaryWithObject:@"clue: cross____" forKey:@"word"];
+    self.wordCluePairs = [NSDictionary dictionaryWithObject:@"this game, cross____" forKey:@"word"];
     
     //initalize indexes for collectionview
     self.xIndex = 0;
@@ -53,7 +54,6 @@
     //create word tiles and add to array
     [self createTiles:[self.wordCluePairs allKeys].firstObject];
 }
-
 
 //create tile objects for each character in clue and assign them to the array of tiles
 - (void) createTiles : (NSString *)word {
@@ -102,6 +102,7 @@
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     BoardTileCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"tile" forIndexPath:indexPath];
     
+    cell.inputView.userInteractionEnabled = NO;
     NSMutableArray *innerArray = [self.tilesArray objectAtIndex:self.yIndex];
     Tile *tile = [innerArray objectAtIndex:self.xIndex];
     [cell setTileInfo:tile];
@@ -115,11 +116,69 @@
     }
     
     return cell;
+    
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    BoardTileCell *cell = (BoardTileCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    cell.inputView.userInteractionEnabled = YES;
+    NSString *clues = @"";
+    if (cell.tile.acrossClue != nil) {
+        clues = [clues stringByAppendingString:[NSString stringWithFormat:@"Across: %@ \n", cell.tile.acrossClue]];
+    }
+    if (cell.tile.downClue != nil) {
+        clues = [clues stringByAppendingString:[NSString stringWithFormat:@"Down: %@", cell.tile.downClue]];
+    }
+    self.clueLabel.text = clues;
 }
 
 - (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     int numTiles = (int)(self.tilesArray.count * self.tilesArray.count);
     return numTiles;
+}
+
+- (IBAction)didTapCheck:(id)sender {
+    BOOL correct = YES;
+    
+    //check if all tiles have correct input
+    for (NSMutableArray *row in self.tilesArray) {
+        for (Tile *tile in row) {
+            if (tile.fillable) {
+                if (![tile.correctLetter isEqualToString:tile.inputLetter]) {
+                    correct = NO;
+                }
+            }
+        }
+    }
+    
+    //if correct, make alert saying everything is correct (ok closes alert and controller)
+    if (correct) {
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Complete!"
+                                       message:@"Congratulations, you have finished this board."
+                                       preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Finish Game" style:UIAlertActionStyleDefault
+           handler:^(UIAlertAction * action) {
+            [alert dismissViewControllerAnimated:YES completion:nil];
+            [self dismissViewControllerAnimated:true completion:nil];
+        }];
+        
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    
+    //if not correct, make alert saying everything is not correct yet (ok just closes alert)
+    else {
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Not Quite..."
+                                       message:@"The board is not yet correct."
+                                       preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Back to Game" style:UIAlertActionStyleDefault
+           handler:^(UIAlertAction * action) {
+            [alert dismissViewControllerAnimated:YES completion:nil];
+        }];
+        
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
 
 - (IBAction)didTapClose:(id)sender {
