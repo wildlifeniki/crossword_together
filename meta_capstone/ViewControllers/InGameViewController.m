@@ -17,7 +17,6 @@
 @property (assign, nonatomic) int xIndex;
 @property (assign, nonatomic) int yIndex;
 
-
 @end
 
 @implementation InGameViewController
@@ -55,6 +54,7 @@
     [self createTiles:[self.wordCluePairs allKeys].firstObject];
 }
 
+
 //create tile objects for each character in clue and assign them to the array of tiles
 - (void) createTiles : (NSString *)word {
     NSMutableArray *wordLetters = [NSMutableArray arrayWithArray:@[]];
@@ -73,6 +73,7 @@
         tile.xIndex = xIndex;
         tile.yIndex = 1;         //assigning index hard-coded for now
         tile.correctLetter = letter;
+        tile.inputLetter = @" ";
         tile.acrossClue = [self.wordCluePairs valueForKey:word];
         tile.fillable = YES;
         
@@ -89,19 +90,13 @@
     for (NSMutableArray *row in array) {
         for (Tile *tile in row) {
             if (tile.fillable)
-                print = [print stringByAppendingString:tile.correctLetter];
+                print = [print stringByAppendingString:tile.inputLetter];
             else
-                print = [print stringByAppendingString:@"_"];
+                print = [print stringByAppendingString:@"-"];
         }
         print = [print stringByAppendingString:@"\n"];
     }
     NSLog(@"%@", print);
-}
-
-
-
-- (IBAction)didTapClose:(id)sender {
-    [self dismissViewControllerAnimated:true completion:nil];
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -124,9 +119,11 @@
 
 - (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     int numTiles = (int)(self.tilesArray.count * self.tilesArray.count);
-    NSLog(@"number of tiles: %d", numTiles);
     return numTiles;
 }
 
+- (IBAction)didTapClose:(id)sender {
+    [self dismissViewControllerAnimated:true completion:nil];
+}
 
 @end

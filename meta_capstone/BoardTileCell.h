@@ -10,9 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface BoardTileCell : UICollectionViewCell
+@interface BoardTileCell : UICollectionViewCell <UITextViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextView *inputView;
+@property (strong, nonatomic) Tile *tile;
 
 - (void)setTileInfo:(Tile *)tile;
 
