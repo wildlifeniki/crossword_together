@@ -15,11 +15,12 @@
     self.tile = tile;
         
     if(self.tile.fillable) {
-        self.inputView.text = @"";//tile.correctLetter;
+        [self.contentView.layer setBorderColor:[UIColor blackColor].CGColor];
+        [self.contentView.layer setBorderWidth:1.0f];
+        self.inputView.text = @"";
     }
     else {
         [self.inputView removeFromSuperview];
-        self.backgroundColor = [UIColor blackColor];
     }
 }
 

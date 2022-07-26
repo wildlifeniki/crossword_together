@@ -28,14 +28,19 @@
     self.boardCollectionView.dataSource = self;
     
     //initialize dictionary
-    self.wordCluePairs = [NSDictionary dictionaryWithObject:@"this game, cross____" forKey:@"word"];
+    self.wordCluePairs = [NSDictionary dictionaryWithObjectsAndKeys:
+                          @"this game, cross____", @"word",
+                          @"this game, _____word", @"cross",
+                          @"pink fish", @"salmon",
+                          @"not old", @"new",
+                          nil];
     
     //initalize indexes for collectionview
     self.xIndex = 0;
     self.yIndex = 0;
     
     //initialize tilesArray with all unfillable tiles
-    int size = 4; //to make square grid
+    int size = 10; //to make square grid
     
     //fill inner array
     Tile *black = [[Tile alloc] init];
@@ -52,11 +57,15 @@
     }
     
     //create word tiles and add to array
-    [self createTiles:[self.wordCluePairs allKeys].firstObject];
+    NSArray *words = [self.wordCluePairs allKeys];
+    [self createTiles:[words objectAtIndex:0] :3 :1 :NO]; //word
+    [self createTiles:[words objectAtIndex:2] :1 :2 :YES]; //cross
+    [self createTiles:[words objectAtIndex:1] :5 :2 :NO]; //salmon
+    [self createTiles:[words objectAtIndex:3] :5 :7 :YES]; //new
+
 }
 
-//create tile objects for each character in clue and assign them to the array of tiles
-- (void) createTiles : (NSString *)word {
+- (void) createTiles: (NSString *)word : (int) xIndex : (int) yIndex : (BOOL) across {
     NSMutableArray *wordLetters = [NSMutableArray arrayWithArray:@[]];
     
     //split word string into substrings of 1 capital letter
@@ -67,21 +76,35 @@
     }
     
     //create tiles for each letter and put them in correct spot in the array
-    int xIndex = 0;
     for (NSString *letter in wordLetters) {
-        Tile *tile = [[Tile alloc] init];
-        tile.xIndex = xIndex;
-        tile.yIndex = 1;         //assigning index hard-coded for now
-        tile.correctLetter = letter;
-        tile.inputLetter = @" ";
-        tile.acrossClue = [self.wordCluePairs valueForKey:word];
-        tile.fillable = YES;
-        
-        NSMutableArray *innerArray = [self.tilesArray objectAtIndex:tile.yIndex];
-        [innerArray replaceObjectAtIndex:tile.xIndex withObject:tile];
-        xIndex++;
+        //check if fillable tile already in spot, if so, just edit that tile
+        Tile *tile = [self getTileAtIndex:xIndex :yIndex];
+        if (!tile.fillable) {
+            tile = [[Tile alloc] init];
+            tile.fillable = YES;
+            tile.xIndex = xIndex;
+            tile.yIndex = yIndex;
+            tile.correctLetter = letter;
+            tile.inputLetter = @" ";
+        }
+        if (across) { tile.acrossClue = [self.wordCluePairs valueForKey:word]; }
+        else { tile.downClue = [self.wordCluePairs valueForKey:word]; }
+
+        [self setTileAtIndex:tile :tile.xIndex :tile.yIndex];
+        if (across) { xIndex++; }
+        else { yIndex++; }
     }
-    [self printSquareArray:self.tilesArray];
+    //[self printSquareArray:self.tilesArray];
+}
+
+- (Tile *) getTileAtIndex : (int) xIndex : (int) yIndex {
+    NSMutableArray *innerArray = [self.tilesArray objectAtIndex:yIndex];
+    return [innerArray objectAtIndex:xIndex];
+}
+
+- (void) setTileAtIndex : (Tile *) tile : (int) xIndex : (int) yIndex {
+    NSMutableArray *innerArray = [self.tilesArray objectAtIndex:yIndex];
+    [innerArray replaceObjectAtIndex:xIndex withObject:tile];
 }
 
 //for help with testing, can be removed once ui is able to show board
