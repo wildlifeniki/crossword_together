@@ -18,6 +18,9 @@
 @property (assign, nonatomic) int xIndex;
 @property (assign, nonatomic) int yIndex;
 
+@property (strong, nonatomic) NSTimer *timer;
+@property (assign, nonatomic) int seconds;
+
 @end
 
 @implementation InGameViewController
@@ -26,6 +29,10 @@
     // Do any additional setup after loading the view.
     self.boardCollectionView.delegate = self;
     self.boardCollectionView.dataSource = self;
+    
+    //initialize timer
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
+    [self.timer fire];
     
     //initialize dictionary
     self.wordCluePairs = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -63,6 +70,15 @@
     [self createTiles:[words objectAtIndex:1] :5 :2 :NO]; //salmon
     [self createTiles:[words objectAtIndex:3] :5 :7 :YES]; //new
 
+}
+
+-(void)timerFired {
+    self.seconds++;
+    //calculate minutes and seconds
+    int displayMin = self.seconds/60;
+    int displaySec = self.seconds%60;
+    NSString *displayTime = [NSString stringWithFormat:@"%02d:%02d", displayMin, displaySec];
+    self.navigationItem.title = displayTime;
 }
 
 - (void) createTiles: (NSString *)word : (int) xIndex : (int) yIndex : (BOOL) across {
@@ -124,7 +140,8 @@
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     BoardTileCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"tile" forIndexPath:indexPath];
     cell.inputView.userInteractionEnabled = NO;
-    cell.inputView.backgroundColor = [UIColor whiteColor];    Tile *tile = [self getTileAtIndex:self.xIndex :self.yIndex];
+    cell.inputView.backgroundColor = [UIColor whiteColor];
+    Tile *tile = [self getTileAtIndex:self.xIndex :self.yIndex];
     [cell setTileInfo:tile];
     
     //always increment x index
@@ -183,6 +200,7 @@
             [self dismissViewControllerAnimated:true completion:nil];
         }];
         
+        [self.timer invalidate];
         [alert addAction:defaultAction];
         [self presentViewController:alert animated:YES completion:nil];
     }
@@ -203,6 +221,7 @@
 }
 
 - (IBAction)didTapClose:(id)sender {
+    [self.timer invalidate];
     [self dismissViewControllerAnimated:true completion:nil];
 }
 

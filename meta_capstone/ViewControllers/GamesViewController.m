@@ -14,6 +14,7 @@
 #import "Parse/Parse.h"
 #import "ActiveGameCell.h"
 #import "PendingInviteCell.h"
+#import "InGameViewController.h"
 
 @interface GamesViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -26,6 +27,7 @@
 @property (strong, nonatomic) UIRefreshControl *gameRefreshControl;
 @property (strong, nonatomic) UIRefreshControl *inviteRefreshControl;
 
+@property (strong, nonatomic) PFObject *currUser;
 
 @end
 
@@ -36,6 +38,14 @@
     
     self.gamesTableView.dataSource = self;
     self.invitesTableView.dataSource = self;
+    
+    //get current user
+    PFQuery *idQuery = [PFQuery queryWithClassName:@"AppInfo"];
+    [idQuery fromLocalDatastore];
+    NSArray *idObjects = [idQuery findObjects];
+    PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
+    [query whereKey:@"fbID" equalTo:idObjects.firstObject[@"fbID"]];
+    self.currUser = [query findObjects].firstObject;
 
     [self getActiveGames];
     [self getPendingInvites];
@@ -63,15 +73,7 @@
 }
 
 - (void)getActiveGames {
-    NSMutableArray *gameIDs;
-    PFQuery *idQuery = [PFQuery queryWithClassName:@"AppInfo"];
-    [idQuery fromLocalDatastore];
-    NSArray *idObjects = [idQuery findObjects];
-    if ([idObjects count] != 0) {
-        PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
-        [query whereKey:@"fbID" equalTo:idObjects.firstObject[@"fbID"]];
-        gameIDs = [NSMutableArray arrayWithArray:[query findObjects].firstObject[@"activeGames"]];
-    }
+    NSMutableArray *gameIDs = [NSMutableArray arrayWithArray:self.currUser[@"activeGames"]];
 
     [self getRespectiveTable:gameIDs :YES];
     
@@ -80,15 +82,7 @@
 }
 
 - (void)getPendingInvites {
-    NSMutableArray *inviteGameIDs;
-    PFQuery *idQuery = [PFQuery queryWithClassName:@"AppInfo"];
-    [idQuery fromLocalDatastore];
-    NSArray *idObjects = [idQuery findObjects];
-    if ([idObjects count] != 0) {
-        PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
-        [query whereKey:@"fbID" equalTo:idObjects.firstObject[@"fbID"]];
-        inviteGameIDs = [NSMutableArray arrayWithArray:[query findObjects].firstObject[@"pendingInvites"]];
-    }
+    NSMutableArray *inviteGameIDs = [NSMutableArray arrayWithArray:self.currUser[@"pendingInvites"]];
 
     [self getRespectiveTable:inviteGameIDs :NO];
     
@@ -126,7 +120,11 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    
+    UINavigationController *navigationController = [segue destinationViewController];
+    InGameViewController *viewController = (InGameViewController*)navigationController.topViewController;
+    ActiveGameCell *cell = [self.gamesTableView cellForRowAtIndexPath:self.gamesTableView.indexPathForSelectedRow];
+    viewController.game = cell.game;
+    viewController.currUser =  self.currUser;
 }
 
 @end

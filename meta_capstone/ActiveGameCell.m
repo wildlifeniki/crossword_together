@@ -23,6 +23,7 @@
 }
 
 - (void)setCellInfo:(PFObject *)game {
+    self.game = game;
     PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
     [query whereKey:@"fbID" equalTo:game[@"hostID"]];
     self.hostUserLabel.text = [NSString stringWithFormat:@"Host: %@", [query findObjects].firstObject[@"name"]];

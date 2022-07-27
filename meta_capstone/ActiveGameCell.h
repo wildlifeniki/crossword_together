@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) IBOutlet UIImageView *hostProfileImage;
 @property (strong, nonatomic) IBOutlet UILabel *hostUserLabel;
 @property (strong, nonatomic) IBOutlet UILabel *boardFillLabel;
+@property (strong, nonatomic) PFObject *game;
 
 - (void)setCellInfo:(PFObject *)game;
 
