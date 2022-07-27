@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Tile.h"
+#import "Parse/Parse.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) IBOutlet UITextView *inputView;
 @property (strong, nonatomic) Tile *tile;
+@property (strong, nonatomic) PFObject *game;
+@property (strong, nonatomic) PFObject *user;
 
 - (void)setTileInfo:(Tile *)tile;
 

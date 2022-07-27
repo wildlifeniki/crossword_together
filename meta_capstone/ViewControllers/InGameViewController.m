@@ -17,9 +17,8 @@
 @property (nonatomic, strong) NSMutableArray *tilesArray;
 @property (assign, nonatomic) int xIndex;
 @property (assign, nonatomic) int yIndex;
-
 @property (strong, nonatomic) NSTimer *timer;
-@property (assign, nonatomic) int seconds;
+@property (strong, nonatomic) BoardTileCell *prevSelectedCell;
 
 @end
 
@@ -73,10 +72,13 @@
 }
 
 -(void)timerFired {
-    self.seconds++;
+    [self.game incrementKey:@"time"];
+    [self.game save];
+    
+    int seconds = [self.game[@"time"] intValue];
     //calculate minutes and seconds
-    int displayMin = self.seconds/60;
-    int displaySec = self.seconds%60;
+    int displayMin = seconds/60;
+    int displaySec = seconds%60;
     NSString *displayTime = [NSString stringWithFormat:@"%02d:%02d", displayMin, displaySec];
     self.navigationItem.title = displayTime;
 }
@@ -137,11 +139,14 @@
     NSLog(@"%@", print);
 }
 
+//initialize board ui
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     BoardTileCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"tile" forIndexPath:indexPath];
     cell.inputView.userInteractionEnabled = NO;
     cell.inputView.backgroundColor = [UIColor whiteColor];
     Tile *tile = [self getTileAtIndex:self.xIndex :self.yIndex];
+    cell.game = self.game;
+    cell.user = self.currUser;
     [cell setTileInfo:tile];
     
     //always increment x index
@@ -154,11 +159,20 @@
     return cell;
 }
 
+//what to do if cell is selected
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     BoardTileCell *cell = (BoardTileCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    [cell.inputView becomeFirstResponder];
-    cell.inputView.userInteractionEnabled = YES;
-    cell.inputView.backgroundColor = [UIColor systemGray5Color];
+    if ([self.game[@"hostID"] isEqualToString:self.currUser[@"fbID"]]) {
+        [cell.inputView becomeFirstResponder];
+        cell.inputView.userInteractionEnabled = YES;
+        cell.inputView.backgroundColor = [UIColor systemGray5Color];
+    }
+    else {
+        if (cell != self.prevSelectedCell)
+            self.prevSelectedCell.contentView.backgroundColor = [UIColor whiteColor];
+        self.prevSelectedCell = cell;
+        cell.contentView.backgroundColor = [UIColor systemGray5Color];
+    }
     
     NSString *acrossClue = cell.tile.acrossClue;
     NSString *downClue = cell.tile.downClue;
@@ -236,23 +250,26 @@
     [usersQuery whereKey:@"fbID" containedIn:playerIDs];
     NSArray *players = [usersQuery findObjects];
     
+    //get final time
+    int seconds = [self.game[@"time"] intValue];
+    
     //update all players
     for (PFObject *player in players) {
         int prevTotalGames = [player[@"totalGames"] intValue];
         if (prevTotalGames == 0) {
             //edge case for new player
-            player[@"avgTime"] = [NSNumber numberWithInt:self.seconds];
-            player[@"bestTime"] = [NSNumber numberWithInt:self.seconds];
+            player[@"avgTime"] = [NSNumber numberWithInt:seconds];
+            player[@"bestTime"] = [NSNumber numberWithInt:seconds];
         }
         else {
             //update best time
             int prevBest = [player[@"bestTime"] intValue];
-            if (self.seconds < prevBest)
-                player[@"bestTime"] = [NSNumber numberWithInt:self.seconds];
+            if (seconds < prevBest)
+                player[@"bestTime"] = [NSNumber numberWithInt:seconds];
             
             //update avg time
             int prevAvg = [player[@"avgTime"] intValue];
-            int avgTime = ((prevAvg * prevTotalGames) + self.seconds) / (prevTotalGames + 1);
+            int avgTime = ((prevAvg * prevTotalGames) + seconds) / (prevTotalGames + 1);
 
             player[@"avgTime"] = [NSNumber numberWithInt:avgTime];
         }

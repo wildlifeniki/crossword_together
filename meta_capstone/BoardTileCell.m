@@ -13,15 +13,17 @@
 - (void)setTileInfo :(Tile *)tile {
     self.inputView.delegate = self;
     self.tile = tile;
-        
-    if(self.tile.fillable) {
+    
+    if (self.tile.fillable) {
         [self.contentView.layer setBorderColor:[UIColor blackColor].CGColor];
         [self.contentView.layer setBorderWidth:1.0f];
-        self.inputView.text = @"";
+        if ([self.game[@"hostID"] isEqualToString:self.user[@"fbID"]])
+            self.inputView.text = @"";
+        else
+            [self.inputView removeFromSuperview];
     }
-    else {
+    else
         [self.inputView removeFromSuperview];
-    }
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
