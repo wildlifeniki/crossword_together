@@ -160,13 +160,16 @@
     cell.inputView.userInteractionEnabled = YES;
     cell.inputView.backgroundColor = [UIColor systemGray5Color];
     
+    NSString *acrossClue = cell.tile.acrossClue;
+    NSString *downClue = cell.tile.downClue;
+    
     NSString *clues = @"";
-    if (cell.tile.acrossClue != nil)
-        clues = [clues stringByAppendingString:[NSString stringWithFormat:@"Across: %@", cell.tile.acrossClue]];
-    if (cell.tile.acrossClue != nil && cell.tile.downClue != nil)
+    if (acrossClue != nil)
+        clues = [clues stringByAppendingString:[NSString stringWithFormat:@"Across: %@", acrossClue]];
+    if (acrossClue != nil && downClue != nil)
         clues = [clues stringByAppendingString:@"\n"];
-    if (cell.tile.downClue != nil)
-        clues = [clues stringByAppendingString:[NSString stringWithFormat:@"Down: %@", cell.tile.downClue]];
+    if (downClue != nil)
+        clues = [clues stringByAppendingString:[NSString stringWithFormat:@"Down: %@", downClue]];
     self.clueLabel.text = clues;
 }
 
@@ -199,9 +202,9 @@
             [alert dismissViewControllerAnimated:YES completion:nil];
             [self dismissViewControllerAnimated:true completion:nil];
         }];
-        
-        [self updatePlayerData];
         [self.timer invalidate];
+        [self updatePlayerData];
+        [self removeGameData];
         [alert addAction:defaultAction];
         [self presentViewController:alert animated:YES completion:nil];
     }
@@ -262,22 +265,35 @@
         NSMutableArray *newRecentIDs = [NSMutableArray arrayWithArray:@[]];
         for (NSString *playerID in playerIDs) {
             //remove any duplicate ids that will be added
-            if ([recentIDs containsObject:playerID])
-                [recentIDs removeObject:playerID];
+            [recentIDs removeObject:playerID];
             //don't add player to own recently played
             if (![playerID isEqualToString:player[@"fbID"]])
                 [newRecentIDs addObject:playerID];
         }
         player[@"recentlyPlayedWith"] = [newRecentIDs arrayByAddingObjectsFromArray:recentIDs];
         
-        [player save];
+//        [player save]; //comment if testing without updating backend
     }
 }
 
 - (void)removeGameData {
-    //remove game object
     //remove game id from all active games and pending invites
-    
+    NSString *gameID = self.game.objectId;
+    PFQuery *usersQuery = [PFQuery queryWithClassName:@"AppUser"];
+    NSArray *allUsers = [usersQuery findObjects];
+    for (PFObject *user in allUsers) {
+        NSMutableArray *activeGames = user[@"activeGames"];
+        NSMutableArray *pendingInvites = user[@"pendingInvites"];
+        [activeGames removeObject:gameID];
+        [pendingInvites removeObject:gameID];
+        if (activeGames != nil)
+            user[@"activeGames"] = activeGames;
+        if (pendingInvites != nil)
+            user[@"pendingInvites"] = pendingInvites;
+//        [user save]; //comment if testing without updating backend
+    }
+    //remove game object
+//    [self.game delete]; //comment if testing without updating backend
 }
 
 @end

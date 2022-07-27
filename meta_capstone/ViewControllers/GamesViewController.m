@@ -120,11 +120,13 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    UINavigationController *navigationController = [segue destinationViewController];
-    InGameViewController *viewController = (InGameViewController*)navigationController.topViewController;
-    ActiveGameCell *cell = [self.gamesTableView cellForRowAtIndexPath:self.gamesTableView.indexPathForSelectedRow];
-    viewController.game = cell.game;
-    viewController.currUser =  self.currUser;
+    if ([segue.identifier isEqualToString:@"openGame"]){
+        UINavigationController *navigationController = [segue destinationViewController];
+        InGameViewController *viewController = (InGameViewController*)navigationController.topViewController;
+        ActiveGameCell *cell = [self.gamesTableView cellForRowAtIndexPath:self.gamesTableView.indexPathForSelectedRow];
+        viewController.game = cell.game;
+        viewController.currUser =  self.currUser;
+    }
 }
 
 @end
