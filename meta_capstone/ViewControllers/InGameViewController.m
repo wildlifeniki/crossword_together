@@ -200,6 +200,7 @@
             [self dismissViewControllerAnimated:true completion:nil];
         }];
         
+        [self updatePlayerData];
         [self.timer invalidate];
         [alert addAction:defaultAction];
         [self presentViewController:alert animated:YES completion:nil];
@@ -223,6 +224,60 @@
 - (IBAction)didTapClose:(id)sender {
     [self.timer invalidate];
     [self dismissViewControllerAnimated:true completion:nil];
+}
+
+- (void)updatePlayerData {
+    //get array of players in game
+    NSArray *playerIDs = self.game[@"activePlayerIDs"];
+    PFQuery *usersQuery = [PFQuery queryWithClassName:@"AppUser"];
+    [usersQuery whereKey:@"fbID" containedIn:playerIDs];
+    NSArray *players = [usersQuery findObjects];
+    
+    //update all players
+    for (PFObject *player in players) {
+        int prevTotalGames = [player[@"totalGames"] intValue];
+        if (prevTotalGames == 0) {
+            //edge case for new player
+            player[@"avgTime"] = [NSNumber numberWithInt:self.seconds];
+            player[@"bestTime"] = [NSNumber numberWithInt:self.seconds];
+        }
+        else {
+            //update best time
+            int prevBest = [player[@"bestTime"] intValue];
+            if (self.seconds < prevBest)
+                player[@"bestTime"] = [NSNumber numberWithInt:self.seconds];
+            
+            //update avg time
+            int prevAvg = [player[@"avgTime"] intValue];
+            int avgTime = ((prevAvg * prevTotalGames) + self.seconds) / (prevTotalGames + 1);
+
+            player[@"avgTime"] = [NSNumber numberWithInt:avgTime];
+        }
+        
+        //update total games
+        [player incrementKey:@"totalGames"];
+
+        //update recently played with ids
+        NSMutableArray *recentIDs = player[@"recentlyPlayedWith"];
+        NSMutableArray *newRecentIDs = [NSMutableArray arrayWithArray:@[]];
+        for (NSString *playerID in playerIDs) {
+            //remove any duplicate ids that will be added
+            if ([recentIDs containsObject:playerID])
+                [recentIDs removeObject:playerID];
+            //don't add player to own recently played
+            if (![playerID isEqualToString:player[@"fbID"]])
+                [newRecentIDs addObject:playerID];
+        }
+        player[@"recentlyPlayedWith"] = [newRecentIDs arrayByAddingObjectsFromArray:recentIDs];
+        
+        [player save];
+    }
+}
+
+- (void)removeGameData {
+    //remove game object
+    //remove game id from all active games and pending invites
+    
 }
 
 @end
