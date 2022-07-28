@@ -13,6 +13,7 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *clueLabel;
 @property (strong, nonatomic) IBOutlet UICollectionView *boardCollectionView;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *checkButton;
 @property (nonatomic, strong) NSDictionary *wordCluePairs;
 @property (nonatomic, strong) NSMutableArray *tilesArray;
 @property (assign, nonatomic) int xIndex;
@@ -29,6 +30,14 @@
     // Do any additional setup after loading the view.
     self.boardCollectionView.delegate = self;
     self.boardCollectionView.dataSource = self;
+    
+    //if user is not the host, remove check button
+    if ([self.game[@"hostID"] isEqualToString:self.currUser[@"fbID"]]) {
+        self.navigationItem.rightBarButtonItem = self.checkButton;
+    }
+    else {
+        self.navigationItem.rightBarButtonItem = nil;
+    }
     
     //initialize timer
     self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
@@ -73,9 +82,6 @@
         [self createTiles:[words objectAtIndex:1] :5 :2 :NO]; //salmon
         [self createTiles:[words objectAtIndex:3] :5 :7 :YES]; //new
     }
-//    else {
-//        [self.boardCollectionView reloadData];
-//    }
 }
 
 
@@ -89,6 +95,8 @@
     int displaySec = seconds%60;
     NSString *displayTime = [NSString stringWithFormat:@"%02d:%02d", displayMin, displaySec];
     self.navigationItem.title = displayTime;
+    
+    //[self.boardCollectionView reloadData];
 }
 
 - (void) createTiles: (NSString *)word : (int) xIndex : (int) yIndex : (BOOL) across {
@@ -128,7 +136,7 @@
 - (PFObject *) getTileAtIndex : (int) xIndex : (int) yIndex {
     NSMutableArray *innerArray = [self.game[@"tilesArray"] objectAtIndex:yIndex];
     NSString *tileID = [innerArray objectAtIndex:xIndex];
-    return [[PFQuery queryWithClassName:@"Tile"] getObjectWithId:tileID ];
+    return [[PFQuery queryWithClassName:@"Tile"] getObjectWithId:tileID];
 }
 
 - (void) setTileAtIndex : (PFObject *) tile : (int) xIndex : (int) yIndex {

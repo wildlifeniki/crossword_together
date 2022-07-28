@@ -580,6 +580,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="boardCollectionView" destination="UhI-Fb-p0g" id="fBc-k5-lPP"/>
+                        <outlet property="checkButton" destination="OAb-mD-1CG" id="Qtr-LW-VAe"/>
                         <outlet property="clueLabel" destination="4AX-u7-GsN" id="02u-Dp-VHF"/>
                     </connections>
                 </viewController>
