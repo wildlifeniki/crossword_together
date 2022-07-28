@@ -19,6 +19,7 @@
 @property (assign, nonatomic) int yIndex;
 @property (strong, nonatomic) NSTimer *timer;
 @property (strong, nonatomic) BoardTileCell *prevSelectedCell;
+@property (strong, nonatomic) PFObject *emptyTile;
 
 @end
 
@@ -32,44 +33,51 @@
     //initialize timer
     self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
     [self.timer fire];
-    
-    //initialize dictionary
-    self.wordCluePairs = [NSDictionary dictionaryWithObjectsAndKeys:
-                          @"this game, cross____", @"word",
-                          @"this game, _____word", @"cross",
-                          @"pink fish", @"salmon",
-                          @"not old", @"new",
-                          nil];
-    
-    //initalize indexes for collectionview
-    self.xIndex = 0;
-    self.yIndex = 0;
-    
-    //initialize tilesArray with all unfillable tiles
-    int size = 10; //to make square grid
-    
-    //fill inner array
-    Tile *black = [[Tile alloc] init];
-    black.fillable = NO;
-    NSMutableArray *innerArray = [[NSMutableArray alloc] initWithCapacity: size];
-    for (int j = 0; j < size; j++) {
-        [innerArray insertObject:black atIndex:j];
+        
+    //if no board already in database, create empty board
+    if (self.game[@"tilesArray"] == nil) {
+        //initialize dictionary
+        self.wordCluePairs = [NSDictionary dictionaryWithObjectsAndKeys:
+                              @"this game, cross____", @"word",
+                              @"this game, _____word", @"cross",
+                              @"pink fish", @"salmon",
+                              @"not old", @"new",
+                              nil];
+        
+        //initalize indexes for collectionview
+        self.xIndex = 0;
+        self.yIndex = 0;
+        
+        //initialize tilesArray with all unfillable tiles
+        self.emptyTile = [[[PFQuery queryWithClassName:@"Tile"] whereKey:@"fillable" equalTo:@NO] findObjects].firstObject; //init emptyTile object
+        int size = 10; //to make square grid
+        
+        //fill inner array
+        NSMutableArray *innerArray = [[NSMutableArray alloc] initWithCapacity: size];
+        for (int j = 0; j < size; j++) {
+            [innerArray insertObject:self.emptyTile.objectId atIndex:j];
+        }
+        
+        //add inner array to tilesArray
+        NSMutableArray *tilesArray = [[NSMutableArray alloc] initWithCapacity: size];
+        for (int i = 0; i < size; i++) {
+            [tilesArray insertObject:[NSMutableArray arrayWithArray:innerArray] atIndex:i];
+        }
+        self.game[@"tilesArray"] = tilesArray;
+        [self.game save];
+        
+        //create word tiles and add to array
+        NSArray *words = [self.wordCluePairs allKeys];
+        [self createTiles:[words objectAtIndex:0] :3 :1 :NO]; //word
+        [self createTiles:[words objectAtIndex:2] :1 :2 :YES]; //cross
+        [self createTiles:[words objectAtIndex:1] :5 :2 :NO]; //salmon
+        [self createTiles:[words objectAtIndex:3] :5 :7 :YES]; //new
     }
-
-    //add inner array to tilesArray
-    self.tilesArray = [[NSMutableArray alloc] initWithCapacity: size];
-    for (int i = 0; i < size; i++) {
-        [self.tilesArray insertObject:[NSMutableArray arrayWithArray:innerArray] atIndex:i];
-    }
-    
-    //create word tiles and add to array
-    NSArray *words = [self.wordCluePairs allKeys];
-    [self createTiles:[words objectAtIndex:0] :3 :1 :NO]; //word
-    [self createTiles:[words objectAtIndex:2] :1 :2 :YES]; //cross
-    [self createTiles:[words objectAtIndex:1] :5 :2 :NO]; //salmon
-    [self createTiles:[words objectAtIndex:3] :5 :7 :YES]; //new
-
+//    else {
+//        [self.boardCollectionView reloadData];
+//    }
 }
+
 
 -(void)timerFired {
     [self.game incrementKey:@"time"];
@@ -96,32 +104,40 @@
     //create tiles for each letter and put them in correct spot in the array
     for (NSString *letter in wordLetters) {
         //check if fillable tile already in spot, if so, just edit that tile
-        Tile *tile = [self getTileAtIndex:xIndex :yIndex];
-        if (!tile.fillable) {
-            tile = [[Tile alloc] init];
-            tile.fillable = YES;
-            tile.xIndex = xIndex;
-            tile.yIndex = yIndex;
-            tile.correctLetter = letter;
-            tile.inputLetter = @" ";
+        PFObject *checkTile = [self getTileAtIndex:xIndex :yIndex];
+        PFObject *tile = [PFObject objectWithClassName:@"Tile"];
+        if (![checkTile[@"fillable"] boolValue]) {
+            tile[@"fillable"] = @YES;
+            tile[@"xIndex"] = [NSNumber numberWithInt:xIndex];
+            tile[@"yIndex"] = [NSNumber numberWithInt:yIndex];
+            tile[@"correctLetter"] = letter;
+            tile[@"inputLetter"] = @" ";
         }
-        if (across) { tile.acrossClue = [self.wordCluePairs valueForKey:word]; }
-        else { tile.downClue = [self.wordCluePairs valueForKey:word]; }
+        else
+            tile = checkTile;
+        if (across) { tile[@"acrossClue"] = [self.wordCluePairs valueForKey:word]; }
+        else { tile[@"downClue"] = [self.wordCluePairs valueForKey:word]; }
+        [tile save];
 
-        [self setTileAtIndex:tile :tile.xIndex :tile.yIndex];
+        [self setTileAtIndex:tile :[tile[@"xIndex"] intValue]  :[tile[@"yIndex"] intValue]];
         if (across) { xIndex++; }
         else { yIndex++; }
     }
 }
 
-- (Tile *) getTileAtIndex : (int) xIndex : (int) yIndex {
-    NSMutableArray *innerArray = [self.tilesArray objectAtIndex:yIndex];
-    return [innerArray objectAtIndex:xIndex];
+- (PFObject *) getTileAtIndex : (int) xIndex : (int) yIndex {
+    NSMutableArray *innerArray = [self.game[@"tilesArray"] objectAtIndex:yIndex];
+    NSString *tileID = [innerArray objectAtIndex:xIndex];
+    return [[PFQuery queryWithClassName:@"Tile"] getObjectWithId:tileID ];
 }
 
-- (void) setTileAtIndex : (Tile *) tile : (int) xIndex : (int) yIndex {
-    NSMutableArray *innerArray = [self.tilesArray objectAtIndex:yIndex];
-    [innerArray replaceObjectAtIndex:xIndex withObject:tile];
+- (void) setTileAtIndex : (PFObject *) tile : (int) xIndex : (int) yIndex {
+    NSMutableArray *tilesArray = self.game[@"tilesArray"];
+    NSMutableArray *innerArray = [tilesArray objectAtIndex:yIndex];
+    [innerArray replaceObjectAtIndex:xIndex withObject:tile.objectId];
+    [tilesArray replaceObjectAtIndex:yIndex withObject:innerArray];
+    self.game[@"tilesArray"] = tilesArray;
+    [self.game save];
 }
 
 //for help with testing, can be removed once ui is able to show board
@@ -144,7 +160,7 @@
     BoardTileCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"tile" forIndexPath:indexPath];
     cell.inputView.userInteractionEnabled = NO;
     cell.inputView.backgroundColor = [UIColor whiteColor];
-    Tile *tile = [self getTileAtIndex:self.xIndex :self.yIndex];
+    PFObject *tile = [self getTileAtIndex:self.xIndex :self.yIndex];
     cell.game = self.game;
     cell.user = self.currUser;
     [cell setTileInfo:tile];
@@ -152,7 +168,7 @@
     //always increment x index
     //if x index reaches array count reset and increment y index
     self.xIndex++;
-    if (self.xIndex >= self.tilesArray.count) {
+    if (self.xIndex >= [self.game[@"tilesArray"] count]) {
         self.xIndex = 0;
         self.yIndex++;
     }
@@ -169,13 +185,13 @@
     }
     else {
         if (cell != self.prevSelectedCell)
-            self.prevSelectedCell.contentView.backgroundColor = [UIColor whiteColor];
+            self.prevSelectedCell.inputView.backgroundColor = [UIColor whiteColor];
         self.prevSelectedCell = cell;
-        cell.contentView.backgroundColor = [UIColor systemGray5Color];
+        cell.inputView.backgroundColor = [UIColor systemGray5Color];
     }
     
-    NSString *acrossClue = cell.tile.acrossClue;
-    NSString *downClue = cell.tile.downClue;
+    NSString *acrossClue = cell.tile[@"acrossClue"];
+    NSString *downClue = cell.tile[@"downClue"];
     
     NSString *clues = @"";
     if (acrossClue != nil)
@@ -188,18 +204,19 @@
 }
 
 - (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    int numTiles = (int)(self.tilesArray.count * self.tilesArray.count);
-    return numTiles;
+    int numRows = (int) [self.game[@"tilesArray"] count];
+    return numRows * numRows;
 }
 
 - (IBAction)didTapCheck:(id)sender {
     BOOL correct = YES;
     
     //check if all tiles have correct input
-    for (NSMutableArray *row in self.tilesArray) {
-        for (Tile *tile in row) {
-            if (tile.fillable) {
-                if (![tile.correctLetter isEqualToString:tile.inputLetter]) {
+    for (NSMutableArray *row in self.game[@"tilesArray"]) {
+        for (NSString *tileID in row) {
+            PFObject *tile = [[PFQuery queryWithClassName:@"Tile"] getObjectWithId:tileID];
+            if ([tile[@"fillable"] boolValue]) {
+                if (![tile[@"correctLetter"] isEqualToString:tile[@"inputLetter"]]) {
                     correct = NO;
                 }
             }

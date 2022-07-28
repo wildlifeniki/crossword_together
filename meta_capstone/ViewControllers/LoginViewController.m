@@ -75,12 +75,11 @@
                     else { NSLog(@"pin failed"); }
                 }];
                 
+                [self performSegueWithIdentifier:@"loginSegue" sender:nil];
+
             }
         }];
         });
-        
-        [self performSegueWithIdentifier:@"loginSegue" sender:nil];
-
     }
 }
 
