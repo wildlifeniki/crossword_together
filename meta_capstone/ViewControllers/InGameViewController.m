@@ -19,6 +19,7 @@
 @property (assign, nonatomic) int xIndex;
 @property (assign, nonatomic) int yIndex;
 @property (strong, nonatomic) NSTimer *timer;
+@property (strong, nonatomic) NSTimer *updateTimer;
 @property (strong, nonatomic) BoardTileCell *prevSelectedCell;
 @property (strong, nonatomic) PFObject *emptyTile;
 
@@ -30,14 +31,6 @@
     // Do any additional setup after loading the view.
     self.boardCollectionView.delegate = self;
     self.boardCollectionView.dataSource = self;
-    
-    //if user is not the host, remove check button
-    if ([self.game[@"hostID"] isEqualToString:self.currUser[@"fbID"]]) {
-        self.navigationItem.rightBarButtonItem = self.checkButton;
-    }
-    else {
-        self.navigationItem.rightBarButtonItem = nil;
-    }
     
     //initialize timer
     self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
@@ -82,8 +75,16 @@
         [self createTiles:[words objectAtIndex:1] :5 :2 :NO]; //salmon
         [self createTiles:[words objectAtIndex:3] :5 :7 :YES]; //new
     }
+    
+    //if user is not the host, remove check button
+    if ([self.game[@"hostID"] isEqualToString:self.currUser[@"fbID"]]) {
+        self.navigationItem.rightBarButtonItem = self.checkButton;
+    }
+    else {
+        self.navigationItem.rightBarButtonItem = nil;
+        self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(checkUpdate) userInfo:nil repeats:YES];
+    }
 }
-
 
 -(void)timerFired {
     [self.game incrementKey:@"time"];
@@ -95,8 +96,14 @@
     int displaySec = seconds%60;
     NSString *displayTime = [NSString stringWithFormat:@"%02d:%02d", displayMin, displaySec];
     self.navigationItem.title = displayTime;
-    
-    //[self.boardCollectionView reloadData];
+}
+
+-(void)checkUpdate {
+    self.game = [[PFQuery queryWithClassName:@"Game"] getObjectWithId:self.game.objectId];
+    if ([self.game[@"updated"] boolValue]) {
+        self.game[@"updated"] = @NO;
+        [self.boardCollectionView reloadData];
+    }
 }
 
 - (void) createTiles: (NSString *)word : (int) xIndex : (int) yIndex : (BOOL) across {
@@ -165,37 +172,47 @@
 
 //initialize board ui
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    self.xIndex = (int)([indexPath item] % 10);
+    self.yIndex = (int)([indexPath item] / 10);
+    
     BoardTileCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"tile" forIndexPath:indexPath];
-    cell.inputView.userInteractionEnabled = NO;
-    cell.inputView.backgroundColor = [UIColor whiteColor];
     PFObject *tile = [self getTileAtIndex:self.xIndex :self.yIndex];
     cell.game = self.game;
     cell.user = self.currUser;
-    [cell setTileInfo:tile];
+    cell.tile = tile;
     
-    //always increment x index
-    //if x index reaches array count reset and increment y index
-    self.xIndex++;
-    if (self.xIndex >= [self.game[@"tilesArray"] count]) {
-        self.xIndex = 0;
-        self.yIndex++;
+    if ([cell.tile[@"fillable"] boolValue]) {
+        [cell.contentView.layer setBorderColor:[UIColor blackColor].CGColor];
+        [cell.contentView.layer setBorderWidth:1.0f];
+        cell.inputView.userInteractionEnabled = NO;
+        cell.inputView.backgroundColor = [UIColor whiteColor];
+        cell.inputView.text = cell.tile[@"inputLetter"];
     }
+    else {
+        cell.inputView.text = @"";
+        cell.inputView.backgroundColor = [UIColor clearColor];
+        [cell.contentView.layer setBorderWidth:0.0f];
+        [cell.contentView setBackgroundColor:[UIColor clearColor]];
+    }
+    
     return cell;
 }
 
 //what to do if cell is selected
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     BoardTileCell *cell = (BoardTileCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    cell.inputView.delegate = cell;
+    cell.inputView.backgroundColor = [UIColor systemGray5Color];
+
     if ([self.game[@"hostID"] isEqualToString:self.currUser[@"fbID"]]) {
         [cell.inputView becomeFirstResponder];
         cell.inputView.userInteractionEnabled = YES;
-        cell.inputView.backgroundColor = [UIColor systemGray5Color];
     }
     else {
         if (cell != self.prevSelectedCell)
             self.prevSelectedCell.inputView.backgroundColor = [UIColor whiteColor];
         self.prevSelectedCell = cell;
-        cell.inputView.backgroundColor = [UIColor systemGray5Color];
     }
     
     NSString *acrossClue = cell.tile[@"acrossClue"];
@@ -242,6 +259,7 @@
             [self dismissViewControllerAnimated:true completion:nil];
         }];
         [self.timer invalidate];
+        [self.updateTimer invalidate];
         [self updatePlayerData];
         [self removeGameData];
         [alert addAction:defaultAction];
@@ -265,6 +283,7 @@
 
 - (IBAction)didTapClose:(id)sender {
     [self.timer invalidate];
+    [self.updateTimer invalidate];
     [self dismissViewControllerAnimated:true completion:nil];
 }
 
