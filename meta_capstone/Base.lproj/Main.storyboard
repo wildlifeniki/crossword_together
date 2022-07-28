@@ -514,12 +514,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4AX-u7-GsN">
-                                <rect key="frame" x="20" y="862" width="374" height="0.0"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="UhI-Fb-p0g">
                                 <rect key="frame" x="57" y="209" width="300" height="300"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -554,13 +548,22 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4AX-u7-GsN">
+                                <rect key="frame" x="20" y="842" width="374" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="20" id="urm-tE-5Bd"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="9mi-YL-VxH"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="4AX-u7-GsN" secondAttribute="trailing" constant="20" id="h0E-d9-VTm"/>
-                            <constraint firstItem="4AX-u7-GsN" firstAttribute="bottom" secondItem="9mi-YL-VxH" secondAttribute="bottom" id="xJZ-31-VP5"/>
-                            <constraint firstItem="4AX-u7-GsN" firstAttribute="leading" secondItem="ztn-BM-Vsn" secondAttribute="leading" constant="20" id="yL1-ce-T2S"/>
+                            <constraint firstItem="4AX-u7-GsN" firstAttribute="leading" secondItem="ztn-BM-Vsn" secondAttribute="leading" constant="20" symbolic="YES" id="B8E-UC-cVg"/>
+                            <constraint firstAttribute="trailing" secondItem="4AX-u7-GsN" secondAttribute="trailing" constant="20" symbolic="YES" id="LUb-Hu-1EL"/>
+                            <constraint firstItem="4AX-u7-GsN" firstAttribute="bottom" secondItem="9mi-YL-VxH" secondAttribute="bottom" id="iMB-Si-lDQ"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Board" id="yGu-xP-JJf">
@@ -577,7 +580,8 @@
                     </navigationItem>
                     <connections>
                         <outlet property="boardCollectionView" destination="UhI-Fb-p0g" id="fBc-k5-lPP"/>
-                        <outlet property="clueLabel" destination="4AX-u7-GsN" id="TnA-Kv-LaZ"/>
+                        <outlet property="checkButton" destination="OAb-mD-1CG" id="Qtr-LW-VAe"/>
+                        <outlet property="clueLabel" destination="4AX-u7-GsN" id="02u-Dp-VHF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a5z-g0-ERq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

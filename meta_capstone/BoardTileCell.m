@@ -10,18 +10,20 @@
 
 @implementation BoardTileCell
 
-- (void)setTileInfo :(Tile *)tile {
+- (void)setTileInfo :(PFObject *)tile {
     self.inputView.delegate = self;
     self.tile = tile;
-        
-    if(self.tile.fillable) {
+    
+    if ([self.tile[@"fillable"] boolValue]) {
         [self.contentView.layer setBorderColor:[UIColor blackColor].CGColor];
         [self.contentView.layer setBorderWidth:1.0f];
-        self.inputView.text = @"";
+        if ([self.game[@"hostID"] isEqualToString:self.user[@"fbID"]])
+            self.inputView.text = self.tile[@"inputLetter"];
+        else
+            self.inputView.text = self.tile[@"inputLetter"];
     }
-    else {
+    else
         [self.inputView removeFromSuperview];
-    }
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
@@ -34,7 +36,11 @@
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
-    self.tile.inputLetter = self.inputView.text;
+    self.tile[@"inputLetter"] = self.inputView.text;
+    [self.tile save];
+    self.inputView.userInteractionEnabled = NO;
+    self.inputView.backgroundColor = [UIColor whiteColor];
+    [self.inputView resignFirstResponder];
 }
 
 @end

@@ -38,8 +38,6 @@
     if (FBSDKAccessToken.currentAccessToken != nil) {
         //if token is not expired, all data should be updated, so no need to have check here
         NSLog(@"skip login screen");
-
-        
         self.window.rootViewController = [storyboard instantiateViewControllerWithIdentifier:@"TabBarController"];
     }
     

@@ -59,7 +59,7 @@
                     user[@"name"] = [NSString stringWithFormat:@"%@ %@", profile.firstName, profile.lastName];
                     user[@"totalGames"] = @0;
                     user[@"bestTime"] = @0;
-                    user[@"avgTime"] = [NSNumber numberWithInt:arc4random_uniform(100)];
+                    user[@"avgTime"] = @0;
                     user[@"recentlyPlayedWith"] = [NSMutableArray new];
                 
                     [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
@@ -75,12 +75,11 @@
                     else { NSLog(@"pin failed"); }
                 }];
                 
+                [self performSegueWithIdentifier:@"loginSegue" sender:nil];
+
             }
         }];
         });
-        
-        [self performSegueWithIdentifier:@"loginSegue" sender:nil];
-
     }
 }
 
