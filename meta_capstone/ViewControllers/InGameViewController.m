@@ -14,12 +14,14 @@
 @property (strong, nonatomic) IBOutlet UILabel *clueLabel;
 @property (strong, nonatomic) IBOutlet UICollectionView *boardCollectionView;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *checkButton;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *requestHostButton;
 @property (nonatomic, strong) NSDictionary *wordCluePairs;
 @property (nonatomic, strong) NSMutableArray *tilesArray;
 @property (assign, nonatomic) int xIndex;
 @property (assign, nonatomic) int yIndex;
 @property (strong, nonatomic) NSTimer *timer;
 @property (strong, nonatomic) NSTimer *updateTimer;
+@property (strong, nonatomic) NSTimer *hostTimer;
 @property (strong, nonatomic) BoardTileCell *prevSelectedCell;
 @property (strong, nonatomic) PFObject *emptyTile;
 
@@ -66,6 +68,9 @@
             [tilesArray insertObject:[NSMutableArray arrayWithArray:innerArray] atIndex:i];
         }
         self.game[@"tilesArray"] = tilesArray;
+        self.game[@"waiting"] = @NO;
+        [self.game removeObjectForKey:@"requestingHost"];
+        [self.game removeObjectForKey:@"requestedBy"];
         [self.game save];
         
         //create word tiles and add to array
@@ -78,11 +83,15 @@
     
     //if user is not the host, remove check button
     if ([self.game[@"hostID"] isEqualToString:self.currUser[@"fbID"]]) {
+        self.navigationItem.rightBarButtonItem = nil;
         self.navigationItem.rightBarButtonItem = self.checkButton;
+        self.hostTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(checkHostRequest) userInfo:nil repeats:YES];
     }
     else {
         self.navigationItem.rightBarButtonItem = nil;
+        self.navigationItem.rightBarButtonItem = self.requestHostButton;
         self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(checkUpdate) userInfo:nil repeats:YES];
+        self.hostTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(checkHostAccept) userInfo:nil repeats:YES];
     }
 }
 
@@ -103,6 +112,68 @@
     if ([self.game[@"updated"] boolValue]) {
         self.game[@"updated"] = @NO;
         [self.boardCollectionView reloadData];
+    }
+}
+
+-(void)checkHostRequest {
+    self.game = [[PFQuery queryWithClassName:@"Game"] getObjectWithId:self.game.objectId];
+    if (![self.game[@"waiting"] boolValue] && [self.currUser[@"fbID"] isEqualToString:self.game[@"hostID"]]) {
+        NSString *requesting = self.game[@"requestingHost"];
+        if(requesting != nil && ![requesting isEqualToString:@"Accepted"] && ![requesting isEqualToString:@"Denied"] ) {
+            self.game[@"waiting"] = @YES;
+            [self.game save];
+            PFObject *requestingUser = [[[PFQuery queryWithClassName:@"AppUser"] whereKey:@"fbID" equalTo:requesting] getFirstObject];
+            NSString *info = [NSString stringWithFormat:@"%@ is requesting host. Would you like to give them control of the board?", requestingUser[@"name"]];
+            UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Host Request"
+                                           message:info
+                                           preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* accept = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault
+               handler:^(UIAlertAction * action) {
+                self.game[@"requestingHost"] = @"Accepted";
+                self.game[@"hostID"] = requesting;
+                [self.game save];
+                [alert dismissViewControllerAnimated:YES completion:nil];
+                [self viewDidLoad];
+            }];
+            
+            UIAlertAction* deny = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault
+               handler:^(UIAlertAction * action) {
+                self.game[@"requestingHost"] = @"Denied";
+                [self.game save];
+                [alert dismissViewControllerAnimated:YES completion:nil];
+            }];
+            
+            [alert addAction:accept];
+            [alert addAction:deny];
+            [self presentViewController:alert animated:YES completion:nil];
+            self.game[@"waiting"] = @NO;
+            [self.game save];
+        }
+    }
+}
+
+- (void) checkHostAccept {
+    self.game = [[PFQuery queryWithClassName:@"Game"] getObjectWithId:self.game.objectId];
+    NSString *requesting = self.game[@"requestingHost"];
+    if([self.game[@"requestedBy"] isEqualToString:self.currUser[@"fbID"]]) {
+        UIAlertController *alert;
+        if([requesting isEqualToString:@"Accepted"] || [requesting isEqualToString:@"Denied"]) {
+            NSString *title = [NSString stringWithFormat:@"Host Request %@", requesting];
+            alert = [UIAlertController alertControllerWithTitle:title
+                                           message:@""
+                                           preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction* ok = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault
+               handler:^(UIAlertAction * action) {
+                [self.game removeObjectForKey:@"requestingHost"];
+                [self.game save];
+                [alert dismissViewControllerAnimated:YES completion:nil];
+                [self viewDidLoad];
+            }];
+            
+            [alert addAction:ok];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
     }
 }
 
@@ -185,12 +256,14 @@
     if ([cell.tile[@"fillable"] boolValue]) {
         [cell.contentView.layer setBorderColor:[UIColor blackColor].CGColor];
         [cell.contentView.layer setBorderWidth:1.0f];
+        cell.userInteractionEnabled = YES;
         cell.inputView.userInteractionEnabled = NO;
         cell.inputView.backgroundColor = [UIColor whiteColor];
         cell.inputView.text = cell.tile[@"inputLetter"];
     }
     else {
         cell.inputView.text = @"";
+        cell.userInteractionEnabled = NO;
         cell.inputView.backgroundColor = [UIColor clearColor];
         [cell.contentView.layer setBorderWidth:0.0f];
         [cell.contentView setBackgroundColor:[UIColor clearColor]];
@@ -231,6 +304,11 @@
 - (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     int numRows = (int) [self.game[@"tilesArray"] count];
     return numRows * numRows;
+}
+- (IBAction)didTapRequestHost:(id)sender {
+    self.game[@"requestingHost"] = self.currUser[@"fbID"];
+    self.game[@"requestedBy"] = self.currUser[@"fbID"];
+    [self.game save];
 }
 
 - (IBAction)didTapCheck:(id)sender {

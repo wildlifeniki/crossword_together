@@ -18,8 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) PFObject *game;
 @property (strong, nonatomic) PFObject *user;
 
-- (void)setTileInfo:(PFObject *)tile;
-
 - (void)textViewDidEndEditing:(UITextView *)textView;
 
 
