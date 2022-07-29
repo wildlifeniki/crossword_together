@@ -226,21 +226,6 @@
     [self.game save];
 }
 
-//for help with testing, can be removed once ui is able to show board
-- (void)printSquareArray : (NSMutableArray *)array {
-    NSString *print = @"current board: \n";
-    for (NSMutableArray *row in array) {
-        for (Tile *tile in row) {
-            if (tile.fillable)
-                print = [print stringByAppendingString:tile.inputLetter];
-            else
-                print = [print stringByAppendingString:@"-"];
-        }
-        print = [print stringByAppendingString:@"\n"];
-    }
-    NSLog(@"%@", print);
-}
-
 //initialize board ui
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -433,6 +418,107 @@
     }
     //remove game object
 //    [self.game delete]; //comment if testing without updating backend
+}
+
+
+
+
+
+
+
+
+
+//generating boards testing
+
+- (void)printSquareArray : (NSMutableArray *)array {
+    NSString *print = @"current board: \n";
+    for (NSMutableArray *row in array) {
+        for (Tile *tile in row) {
+            if (tile.fillable)
+                print = [print stringByAppendingString:tile.correctLetter];
+            else
+                print = [print stringByAppendingString:@"-"];
+        }
+        print = [print stringByAppendingString:@"\n"];
+    }
+    NSLog(@"%@", print);
+}
+
+- (Tile *) getTileAtIndexTesting : (int) xIndex : (int) yIndex {
+    NSMutableArray *innerArray = [self.tilesArray objectAtIndex:yIndex];
+    return [innerArray objectAtIndex:xIndex];
+}
+- (void) setTileAtIndexTesting : (Tile *) tile : (int) xIndex : (int) yIndex {
+    NSMutableArray *innerArray = [self.tilesArray objectAtIndex:yIndex];
+    [innerArray replaceObjectAtIndex:xIndex withObject:tile];
+}
+
+- (void) createTilesTesting: (NSString *)word : (int) xIndex : (int) yIndex : (BOOL) across {
+    NSMutableArray *wordLetters = [NSMutableArray arrayWithArray:@[]];
+    
+    //split word string into substrings of 1 capital letter
+    NSString *capitalWord = [word uppercaseString];
+    for (int i = 0; i < capitalWord.length; i++) {
+        NSString *letter = [capitalWord substringWithRange:(NSMakeRange(i, 1))];
+        [wordLetters addObject:letter];
+    }
+    
+    //create tiles for each letter and put them in correct spot in the array
+    for (NSString *letter in wordLetters) {
+        //check if fillable tile already in spot, if so, just edit that tile
+        Tile *tile = [self getTileAtIndexTesting:xIndex :yIndex];
+        if (!tile.fillable) {
+            tile = [[Tile alloc] init];
+            tile.fillable = YES;
+            tile.xIndex = xIndex;
+            tile.yIndex = yIndex;
+            tile.correctLetter = letter;
+            tile.inputLetter = @" ";
+        }
+        if (across) { tile.acrossClue = word; }
+        else { tile.downClue = word; }
+        [self setTileAtIndexTesting:tile :tile.xIndex :tile.yIndex];
+        if (across) { xIndex++; }
+        else { yIndex++; }
+    }
+}
+
+- (void) createBoard: (NSArray *)words {
+    //empty array, remove later
+    Tile *empty = [[Tile alloc] init];
+    empty.fillable = NO;
+    NSMutableArray *innerArray = [[NSMutableArray alloc] initWithCapacity: 10];
+    for (int j = 0; j < 10; j++) {
+        [innerArray insertObject:empty atIndex:j];
+    }
+    
+    //remove word once added
+    NSMutableArray *usableWords = [NSMutableArray arrayWithArray:words];
+    
+    //add inner array to tilesArray
+    self.tilesArray = [[NSMutableArray alloc] initWithCapacity: 10];
+    for (int i = 0; i < 10; i++) {
+        [self.tilesArray insertObject:[NSMutableArray arrayWithArray:innerArray] atIndex:i];
+    }
+    
+    //pick random word to go across top
+    NSUInteger randomIndex = arc4random() % usableWords.count;
+    NSString *first = [words objectAtIndex:randomIndex];
+    [usableWords removeObject:first];
+    [self createTilesTesting:first :0 :0 :YES];
+    
+    //pick random letter in top word
+    NSUInteger secondStart = arc4random() % first.length; //(index, 0)
+    NSString *letter = [first substringWithRange:NSMakeRange(secondStart, 1)];
+    NSArray *secondOptions = [usableWords filteredArrayUsingPredicate: [NSPredicate predicateWithFormat:@"SELF BEGINSWITH %@", letter]];
+    
+    //pick random word to go down from letter
+    randomIndex = arc4random() % secondOptions.count;
+    NSString *second = [secondOptions objectAtIndex:randomIndex];
+    [usableWords removeObject:second];
+    [self createTilesTesting:second :(int) secondStart :0 :NO];
+    
+    [self printSquareArray:self.tilesArray];
 }
 
 @end
