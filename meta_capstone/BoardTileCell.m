@@ -32,15 +32,13 @@
         [self textViewDidEndEditing:self.inputView];
         return NO;
     }
-    return YES;
+    return textView.text.length + (text.length - range.length) <= 1;
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
     self.tile[@"inputLetter"] = self.inputView.text;
     [self.tile save];
     self.game[@"updated"] = @YES;
-    self.game[@"updateX"] = self.tile[@"xIndex"];
-    self.game[@"updateY"] = self.tile[@"yIndex"];
     [self.game save];
     self.inputView.userInteractionEnabled = NO;
     self.inputView.backgroundColor = [UIColor whiteColor];

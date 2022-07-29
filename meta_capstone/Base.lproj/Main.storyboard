@@ -572,16 +572,24 @@
                                 <action selector="didTapClose:" destination="F4t-Ew-nr1" id="jE7-jG-WpK"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Check" image="checkmark" catalog="system" id="OAb-mD-1CG">
-                            <connections>
-                                <action selector="didTapCheck:" destination="F4t-Ew-nr1" id="CL9-xV-jYP"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Request Host" image="square.and.pencil" catalog="system" id="iuK-7U-yeY">
+                                <connections>
+                                    <action selector="didTapRequestHost:" destination="F4t-Ew-nr1" id="uWz-dw-lcx"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Check" image="checkmark" catalog="system" id="OAb-mD-1CG">
+                                <connections>
+                                    <action selector="didTapCheck:" destination="F4t-Ew-nr1" id="CL9-xV-jYP"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="boardCollectionView" destination="UhI-Fb-p0g" id="fBc-k5-lPP"/>
                         <outlet property="checkButton" destination="OAb-mD-1CG" id="Qtr-LW-VAe"/>
                         <outlet property="clueLabel" destination="4AX-u7-GsN" id="02u-Dp-VHF"/>
+                        <outlet property="requestHostButton" destination="iuK-7U-yeY" id="Htv-uJ-Yg1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a5z-g0-ERq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -747,6 +755,7 @@
         <image name="person.circle" catalog="system" width="128" height="121"/>
         <image name="person.fill" catalog="system" width="128" height="120"/>
         <image name="plus" catalog="system" width="128" height="113"/>
+        <image name="square.and.pencil" catalog="system" width="128" height="115"/>
         <image name="star.fill" catalog="system" width="128" height="116"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

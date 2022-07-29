@@ -14,12 +14,14 @@
 @property (strong, nonatomic) IBOutlet UILabel *clueLabel;
 @property (strong, nonatomic) IBOutlet UICollectionView *boardCollectionView;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *checkButton;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *requestHostButton;
 @property (nonatomic, strong) NSDictionary *wordCluePairs;
 @property (nonatomic, strong) NSMutableArray *tilesArray;
 @property (assign, nonatomic) int xIndex;
 @property (assign, nonatomic) int yIndex;
 @property (strong, nonatomic) NSTimer *timer;
 @property (strong, nonatomic) NSTimer *updateTimer;
+@property (strong, nonatomic) NSTimer *hostTimer;
 @property (strong, nonatomic) BoardTileCell *prevSelectedCell;
 @property (strong, nonatomic) PFObject *emptyTile;
 
@@ -78,10 +80,13 @@
     
     //if user is not the host, remove check button
     if ([self.game[@"hostID"] isEqualToString:self.currUser[@"fbID"]]) {
+        self.navigationItem.rightBarButtonItem = nil;
         self.navigationItem.rightBarButtonItem = self.checkButton;
+        self.hostTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(checkHost) userInfo:nil repeats:YES];
     }
     else {
         self.navigationItem.rightBarButtonItem = nil;
+        self.navigationItem.rightBarButtonItem = self.requestHostButton;
         self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(checkUpdate) userInfo:nil repeats:YES];
     }
 }
@@ -103,6 +108,36 @@
     if ([self.game[@"updated"] boolValue]) {
         self.game[@"updated"] = @NO;
         [self.boardCollectionView reloadData];
+    }
+}
+
+-(void)checkHost {
+    self.game = [[PFQuery queryWithClassName:@"Game"] getObjectWithId:self.game.objectId];
+    if(self.game[@"requestingHost"] != nil) {
+        PFObject *requestingUser = [[PFQuery queryWithClassName:@"AppUser"] getObjectWithId:self.game[@"requestingHost"]];
+        NSString *info = [NSString stringWithFormat:@"%@ is requesting host. Would you like to give them control of the board?", requestingUser[@"name"]];
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Host Request"
+                                       message:info
+                                       preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* accept = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault
+           handler:^(UIAlertAction * action) {
+            NSLog(@"GIVING HOST");
+            [self.game removeObjectForKey:@"requestingHost"];
+            [self.game save];
+            [alert dismissViewControllerAnimated:YES completion:nil];
+        }];
+        
+        UIAlertAction* deny = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault
+           handler:^(UIAlertAction * action) {
+            NSLog(@"DENIED HOST");
+            [self.game removeObjectForKey:@"requestingHost"];
+            [self.game save];
+            [alert dismissViewControllerAnimated:YES completion:nil];
+        }];
+        
+        [alert addAction:accept];
+        [alert addAction:deny];
+        [self presentViewController:alert animated:YES completion:nil];
     }
 }
 
@@ -231,6 +266,24 @@
 - (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     int numRows = (int) [self.game[@"tilesArray"] count];
     return numRows * numRows;
+}
+- (IBAction)didTapRequestHost:(id)sender {
+//    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Host Request"
+//                                   message:info
+//                                   preferredStyle:UIAlertControllerStyleAlert];
+//    UIAlertAction* accept = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault
+//       handler:^(UIAlertAction * action) {
+//        NSLog(@"GIVING HOST");
+//        [alert dismissViewControllerAnimated:YES completion:nil];
+//    }];
+//
+//    UIAlertAction* deny = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault
+//       handler:^(UIAlertAction * action) {
+//        NSLog(@"DENIED HOST");
+//        [alert dismissViewControllerAnimated:YES completion:nil];
+//    }];
+    self.game[@"requestingHost"] = self.currUser.objectId;
+    [self.game save];
 }
 
 - (IBAction)didTapCheck:(id)sender {
