@@ -68,6 +68,9 @@
             [tilesArray insertObject:[NSMutableArray arrayWithArray:innerArray] atIndex:i];
         }
         self.game[@"tilesArray"] = tilesArray;
+        self.game[@"waiting"] = @NO;
+        [self.game removeObjectForKey:@"requestingHost"];
+        [self.game removeObjectForKey:@"requestedBy"];
         [self.game save];
         
         //create word tiles and add to array
@@ -114,55 +117,63 @@
 
 -(void)checkHostRequest {
     self.game = [[PFQuery queryWithClassName:@"Game"] getObjectWithId:self.game.objectId];
-    NSString *requesting = self.game[@"requestingHost"];
-    if(requesting != nil && ![requesting isEqualToString:@"Accepted"] && ![requesting isEqualToString:@"Denied"]) {
-        PFObject *requestingUser = [[[PFQuery queryWithClassName:@"AppUser"] whereKey:@"fbID" equalTo:requesting] getFirstObject];
-        NSString *info = [NSString stringWithFormat:@"%@ is requesting host. Would you like to give them control of the board?", requestingUser[@"name"]];
-        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Host Request"
-                                       message:info
-                                       preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* accept = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault
-           handler:^(UIAlertAction * action) {
-            self.game[@"requestingHost"] = @"Accepted";
-            self.game[@"hostID"] = requesting;
+    if (![self.game[@"waiting"] boolValue] && [self.currUser[@"fbID"] isEqualToString:self.game[@"hostID"]]) {
+        NSString *requesting = self.game[@"requestingHost"];
+        if(requesting != nil && ![requesting isEqualToString:@"Accepted"] && ![requesting isEqualToString:@"Denied"] ) {
+            self.game[@"waiting"] = @YES;
             [self.game save];
-            [alert dismissViewControllerAnimated:YES completion:nil];
-            [self viewDidLoad];
-        }];
-        
-        UIAlertAction* deny = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault
-           handler:^(UIAlertAction * action) {
-            self.game[@"requestingHost"] = @"Denied";
+            PFObject *requestingUser = [[[PFQuery queryWithClassName:@"AppUser"] whereKey:@"fbID" equalTo:requesting] getFirstObject];
+            NSString *info = [NSString stringWithFormat:@"%@ is requesting host. Would you like to give them control of the board?", requestingUser[@"name"]];
+            UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Host Request"
+                                           message:info
+                                           preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* accept = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault
+               handler:^(UIAlertAction * action) {
+                self.game[@"requestingHost"] = @"Accepted";
+                self.game[@"hostID"] = requesting;
+                [self.game save];
+                [alert dismissViewControllerAnimated:YES completion:nil];
+                [self viewDidLoad];
+            }];
+            
+            UIAlertAction* deny = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault
+               handler:^(UIAlertAction * action) {
+                self.game[@"requestingHost"] = @"Denied";
+                [self.game save];
+                [alert dismissViewControllerAnimated:YES completion:nil];
+            }];
+            
+            [alert addAction:accept];
+            [alert addAction:deny];
+            [self presentViewController:alert animated:YES completion:nil];
+            self.game[@"waiting"] = @NO;
             [self.game save];
-            [alert dismissViewControllerAnimated:YES completion:nil];
-        }];
-        
-        [alert addAction:accept];
-        [alert addAction:deny];
-        [self presentViewController:alert animated:YES completion:nil];
+        }
     }
 }
 
 - (void) checkHostAccept {
     self.game = [[PFQuery queryWithClassName:@"Game"] getObjectWithId:self.game.objectId];
     NSString *requesting = self.game[@"requestingHost"];
-    UIAlertController *alert;
-    if([requesting isEqualToString:@"Accepted"] || [requesting isEqualToString:@"Denied"]) {
-        NSString *title = [NSString stringWithFormat:@"Host Request %@", requesting];
-        alert = [UIAlertController alertControllerWithTitle:title
-                                       message:@""
-                                       preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction* ok = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault
-           handler:^(UIAlertAction * action) {
-            [self.game removeObjectForKey:@"requestingHost"];
-            [self.game save];
-            [alert dismissViewControllerAnimated:YES completion:nil];
-            [self viewDidLoad];
-        }];
-        
-        [alert addAction:ok];
-        [self presentViewController:alert animated:YES completion:nil];
+    if([self.game[@"requestedBy"] isEqualToString:self.currUser[@"fbID"]]) {
+        UIAlertController *alert;
+        if([requesting isEqualToString:@"Accepted"] || [requesting isEqualToString:@"Denied"]) {
+            NSString *title = [NSString stringWithFormat:@"Host Request %@", requesting];
+            alert = [UIAlertController alertControllerWithTitle:title
+                                           message:@""
+                                           preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction* ok = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault
+               handler:^(UIAlertAction * action) {
+                [self.game removeObjectForKey:@"requestingHost"];
+                [self.game save];
+                [alert dismissViewControllerAnimated:YES completion:nil];
+                [self viewDidLoad];
+            }];
+            
+            [alert addAction:ok];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
     }
 }
 
@@ -245,12 +256,14 @@
     if ([cell.tile[@"fillable"] boolValue]) {
         [cell.contentView.layer setBorderColor:[UIColor blackColor].CGColor];
         [cell.contentView.layer setBorderWidth:1.0f];
+        cell.userInteractionEnabled = YES;
         cell.inputView.userInteractionEnabled = NO;
         cell.inputView.backgroundColor = [UIColor whiteColor];
         cell.inputView.text = cell.tile[@"inputLetter"];
     }
     else {
         cell.inputView.text = @"";
+        cell.userInteractionEnabled = NO;
         cell.inputView.backgroundColor = [UIColor clearColor];
         [cell.contentView.layer setBorderWidth:0.0f];
         [cell.contentView setBackgroundColor:[UIColor clearColor]];
@@ -293,21 +306,8 @@
     return numRows * numRows;
 }
 - (IBAction)didTapRequestHost:(id)sender {
-//    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Host Request"
-//                                   message:info
-//                                   preferredStyle:UIAlertControllerStyleAlert];
-//    UIAlertAction* accept = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault
-//       handler:^(UIAlertAction * action) {
-//        NSLog(@"GIVING HOST");
-//        [alert dismissViewControllerAnimated:YES completion:nil];
-//    }];
-//
-//    UIAlertAction* deny = [UIAlertAction actionWithTitle:@"No" style:UIAlertActionStyleDefault
-//       handler:^(UIAlertAction * action) {
-//        NSLog(@"DENIED HOST");
-//        [alert dismissViewControllerAnimated:YES completion:nil];
-//    }];
     self.game[@"requestingHost"] = self.currUser[@"fbID"];
+    self.game[@"requestedBy"] = self.currUser[@"fbID"];
     [self.game save];
 }
 
