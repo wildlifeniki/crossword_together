@@ -507,18 +507,49 @@
     [usableWords removeObject:first];
     [self createTilesTesting:first :0 :0 :YES];
     
-    //pick random letter in top word
-    NSUInteger secondStart = arc4random() % first.length; //(index, 0)
-    NSString *letter = [first substringWithRange:NSMakeRange(secondStart, 1)];
-    NSArray *secondOptions = [usableWords filteredArrayUsingPredicate: [NSPredicate predicateWithFormat:@"SELF BEGINSWITH %@", letter]];
-    
+    //pick random letter in first word
+    NSUInteger secondStart = arc4random() % first.length; //(secondStart, 0)
+    NSString *secondLetter = [first substringWithRange:NSMakeRange(secondStart, 1)];
+    NSArray *secondOptions = [usableWords filteredArrayUsingPredicate: [NSPredicate predicateWithFormat:@"SELF BEGINSWITH %@", secondLetter]];
     //pick random word to go down from letter
     randomIndex = arc4random() % secondOptions.count;
     NSString *second = [secondOptions objectAtIndex:randomIndex];
     [usableWords removeObject:second];
     [self createTilesTesting:second :(int) secondStart :0 :NO];
     
+    //pick random letter in second word (not first or second)
+    NSUInteger thirdStartY = (arc4random() % (second.length - 2) + 2); //(??, thirdStartY)
+    NSString *thirdLetter = [second substringWithRange:NSMakeRange(thirdStartY, 1)];
+    NSDictionary *thirdOptionsLocations = [self arrayOfValidStringsWithLetterAtIndex:usableWords :thirdLetter :secondStart];
+    NSArray *thirdOptions = [thirdOptionsLocations allKeys];
+    //pick random word to go across from letter
+    randomIndex = arc4random() % thirdOptions.count;
+    NSString *third = [thirdOptions objectAtIndex:randomIndex];
+    NSArray *thirdStartXLocations = [thirdOptionsLocations objectForKey:third];
+    [usableWords removeObject:third];
+    [self createTilesTesting:third :  [[thirdStartXLocations objectAtIndex:arc4random() % thirdStartXLocations.count] intValue]:(int) thirdStartY :YES];
+    
     [self printSquareArray:self.tilesArray];
+}
+
+- (NSDictionary *)arrayOfValidStringsWithLetterAtIndex : (NSArray *)words : (NSString *)letter : (NSUInteger)index {
+    NSMutableDictionary *validWords = [NSMutableDictionary dictionary];
+    for (NSString *word in words) {
+        NSMutableArray *validStart = [NSMutableArray arrayWithArray:@[]];
+        NSString *padding = [@"" stringByPaddingToLength:10 - word.length withString:@"0" startingAtIndex:0];
+        for (int i = 0; i <= padding.length; i++) {
+            NSString *front = [padding substringToIndex:i];
+            NSString *back = [padding substringFromIndex:i];
+            NSString *testWord = [NSString stringWithFormat:@"%@%@%@", front, word, back];
+            if ([[testWord substringWithRange:NSMakeRange(index, 1)] isEqualToString:letter]) {
+                [validStart addObject:[NSNumber numberWithInt:(int) (front.length)]];
+            }
+        }
+        if (validStart.count != 0) {
+            [validWords setObject:validStart forKey:word];
+        }
+    }
+    return validWords;
 }
 
 @end

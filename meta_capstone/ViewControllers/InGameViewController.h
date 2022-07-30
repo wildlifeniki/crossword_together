@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) createBoard: (NSArray *)words;
 
+- (NSDictionary *)arrayOfValidStringsWithLetterAtIndex : (NSArray *)words : (NSString *)letter : (NSUInteger)index;
+
 @end
 
 NS_ASSUME_NONNULL_END
