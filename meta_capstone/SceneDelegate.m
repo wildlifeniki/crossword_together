@@ -23,8 +23,8 @@
     
     ParseClientConfiguration *config = [ParseClientConfiguration  configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
 
-        configuration.applicationId = @"EeN1Wkryoazn9PU7RiSnGwmvUgSUyicPVZ1ggbsU";
-        configuration.clientKey = @"21dYsQdc2ObMbLHcTg007PzPDVw5lqewyPDDjdlS";
+        configuration.applicationId = @"QhWHKsVKhPiUv2RCDq9h224v73JXOWQW0wPzd0tQ";
+        configuration.clientKey = @"8S1kxevszL1WB9QBzL6OvFiRsyt3kOqsNngidVzl";
         configuration.server = @"https://parseapi.back4app.com";
         configuration.localDatastoreEnabled = true;
         

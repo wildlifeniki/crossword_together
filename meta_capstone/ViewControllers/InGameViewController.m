@@ -42,11 +42,57 @@
     if (self.game[@"tilesArray"] == nil) {
         //initialize dictionary
         self.wordCluePairs = [NSDictionary dictionaryWithObjectsAndKeys:
-                              @"this game, cross____", @"word",
-                              @"this game, _____word", @"cross",
-                              @"pink fish", @"salmon",
-                              @"not old", @"new",
+                              @"apple",@"apple",
+                              @"banana",@"banana",
+                              @"carrot",@"carrot",
+                              @"dinosaur",@"dinosaur",
+                              @"enigma",@"enigma",
+                              @"fishy",@"fishy",
+                              @"gorilla",@"gorilla",
+                              @"hippo",@"hippo",
+                              @"iguana",@"iguana",
+                              @"jaguar",@"jaguar",
+                              @"king",@"king",
+                              @"lame",@"lame",
+                              @"mirage",@"mirage",
+                              @"nicer",@"nicer",
+                              @"opal",@"opal",
+                              @"penguin",@"penguin",
+                              @"red",@"red",
+                              @"tyrant",@"tyrant",
+                              @"umbrella",@"umbrella",
+                              @"vivid",@"vivid",
+                              @"yearn",@"yearn",
+                              @"aphid",@"aphid",
+                              @"blue",@"blue",
+                              @"crayon",@"crayon",
+                              @"doubt",@"doubt",
+                              @"elephant",@"elephant",
+                              @"fairy",@"fairy",
+                              @"green",@"green",
+                              @"hoist",@"hoist",
+                              @"implode",@"implode",
+                              @"joker",@"joker",
+                              @"knight",@"knight",
+                              @"living",@"living",
+                              @"monkey",@"monkey",
+                              @"neon",@"neon",
+                              @"orange",@"orange",
+                              @"purple",@"purple",
+                              @"royal",@"royal",
+                              @"stupid",@"stupid",
+                              @"think",@"think",
+                              @"unicorn",@"unicorn",
+                              @"veins",@"veins",
+                              @"yellow",@"yellow",
                               nil];
+//
+//        self.wordCluePairs = [NSDictionary dictionaryWithObjectsAndKeys:
+//                              @"this game, cross____", @"word",
+//                              @"this game, _____word", @"cross",
+//                              @"pink fish", @"salmon",
+//                              @"not old", @"new",
+//                              nil];
         
         //initalize indexes for collectionview
         self.xIndex = 0;
@@ -75,10 +121,11 @@
         
         //create word tiles and add to array
         NSArray *words = [self.wordCluePairs allKeys];
-        [self createTiles:[words objectAtIndex:0] :3 :1 :NO]; //word
-        [self createTiles:[words objectAtIndex:2] :1 :2 :YES]; //cross
-        [self createTiles:[words objectAtIndex:1] :5 :2 :NO]; //salmon
-        [self createTiles:[words objectAtIndex:3] :5 :7 :YES]; //new
+//        [self createTiles:[words objectAtIndex:0] :3 :1 :NO]; //word
+//        [self createTiles:[words objectAtIndex:2] :1 :2 :YES]; //cross
+//        [self createTiles:[words objectAtIndex:1] :5 :2 :NO]; //salmon
+//        [self createTiles:[words objectAtIndex:3] :5 :7 :YES]; //new
+        [self createBoard:words];
     }
     
     //if user is not the host, remove check button
@@ -396,7 +443,7 @@
         }
         player[@"recentlyPlayedWith"] = [newRecentIDs arrayByAddingObjectsFromArray:recentIDs];
         
-//        [player save]; //comment if testing without updating backend
+        [player save]; //comment if testing without updating backend
     }
 }
 
@@ -414,10 +461,14 @@
             user[@"activeGames"] = activeGames;
         if (pendingInvites != nil)
             user[@"pendingInvites"] = pendingInvites;
-//        [user save]; //comment if testing without updating backend
+        [user save]; //comment if testing without updating backend
     }
     //remove game object
-//    [self.game delete]; //comment if testing without updating backend
+    [self.game delete]; //comment if testing without updating backend
+    NSArray *tiles = [[[PFQuery queryWithClassName:@"Tile"] whereKey:@"correctLetter" notEqualTo:@"empty"] findObjects];
+    for (PFObject *tile in tiles) {
+        [tile deleteInBackground];
+    }
 }
 
 
@@ -484,28 +535,28 @@
 }
 
 - (void) createBoard: (NSArray *)words {
-    //empty array, remove later
-    Tile *empty = [[Tile alloc] init];
-    empty.fillable = NO;
-    NSMutableArray *innerArray = [[NSMutableArray alloc] initWithCapacity: 10];
-    for (int j = 0; j < 10; j++) {
-        [innerArray insertObject:empty atIndex:j];
-    }
+//    //empty array, remove later
+//    Tile *empty = [[Tile alloc] init];
+//    empty.fillable = NO;
+//    NSMutableArray *innerArray = [[NSMutableArray alloc] initWithCapacity: 10];
+//    for (int j = 0; j < 10; j++) {
+//        [innerArray insertObject:empty atIndex:j];
+//    }
+//    //add inner array to tilesArray
+//    self.tilesArray = [[NSMutableArray alloc] initWithCapacity: 10];
+//    for (int i = 0; i < 10; i++) {
+//        [self.tilesArray insertObject:[NSMutableArray arrayWithArray:innerArray] atIndex:i];
+//    }
     
     //remove word once added
     NSMutableArray *usableWords = [NSMutableArray arrayWithArray:words];
-    
-    //add inner array to tilesArray
-    self.tilesArray = [[NSMutableArray alloc] initWithCapacity: 10];
-    for (int i = 0; i < 10; i++) {
-        [self.tilesArray insertObject:[NSMutableArray arrayWithArray:innerArray] atIndex:i];
-    }
     
     //pick random word to go across top
     NSUInteger randomIndex = arc4random() % usableWords.count;
     NSString *first = [words objectAtIndex:randomIndex];
     [usableWords removeObject:first];
-    [self createTilesTesting:first :0 :0 :YES];
+    [self createTiles:first :0 :0 :YES];
+//    [self createTilesTesting:first :0 :0 :YES];
     
     //pick random letter in first word
     NSUInteger secondStart = arc4random() % first.length; //(secondStart, 0)
@@ -515,8 +566,9 @@
     randomIndex = arc4random() % secondOptions.count;
     NSString *second = [secondOptions objectAtIndex:randomIndex];
     [usableWords removeObject:second];
-    [self createTilesTesting:second :(int) secondStart :0 :NO];
-    
+    [self createTiles:second :(int) secondStart :0 :NO];
+//    [self createTilesTesting:second :(int) secondStart :0 :NO];
+
     //pick random letter in second word (not first or second)
     NSUInteger thirdStartY = (arc4random() % (second.length - 2) + 2); //(??, thirdStartY)
     NSString *thirdLetter = [second substringWithRange:NSMakeRange(thirdStartY, 1)];
@@ -527,9 +579,10 @@
     NSString *third = [thirdOptions objectAtIndex:randomIndex];
     NSArray *thirdStartXLocations = [thirdOptionsLocations objectForKey:third];
     [usableWords removeObject:third];
-    [self createTilesTesting:third :  [[thirdStartXLocations objectAtIndex:arc4random() % thirdStartXLocations.count] intValue]:(int) thirdStartY :YES];
+    [self createTiles:third :  [[thirdStartXLocations objectAtIndex:arc4random() % thirdStartXLocations.count] intValue]:(int) thirdStartY :YES];
+//    [self createTilesTesting:third :  [[thirdStartXLocations objectAtIndex:arc4random() % thirdStartXLocations.count] intValue]:(int) thirdStartY :YES];
     
-    [self printSquareArray:self.tilesArray];
+//    [self printSquareArray:self.tilesArray];
 }
 
 - (NSDictionary *)arrayOfValidStringsWithLetterAtIndex : (NSArray *)words : (NSString *)letter : (NSUInteger)index {
