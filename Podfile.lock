@@ -15,14 +15,14 @@ PODS:
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
   - Bolts/Tasks (1.9.1)
-  - FBAEMKit (14.0.0):
-    - FBSDKCoreKit_Basics (= 14.0.0)
-  - FBSDKCoreKit (14.0.0):
-    - FBAEMKit (= 14.0.0)
-    - FBSDKCoreKit_Basics (= 14.0.0)
-  - FBSDKCoreKit_Basics (14.0.0)
-  - FBSDKLoginKit (14.0.0):
-    - FBSDKCoreKit (= 14.0.0)
+  - FBAEMKit (14.1.0):
+    - FBSDKCoreKit_Basics (= 14.1.0)
+  - FBSDKCoreKit (14.1.0):
+    - FBAEMKit (= 14.1.0)
+    - FBSDKCoreKit_Basics (= 14.1.0)
+  - FBSDKCoreKit_Basics (14.1.0)
+  - FBSDKLoginKit (14.1.0):
+    - FBSDKCoreKit (= 14.1.0)
   - Parse (1.19.3):
     - Parse/Core (= 1.19.3)
   - Parse/Core (1.19.3):
@@ -46,10 +46,10 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
   Bolts: 8c1e8aab2f603387b8b9924f57d1d64f43d3ffdc
-  FBAEMKit: d00064597439e75885c70d9adbcb5f3e9ad84f5d
-  FBSDKCoreKit: e5d3acfffe5063a9d0b967ba2ad1f5afc460cf43
-  FBSDKCoreKit_Basics: 1ff46a12e80f0b66e6c00e1ef32d6a5b5b9008a5
-  FBSDKLoginKit: dbe86ef42ab142f3bd0f1c904a21bb33f31c5569
+  FBAEMKit: a899515e45476027f73aef377b5cffadcd56ca3a
+  FBSDKCoreKit: 24f8bc8d3b5b2a8c5c656a1329492a12e8efa792
+  FBSDKCoreKit_Basics: 6e578c9bdc7aa1365dbbbde633c9ebb536bcaa98
+  FBSDKLoginKit: 787de205d524c3a4b17d527916f1d066e4361660
   Parse: 0abb63a0ff6fa34a3f64b81d595a294e2ece143a
 
 PODFILE CHECKSUM: 03e3dd2ed207f058eb99724bf0e6721f22992f00

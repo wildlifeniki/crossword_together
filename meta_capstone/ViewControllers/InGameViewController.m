@@ -86,13 +86,6 @@
                               @"veins",@"veins",
                               @"yellow",@"yellow",
                               nil];
-//
-//        self.wordCluePairs = [NSDictionary dictionaryWithObjectsAndKeys:
-//                              @"this game, cross____", @"word",
-//                              @"this game, _____word", @"cross",
-//                              @"pink fish", @"salmon",
-//                              @"not old", @"new",
-//                              nil];
         
         //initalize indexes for collectionview
         self.xIndex = 0;
@@ -121,10 +114,6 @@
         
         //create word tiles and add to array
         NSArray *words = [self.wordCluePairs allKeys];
-//        [self createTiles:[words objectAtIndex:0] :3 :1 :NO]; //word
-//        [self createTiles:[words objectAtIndex:2] :1 :2 :YES]; //cross
-//        [self createTiles:[words objectAtIndex:1] :5 :2 :NO]; //salmon
-//        [self createTiles:[words objectAtIndex:3] :5 :7 :YES]; //new
         [self createBoard:words];
     }
     
@@ -245,6 +234,7 @@
             tile[@"yIndex"] = [NSNumber numberWithInt:yIndex];
             tile[@"correctLetter"] = letter;
             tile[@"inputLetter"] = @" ";
+            tile[@"gameID"] = self.game.objectId;
         }
         else
             tile = checkTile;
@@ -463,91 +453,18 @@
             user[@"pendingInvites"] = pendingInvites;
         [user save]; //comment if testing without updating backend
     }
-    //remove game object
-    [self.game delete]; //comment if testing without updating backend
-    NSArray *tiles = [[[PFQuery queryWithClassName:@"Tile"] whereKey:@"correctLetter" notEqualTo:@"empty"] findObjects];
+    
+    //remove tiles
+    NSArray *tiles = [[[PFQuery queryWithClassName:@"Tile"] whereKey:@"gameID" equalTo:self.game.objectId] findObjects];
     for (PFObject *tile in tiles) {
         [tile deleteInBackground];
     }
-}
-
-
-
-
-
-
-
-
-
-//generating boards testing
-
-- (void)printSquareArray : (NSMutableArray *)array {
-    NSString *print = @"current board: \n";
-    for (NSMutableArray *row in array) {
-        for (Tile *tile in row) {
-            if (tile.fillable)
-                print = [print stringByAppendingString:tile.correctLetter];
-            else
-                print = [print stringByAppendingString:@"-"];
-        }
-        print = [print stringByAppendingString:@"\n"];
-    }
-    NSLog(@"%@", print);
-}
-
-- (Tile *) getTileAtIndexTesting : (int) xIndex : (int) yIndex {
-    NSMutableArray *innerArray = [self.tilesArray objectAtIndex:yIndex];
-    return [innerArray objectAtIndex:xIndex];
-}
-- (void) setTileAtIndexTesting : (Tile *) tile : (int) xIndex : (int) yIndex {
-    NSMutableArray *innerArray = [self.tilesArray objectAtIndex:yIndex];
-    [innerArray replaceObjectAtIndex:xIndex withObject:tile];
-}
-
-- (void) createTilesTesting: (NSString *)word : (int) xIndex : (int) yIndex : (BOOL) across {
-    NSMutableArray *wordLetters = [NSMutableArray arrayWithArray:@[]];
     
-    //split word string into substrings of 1 capital letter
-    NSString *capitalWord = [word uppercaseString];
-    for (int i = 0; i < capitalWord.length; i++) {
-        NSString *letter = [capitalWord substringWithRange:(NSMakeRange(i, 1))];
-        [wordLetters addObject:letter];
-    }
-    
-    //create tiles for each letter and put them in correct spot in the array
-    for (NSString *letter in wordLetters) {
-        //check if fillable tile already in spot, if so, just edit that tile
-        Tile *tile = [self getTileAtIndexTesting:xIndex :yIndex];
-        if (!tile.fillable) {
-            tile = [[Tile alloc] init];
-            tile.fillable = YES;
-            tile.xIndex = xIndex;
-            tile.yIndex = yIndex;
-            tile.correctLetter = letter;
-            tile.inputLetter = @" ";
-        }
-        if (across) { tile.acrossClue = word; }
-        else { tile.downClue = word; }
-        [self setTileAtIndexTesting:tile :tile.xIndex :tile.yIndex];
-        if (across) { xIndex++; }
-        else { yIndex++; }
-    }
+    //remove game object
+    [self.game delete]; //comment if testing without updating backend
 }
 
 - (void) createBoard: (NSArray *)words {
-//    //empty array, remove later
-//    Tile *empty = [[Tile alloc] init];
-//    empty.fillable = NO;
-//    NSMutableArray *innerArray = [[NSMutableArray alloc] initWithCapacity: 10];
-//    for (int j = 0; j < 10; j++) {
-//        [innerArray insertObject:empty atIndex:j];
-//    }
-//    //add inner array to tilesArray
-//    self.tilesArray = [[NSMutableArray alloc] initWithCapacity: 10];
-//    for (int i = 0; i < 10; i++) {
-//        [self.tilesArray insertObject:[NSMutableArray arrayWithArray:innerArray] atIndex:i];
-//    }
-    
     //remove word once added
     NSMutableArray *usableWords = [NSMutableArray arrayWithArray:words];
     
@@ -556,7 +473,6 @@
     NSString *first = [words objectAtIndex:randomIndex];
     [usableWords removeObject:first];
     [self createTiles:first :0 :0 :YES];
-//    [self createTilesTesting:first :0 :0 :YES];
     
     //pick random letter in first word
     NSUInteger secondStart = arc4random() % first.length; //(secondStart, 0)
@@ -567,7 +483,6 @@
     NSString *second = [secondOptions objectAtIndex:randomIndex];
     [usableWords removeObject:second];
     [self createTiles:second :(int) secondStart :0 :NO];
-//    [self createTilesTesting:second :(int) secondStart :0 :NO];
 
     //pick random letter in second word (not first or second)
     NSUInteger thirdStartY = (arc4random() % (second.length - 2) + 2); //(??, thirdStartY)
@@ -580,9 +495,6 @@
     NSArray *thirdStartXLocations = [thirdOptionsLocations objectForKey:third];
     [usableWords removeObject:third];
     [self createTiles:third :  [[thirdStartXLocations objectAtIndex:arc4random() % thirdStartXLocations.count] intValue]:(int) thirdStartY :YES];
-//    [self createTilesTesting:third :  [[thirdStartXLocations objectAtIndex:arc4random() % thirdStartXLocations.count] intValue]:(int) thirdStartY :YES];
-    
-//    [self printSquareArray:self.tilesArray];
 }
 
 - (NSDictionary *)arrayOfValidStringsWithLetterAtIndex : (NSArray *)words : (NSString *)letter : (NSUInteger)index {
