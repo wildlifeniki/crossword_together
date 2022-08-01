@@ -15,6 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) PFObject *game;
 @property (nonatomic, strong) PFObject *currUser;
 
+- (void) createBoard: (NSArray *)words;
+
+- (NSDictionary *)arrayOfValidStringsWithLetterAtIndex : (NSArray *)words : (NSString *)letter : (NSUInteger)index;
+
 @end
 
 NS_ASSUME_NONNULL_END
