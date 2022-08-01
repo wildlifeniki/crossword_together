@@ -42,49 +42,49 @@
     if (self.game[@"tilesArray"] == nil) {
         //initialize dictionary
         self.wordCluePairs = [NSDictionary dictionaryWithObjectsAndKeys:
-                              @"apple",@"apple",
-                              @"banana",@"banana",
-                              @"carrot",@"carrot",
-                              @"dinosaur",@"dinosaur",
-                              @"enigma",@"enigma",
-                              @"fishy",@"fishy",
-                              @"gorilla",@"gorilla",
-                              @"hippo",@"hippo",
-                              @"iguana",@"iguana",
-                              @"jaguar",@"jaguar",
-                              @"king",@"king",
-                              @"lame",@"lame",
-                              @"mirage",@"mirage",
-                              @"nicer",@"nicer",
-                              @"opal",@"opal",
-                              @"penguin",@"penguin",
-                              @"red",@"red",
-                              @"tyrant",@"tyrant",
-                              @"umbrella",@"umbrella",
-                              @"vivid",@"vivid",
-                              @"yearn",@"yearn",
-                              @"aphid",@"aphid",
-                              @"blue",@"blue",
-                              @"crayon",@"crayon",
-                              @"doubt",@"doubt",
-                              @"elephant",@"elephant",
-                              @"fairy",@"fairy",
-                              @"green",@"green",
-                              @"hoist",@"hoist",
-                              @"implode",@"implode",
-                              @"joker",@"joker",
-                              @"knight",@"knight",
-                              @"living",@"living",
-                              @"monkey",@"monkey",
-                              @"neon",@"neon",
-                              @"orange",@"orange",
-                              @"purple",@"purple",
-                              @"royal",@"royal",
-                              @"stupid",@"stupid",
-                              @"think",@"think",
-                              @"unicorn",@"unicorn",
-                              @"veins",@"veins",
-                              @"yellow",@"yellow",
+                              @"apple",@"iPhone company",
+                              @"banana",@"Bunch of produce",
+                              @"carrot",@"Nose on a snowman",
+                              @"dinosaur",@"Jurassic animal",
+                              @"enigma",@"Mystery",
+                              @"fishy",@"Suspicious",
+                              @"gorilla",@"Silverback",
+                              @"hippos",@"Game: Hungry hungry _____",
+                              @"iguana",@"South American lizard",
+                              @"jumprope",@"Schoolyard activity",
+                              @"king",@"Queen's mate",
+                              @"lame",@"Uncool",
+                              @"mirage",@"Sahara sight",
+                              @"niagra",@"Big fall",
+                              @"opal",@"Pearly stone",
+                              @"penguin",@"Pablo from The Backyardigans",
+                              @"relax",@"Chill",
+                              @"tulip",@"Spring Flower",
+                              @"umbrella",@"Rihanna song from 2007",
+                              @"vivid",@"Colorful",
+                              @"yearn",@"Wants badly",
+                              @"aphid",@"Ladybug snack",
+                              @"bran",@"High fiber ingredient",
+                              @"crayon",@"Wax coloring method",
+                              @"doubt",@"Uncertainty",
+                              @"elephant",@"Mammoth cousin",
+                              @"fairy",@"Collects teeth",
+                              @"green",@"Lush",
+                              @"hoist",@"Lift up",
+                              @"implode",@"Collapse",
+                              @"joker",@"Card that may be wild",
+                              @"knight",@"Chess piece that looks like a horse",
+                              @"living",@"Not dead",
+                              @"monkey",@"Banana consumer",
+                              @"neon",@"Bright sign",
+                              @"orange",@"Disneyland's county",
+                              @"purple",@"Royal color",
+                              @"rises",@"What bread does",
+                              @"stupid",@"Dunce",
+                              @"tango",@"Letter after Sierra",
+                              @"unicorn",@"Horse's mythical relative",
+                              @"venti",@"Starbucks cup size",
+                              @"yellow",@"Canary color",
                               nil];
         
         //initalize indexes for collectionview
@@ -470,31 +470,31 @@
     
     //pick random word to go across top
     NSUInteger randomIndex = arc4random() % usableWords.count;
-    NSString *first = [words objectAtIndex:randomIndex];
-    [usableWords removeObject:first];
-    [self createTiles:first :0 :0 :YES];
+    NSString *firstWord = [words objectAtIndex:randomIndex];
+    [usableWords removeObject:firstWord];
+    [self createTiles:firstWord :0 :0 :YES];
     
     //pick random letter in first word
-    NSUInteger secondStart = arc4random() % first.length; //(secondStart, 0)
-    NSString *secondLetter = [first substringWithRange:NSMakeRange(secondStart, 1)];
+    NSUInteger secondStart = arc4random() % firstWord.length; //(secondStart, 0)
+    NSString *secondLetter = [firstWord substringWithRange:NSMakeRange(secondStart, 1)];
     NSArray *secondOptions = [usableWords filteredArrayUsingPredicate: [NSPredicate predicateWithFormat:@"SELF BEGINSWITH %@", secondLetter]];
     //pick random word to go down from letter
     randomIndex = arc4random() % secondOptions.count;
-    NSString *second = [secondOptions objectAtIndex:randomIndex];
-    [usableWords removeObject:second];
-    [self createTiles:second :(int) secondStart :0 :NO];
+    NSString *secondWord = [secondOptions objectAtIndex:randomIndex];
+    [usableWords removeObject:secondWord];
+    [self createTiles:secondWord :(int) secondStart :0 :NO];
 
     //pick random letter in second word (not first or second)
-    NSUInteger thirdStartY = (arc4random() % (second.length - 2) + 2); //(??, thirdStartY)
-    NSString *thirdLetter = [second substringWithRange:NSMakeRange(thirdStartY, 1)];
+    NSUInteger thirdStartY = (arc4random() % (secondWord.length - 2) + 2); //(??, thirdStartY)
+    NSString *thirdLetter = [secondWord substringWithRange:NSMakeRange(thirdStartY, 1)];
     NSDictionary *thirdOptionsLocations = [self arrayOfValidStringsWithLetterAtIndex:usableWords :thirdLetter :secondStart];
     NSArray *thirdOptions = [thirdOptionsLocations allKeys];
     //pick random word to go across from letter
     randomIndex = arc4random() % thirdOptions.count;
-    NSString *third = [thirdOptions objectAtIndex:randomIndex];
-    NSArray *thirdStartXLocations = [thirdOptionsLocations objectForKey:third];
-    [usableWords removeObject:third];
-    [self createTiles:third :  [[thirdStartXLocations objectAtIndex:arc4random() % thirdStartXLocations.count] intValue]:(int) thirdStartY :YES];
+    NSString *thirdWord = [thirdOptions objectAtIndex:randomIndex];
+    NSArray *thirdStartXLocations = [thirdOptionsLocations objectForKey:thirdWord];
+    [usableWords removeObject:thirdWord];
+    [self createTiles:thirdWord :  [[thirdStartXLocations objectAtIndex:arc4random() % thirdStartXLocations.count] intValue]:(int) thirdStartY :YES];
 }
 
 - (NSDictionary *)arrayOfValidStringsWithLetterAtIndex : (NSArray *)words : (NSString *)letter : (NSUInteger)index {
