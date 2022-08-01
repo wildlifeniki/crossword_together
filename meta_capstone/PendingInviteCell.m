@@ -23,6 +23,7 @@
 }
 
 - (void)setCellInfo:(PFObject *)game {
+    self.contentView.backgroundColor = [UIColor clearColor];
     self.game = game;
     PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
     [query whereKey:@"fbID" equalTo:game[@"inviteID"]];
@@ -42,22 +43,24 @@
 }
 
 - (void)deleteInvite {
+    [self.selfUser removeObject:self.game.objectId forKey:@"pendingInvites"];
+    [self.selfUser save];
     [UIView animateWithDuration:1.0 animations:^{
         self.contentView.backgroundColor = [UIColor redColor];
     } completion:NULL];
     
-    [self.selfUser removeObject:self.game.objectId forKey:@"pendingInvites"];
-    [self.selfUser save];
+
 }
 
 - (void)acceptInvite {
-    [UIView animateWithDuration:1.0 animations:^{
-        self.contentView.backgroundColor = [UIColor blueColor];
-    } completion:NULL];
-    
     [self.selfUser removeObject:self.game.objectId forKey:@"pendingInvites"];
     [self.selfUser addObject:self.game.objectId forKey:@"activeGames"];
     [self.selfUser save];
+    [self.game[@"activeUsers"] addObject:self.selfUser[@"fbID"] forKey:@"activePlayerIDs"];
+    [self.game save];
+    [UIView animateWithDuration:1.0 animations:^{
+        self.contentView.backgroundColor = [UIColor blueColor];
+    } completion:NULL];
 }
 
 
