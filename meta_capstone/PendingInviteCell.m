@@ -41,20 +41,29 @@
     self.selfUser = userObjects.firstObject;
 }
 
-- (IBAction)didTapDeny:(id)sender {
-    NSLog(@"denied");
+- (void)deleteInvite {
+    [UIView animateWithDuration:1.0 animations:^{
+        self.contentView.backgroundColor = [UIColor redColor];
+    } completion:NULL];
+    
     [self.selfUser removeObject:self.game.objectId forKey:@"pendingInvites"];
     [self.selfUser save];
 }
 
-//accepting invite means: game gets added to active games for user, updates active games table, user gets added to active players for game
-- (IBAction)didTapAccept:(id)sender {
-    NSLog(@"accepted");
+- (void)acceptInvite {
+    [UIView animateWithDuration:1.0 animations:^{
+        self.contentView.backgroundColor = [UIColor blueColor];
+    } completion:NULL];
+    
     [self.selfUser removeObject:self.game.objectId forKey:@"pendingInvites"];
     [self.selfUser addObject:self.game.objectId forKey:@"activeGames"];
     [self.selfUser save];
-
 }
 
+
+//accepting invite means: game gets added to active games for user, updates active games table, user gets added to active players for game
+- (IBAction)didTapAccept:(id)sender {
+    [self acceptInvite];
+}
 
 @end
