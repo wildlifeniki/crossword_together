@@ -18,7 +18,6 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
     // Configure the view for the selected state
 }
 
@@ -56,7 +55,7 @@
     [self.selfUser removeObject:self.game.objectId forKey:@"pendingInvites"];
     [self.selfUser addObject:self.game.objectId forKey:@"activeGames"];
     [self.selfUser save];
-    [self.game[@"activeUsers"] addObject:self.selfUser[@"fbID"] forKey:@"activePlayerIDs"];
+    [self.game addObject:self.selfUser[@"fbID"] forKey:@"activePlayerIDs"];
     [self.game save];
     [UIView animateWithDuration:1.0 animations:^{
         self.contentView.backgroundColor = [UIColor blueColor];

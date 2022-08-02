@@ -42,49 +42,49 @@
     if (self.game[@"tilesArray"] == nil) {
         //initialize dictionary
         self.wordCluePairs = [NSDictionary dictionaryWithObjectsAndKeys:
-                              @"apple",@"iPhone company",
-                              @"banana",@"Bunch of produce",
-                              @"carrot",@"Nose on a snowman",
-                              @"dinosaur",@"Jurassic animal",
-                              @"enigma",@"Mystery",
-                              @"fishy",@"Suspicious",
-                              @"gorilla",@"Silverback",
-                              @"hippos",@"Game: Hungry hungry _____",
-                              @"iguana",@"South American lizard",
-                              @"jumprope",@"Schoolyard activity",
-                              @"king",@"Queen's mate",
-                              @"lame",@"Uncool",
-                              @"mirage",@"Sahara sight",
-                              @"niagra",@"Big fall",
-                              @"opal",@"Pearly stone",
-                              @"penguin",@"Pablo from The Backyardigans",
+                              @"iPhone company", @"apple",
+                              @"Bunch of produce", @"banana",
+                              @"Nose on a snowman", @"carrot",
+                              @"Jurassic animal", @"dinosaur",
+                              @"Mystery", @"enigma",
+                              @"Suspicious", @"fishy",
+                              @"Silverback", @"gorilla",
+                              @"They eat marbles in a classic children's game", @"hippos",
+                              @"South American lizard",@"iguana",
+                              @"Schoolyard activity",@"jumprope",
+                              @"Queen's mate",@"king",
+                              @"Uncool",@"lame",
+                              @"Sahara sight",@"mirage",
+                              @"Big fall",@"niagra",
+                              @"Pearly stone",@"opal",
+                              @"Pablo from The Backyardigans",@"penguin",
                               @"relax",@"Chill",
-                              @"tulip",@"Spring Flower",
-                              @"umbrella",@"Rihanna song from 2007",
-                              @"vivid",@"Colorful",
-                              @"yearn",@"Wants badly",
-                              @"aphid",@"Ladybug snack",
-                              @"bran",@"High fiber ingredient",
-                              @"crayon",@"Wax coloring method",
-                              @"doubt",@"Uncertainty",
-                              @"elephant",@"Mammoth cousin",
-                              @"fairy",@"Collects teeth",
-                              @"green",@"Lush",
-                              @"hoist",@"Lift up",
-                              @"implode",@"Collapse",
-                              @"joker",@"Card that may be wild",
-                              @"knight",@"Chess piece that looks like a horse",
-                              @"living",@"Not dead",
-                              @"monkey",@"Banana consumer",
-                              @"neon",@"Bright sign",
-                              @"orange",@"Disneyland's county",
-                              @"purple",@"Royal color",
-                              @"rises",@"What bread does",
-                              @"stupid",@"Dunce",
-                              @"tango",@"Letter after Sierra",
-                              @"unicorn",@"Horse's mythical relative",
-                              @"venti",@"Starbucks cup size",
-                              @"yellow",@"Canary color",
+                              @"Spring Flower",@"tulip",
+                              @"Rihanna song from 2007",@"umbrella",
+                              @"Colorful",@"vivid",
+                              @"Wants badly",@"yearns",
+                              @"Ladybug snack",@"aphid",
+                              @"High fiber ingredient",@"bran",
+                              @"Waxy coloring utensil",@"crayon",
+                              @"Uncertainty",@"doubt",
+                              @"Mammoth cousin",@"elephant",
+                              @"Collects teeth",@"fairy",
+                              @"Lush",@"green",
+                              @"Lift up",@"hoist",
+                              @"Collapse",@"implode",
+                              @"Card that may be wild",@"joker",
+                              @"Chess piece that looks like a horse",@"knight",
+                              @"Not dead",@"living",
+                              @"Banana consumer",@"monkey",
+                              @"Bright sign",@"neon",
+                              @"Disneyland's county",@"orange",
+                              @"Royal color",@"purple",
+                              @"What bread does",@"rises",
+                              @"Dunce",@"stupid",
+                              @"Letter after Sierra",@"tango",
+                              @"Horse's mythical relative",@"unicorn",
+                              @"Starbucks cup size",@"venti",
+                              @"Canary color",@"yellow",
                               nil];
         
         //initalize indexes for collectionview
@@ -189,26 +189,35 @@
 }
 
 - (void) checkHostAccept {
-    self.game = [[PFQuery queryWithClassName:@"Game"] getObjectWithId:self.game.objectId];
-    NSString *requesting = self.game[@"requestingHost"];
-    if([self.game[@"requestedBy"] isEqualToString:self.currUser[@"fbID"]]) {
-        UIAlertController *alert;
-        if([requesting isEqualToString:@"Accepted"] || [requesting isEqualToString:@"Denied"]) {
-            NSString *title = [NSString stringWithFormat:@"Host Request %@", requesting];
-            alert = [UIAlertController alertControllerWithTitle:title
-                                           message:@""
-                                           preferredStyle:UIAlertControllerStyleAlert];
-            
-            UIAlertAction* ok = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault
-               handler:^(UIAlertAction * action) {
-                [self.game removeObjectForKey:@"requestingHost"];
-                [self.game save];
-                [alert dismissViewControllerAnimated:YES completion:nil];
-                [self viewDidLoad];
-            }];
-            
-            [alert addAction:ok];
-            [self presentViewController:alert animated:YES completion:nil];
+    self.game = [[PFQuery queryWithClassName:@"Game"] getObjectWithId:self.game.objectId];    
+    //check if game has been finished
+    if (self.game == nil) {
+        UIAlertController* alert = [self completionAlert];
+        [self.timer invalidate];
+        [self.updateTimer invalidate];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else {
+        NSString *requesting = self.game[@"requestingHost"];
+        if([self.game[@"requestedBy"] isEqualToString:self.currUser[@"fbID"]]) {
+            UIAlertController *alert;
+            if([requesting isEqualToString:@"Accepted"] || [requesting isEqualToString:@"Denied"]) {
+                NSString *title = [NSString stringWithFormat:@"Host Request %@", requesting];
+                alert = [UIAlertController alertControllerWithTitle:title
+                                               message:@""
+                                               preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction* ok = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault
+                   handler:^(UIAlertAction * action) {
+                    [self.game removeObjectForKey:@"requestingHost"];
+                    [self.game save];
+                    [alert dismissViewControllerAnimated:YES completion:nil];
+                    [self viewDidLoad];
+                }];
+                
+                [alert addAction:ok];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
         }
     }
 }
@@ -233,7 +242,7 @@
             tile[@"xIndex"] = [NSNumber numberWithInt:xIndex];
             tile[@"yIndex"] = [NSNumber numberWithInt:yIndex];
             tile[@"correctLetter"] = letter;
-            tile[@"inputLetter"] = @" ";
+            tile[@"inputLetter"] = @"";
             tile[@"gameID"] = self.game.objectId;
         }
         else
@@ -350,19 +359,11 @@
     
     //if correct, make alert saying everything is correct (ok closes alert and controller)
     if (correct) {
-        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Complete!"
-                                       message:@"Congratulations, you have finished this board."
-                                       preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Finish Game" style:UIAlertActionStyleDefault
-           handler:^(UIAlertAction * action) {
-            [alert dismissViewControllerAnimated:YES completion:nil];
-            [self dismissViewControllerAnimated:true completion:nil];
-        }];
         [self.timer invalidate];
         [self.updateTimer invalidate];
         [self updatePlayerData];
         [self removeGameData];
-        [alert addAction:defaultAction];
+        UIAlertController* alert = [self completionAlert];
         [self presentViewController:alert animated:YES completion:nil];
     }
     
@@ -381,6 +382,19 @@
     }
 }
 
+- (UIAlertController*)completionAlert {
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Complete!"
+                                   message:@"Congratulations, you have finished this board."
+                                   preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Finish Game" style:UIAlertActionStyleDefault
+       handler:^(UIAlertAction * action) {
+        [alert dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:true completion:nil];
+    }];
+    [alert addAction:defaultAction];
+    return alert;
+}
+
 - (IBAction)didTapClose:(id)sender {
     [self.timer invalidate];
     [self.updateTimer invalidate];
@@ -388,6 +402,7 @@
 }
 
 - (void)updatePlayerData {
+    self.game = [[PFQuery queryWithClassName:@"Game"] getObjectWithId:self.game.objectId];
     //get array of players in game
     NSArray *playerIDs = self.game[@"activePlayerIDs"];
     PFQuery *usersQuery = [PFQuery queryWithClassName:@"AppUser"];
