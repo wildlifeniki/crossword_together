@@ -18,11 +18,11 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
     // Configure the view for the selected state
 }
 
 - (void)setCellInfo:(PFObject *)game {
+    self.contentView.backgroundColor = [UIColor clearColor];
     self.game = game;
     PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
     [query whereKey:@"fbID" equalTo:game[@"inviteID"]];
@@ -41,20 +41,31 @@
     self.selfUser = userObjects.firstObject;
 }
 
-- (IBAction)didTapDeny:(id)sender {
-    NSLog(@"denied");
+- (void)deleteInvite {
     [self.selfUser removeObject:self.game.objectId forKey:@"pendingInvites"];
     [self.selfUser save];
+    [UIView animateWithDuration:1.0 animations:^{
+        self.contentView.backgroundColor = [UIColor redColor];
+    } completion:NULL];
+    
+
 }
 
-//accepting invite means: game gets added to active games for user, updates active games table, user gets added to active players for game
-- (IBAction)didTapAccept:(id)sender {
-    NSLog(@"accepted");
+- (void)acceptInvite {
     [self.selfUser removeObject:self.game.objectId forKey:@"pendingInvites"];
     [self.selfUser addObject:self.game.objectId forKey:@"activeGames"];
     [self.selfUser save];
-
+    [self.game addObject:self.selfUser[@"fbID"] forKey:@"activePlayerIDs"];
+    [self.game save];
+    [UIView animateWithDuration:1.0 animations:^{
+        self.contentView.backgroundColor = [UIColor blueColor];
+    } completion:NULL];
 }
 
+
+//accepting invite means: game gets added to active games for user, updates active games table, user gets added to active players for game
+- (IBAction)didTapAccept:(id)sender {
+    [self acceptInvite];
+}
 
 @end

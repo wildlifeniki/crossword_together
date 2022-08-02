@@ -109,6 +109,15 @@
     if ([tableView.restorationIdentifier isEqualToString:@"inviteTable"]) {
         PendingInviteCell *cell = [tableView dequeueReusableCellWithIdentifier:@"inviteCell" forIndexPath:indexPath];
         [cell setCellInfo:self.invitesArray[indexPath.row]];
+        
+        UISwipeGestureRecognizer *rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:cell action:@selector(deleteInvite)];
+        rightSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
+        [cell addGestureRecognizer:rightSwipe];
+        
+        UISwipeGestureRecognizer *leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:cell action:@selector(acceptInvite)];
+        leftSwipe.direction = UISwipeGestureRecognizerDirectionRight;
+        [cell addGestureRecognizer:leftSwipe];
+        
         return cell;
     }
     else {

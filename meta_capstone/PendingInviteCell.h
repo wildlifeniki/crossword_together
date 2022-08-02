@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) PFObject *selfUser;
 
 - (void)setCellInfo:(PFObject *)game;
+- (void)deleteInvite;
+- (void)acceptInvite;
 
 @end
 

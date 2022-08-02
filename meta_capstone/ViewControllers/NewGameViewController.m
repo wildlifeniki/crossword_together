@@ -89,7 +89,7 @@
 
 - (void)addUserNotification:(NSNotification *)notification {
     NSDictionary *userInfo = notification.userInfo;
-    if (self.inviteUsers.count <= 1) {
+    if (self.inviteUsers.count <= 3) {
         [self.inviteUsers addObject:userInfo[@"cellUser"]];
     }
     else {

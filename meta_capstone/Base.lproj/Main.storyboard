@@ -334,42 +334,32 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="inviteCell" rowHeight="111" id="7wm-SK-dpP" customClass="PendingInviteCell">
-                                        <rect key="frame" x="0.0" y="44.5" width="414" height="111"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="inviteCell" rowHeight="46" id="7wm-SK-dpP" customClass="PendingInviteCell">
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="46"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7wm-SK-dpP" id="eFU-aR-08x">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="111"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="46"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Invitation from: username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0TS-sD-Xmq">
-                                                    <rect key="frame" x="20" y="11" width="194" height="21"/>
+                                                    <rect key="frame" x="20" y="11" width="194" height="24"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZWc-1A-Bfd">
-                                                    <rect key="frame" x="20" y="40" width="58" height="60"/>
-                                                    <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="plain" title="Deny"/>
-                                                    <connections>
-                                                        <action selector="didTapDeny:" destination="7wm-SK-dpP" eventType="touchUpInside" id="hcm-zs-c7c"/>
-                                                    </connections>
-                                                </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t5W-gY-waA">
-                                                    <rect key="frame" x="324" y="54.5" width="70" height="31"/>
+                                                    <rect key="frame" x="350" y="7.5" width="44" height="31"/>
                                                     <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="filled" title="Accept"/>
+                                                    <buttonConfiguration key="configuration" style="filled" image="checkmark" catalog="system"/>
                                                     <connections>
                                                         <action selector="didTapAccept:" destination="7wm-SK-dpP" eventType="touchUpInside" id="boi-cl-b6y"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="t5W-gY-waA" firstAttribute="centerY" secondItem="ZWc-1A-Bfd" secondAttribute="centerY" id="0fI-Ku-pSb"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="ZWc-1A-Bfd" secondAttribute="bottom" id="2co-YM-VCA"/>
-                                                <constraint firstItem="ZWc-1A-Bfd" firstAttribute="top" secondItem="0TS-sD-Xmq" secondAttribute="bottom" constant="8" symbolic="YES" id="6qA-ve-a3A"/>
-                                                <constraint firstItem="t5W-gY-waA" firstAttribute="trailing" secondItem="eFU-aR-08x" secondAttribute="trailingMargin" id="AKA-vO-eFu"/>
-                                                <constraint firstItem="ZWc-1A-Bfd" firstAttribute="leading" secondItem="eFU-aR-08x" secondAttribute="leadingMargin" id="St2-rZ-bXG"/>
+                                                <constraint firstItem="t5W-gY-waA" firstAttribute="centerY" secondItem="0TS-sD-Xmq" secondAttribute="centerY" id="1Va-RV-q9w"/>
+                                                <constraint firstAttribute="trailing" secondItem="t5W-gY-waA" secondAttribute="trailing" constant="20" symbolic="YES" id="Tdl-dy-gbQ"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="0TS-sD-Xmq" secondAttribute="bottom" id="TlA-Gr-6qG"/>
                                                 <constraint firstItem="0TS-sD-Xmq" firstAttribute="leading" secondItem="eFU-aR-08x" secondAttribute="leadingMargin" id="n98-22-VTS"/>
                                                 <constraint firstItem="0TS-sD-Xmq" firstAttribute="top" secondItem="eFU-aR-08x" secondAttribute="topMargin" id="nGG-cn-lsL"/>
                                             </constraints>
