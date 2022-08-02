@@ -371,9 +371,10 @@
         FCAlertView *incorrectAlert = [[FCAlertView alloc] init];
         [incorrectAlert showAlertWithTitle:@"Not Quite..."
                               withSubtitle:@"The board is not yet correct."
-                           withCustomImage:nil
+                           withCustomImage:[UIImage imageNamed:@"incorrectAlert"]
                        withDoneButtonTitle:@"Back to Game"
                                 andButtons:nil];
+        incorrectAlert.avoidCustomImageTint = YES;
     }
 }
 
@@ -381,9 +382,10 @@
     FCAlertView *correctAlert = [[FCAlertView alloc] init];
     [correctAlert showAlertWithTitle:@"Complete!"
                           withSubtitle:@"Congratulations, you have finished this board."
-                     withCustomImage: nil
+                     withCustomImage: [UIImage imageNamed:@"correctAlert"]
                    withDoneButtonTitle:@"Finish Game"
                             andButtons:nil];
+    correctAlert.avoidCustomImageTint = YES;
     [correctAlert doneActionBlock:^{
         [self dismissViewControllerAnimated:true completion:nil];
     }];
