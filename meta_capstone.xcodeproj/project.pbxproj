@@ -715,7 +715,7 @@
 				DEVELOPMENT_TEAM = U8WH5D6D56;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = meta_capstone/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = crossword;
+				INFOPLIST_KEY_CFBundleDisplayName = CT;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -745,7 +745,7 @@
 				DEVELOPMENT_TEAM = U8WH5D6D56;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = meta_capstone/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = crossword;
+				INFOPLIST_KEY_CFBundleDisplayName = CT;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

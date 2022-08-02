@@ -9,6 +9,7 @@ target 'meta_capstone' do
   pod 'AFNetworking'
   pod 'FBSDKLoginKit'
   pod 'Parse'
+  pod 'FCAlertView'
 
   target 'meta_capstoneTests' do
     inherit! :search_paths
