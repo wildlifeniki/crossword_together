@@ -59,7 +59,7 @@
                               @"Big fall",@"niagra",
                               @"Pearly stone",@"opal",
                               @"Pablo from The Backyardigans",@"penguin",
-                              @"relax",@"Chill",
+                              @"Chill", @"relax",
                               @"Spring Flower",@"tulip",
                               @"Rihanna song from 2007",@"umbrella",
                               @"Colorful",@"vivid",
@@ -375,6 +375,8 @@
                        withDoneButtonTitle:@"Back to Game"
                                 andButtons:nil];
         incorrectAlert.avoidCustomImageTint = YES;
+        incorrectAlert.bounceAnimations = YES;
+        incorrectAlert.customImageScale = 1.5;
     }
 }
 
@@ -386,6 +388,8 @@
                    withDoneButtonTitle:@"Finish Game"
                             andButtons:nil];
     correctAlert.avoidCustomImageTint = YES;
+    correctAlert.customImageScale = 1.5;
+    correctAlert.bounceAnimations = YES;
     [correctAlert doneActionBlock:^{
         [self dismissViewControllerAnimated:true completion:nil];
     }];
