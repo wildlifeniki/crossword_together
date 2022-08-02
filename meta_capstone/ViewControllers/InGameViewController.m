@@ -8,6 +8,7 @@
 #import "InGameViewController.h"
 #import "Tile.h"
 #import "BoardTileCell.h"
+#import "FCAlertView/FCAlertView.h"
 
 @interface InGameViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 
@@ -192,10 +193,9 @@
     self.game = [[PFQuery queryWithClassName:@"Game"] getObjectWithId:self.game.objectId];    
     //check if game has been finished
     if (self.game == nil) {
-        UIAlertController* alert = [self completionAlert];
         [self.timer invalidate];
         [self.updateTimer invalidate];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self completionAlert];
     }
     else {
         NSString *requesting = self.game[@"requestingHost"];
@@ -363,36 +363,30 @@
         [self.updateTimer invalidate];
         [self updatePlayerData];
         [self removeGameData];
-        UIAlertController* alert = [self completionAlert];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self completionAlert];
     }
     
     //if not correct, make alert saying everything is not correct yet (ok just closes alert)
     else {
-        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Not Quite..."
-                                       message:@"The board is not yet correct."
-                                       preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Back to Game" style:UIAlertActionStyleDefault
-           handler:^(UIAlertAction * action) {
-            [alert dismissViewControllerAnimated:YES completion:nil];
-        }];
-        
-        [alert addAction:defaultAction];
-        [self presentViewController:alert animated:YES completion:nil];
+        FCAlertView *incorrectAlert = [[FCAlertView alloc] init];
+        [incorrectAlert showAlertWithTitle:@"Not Quite..."
+                              withSubtitle:@"The board is not yet correct."
+                           withCustomImage:nil
+                       withDoneButtonTitle:@"Back to Game"
+                                andButtons:nil];
     }
 }
 
-- (UIAlertController*)completionAlert {
-    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Complete!"
-                                   message:@"Congratulations, you have finished this board."
-                                   preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"Finish Game" style:UIAlertActionStyleDefault
-       handler:^(UIAlertAction * action) {
-        [alert dismissViewControllerAnimated:YES completion:nil];
+- (void)completionAlert {
+    FCAlertView *correctAlert = [[FCAlertView alloc] init];
+    [correctAlert showAlertWithTitle:@"Complete!"
+                          withSubtitle:@"Congratulations, you have finished this board."
+                     withCustomImage: nil
+                   withDoneButtonTitle:@"Finish Game"
+                            andButtons:nil];
+    [correctAlert doneActionBlock:^{
         [self dismissViewControllerAnimated:true completion:nil];
     }];
-    [alert addAction:defaultAction];
-    return alert;
 }
 
 - (IBAction)didTapClose:(id)sender {
