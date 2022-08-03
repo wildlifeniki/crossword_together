@@ -438,24 +438,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gdu-WZ-Hq0">
-                                <rect key="frame" x="20" y="728" width="374" height="80"/>
-                                <color key="backgroundColor" name="CTBlue"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="0QG-wl-Edn"/>
-                                </constraints>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Start Game">
-                                    <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="32"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="didTapStartGame:" destination="fe4-Zq-3V1" eventType="touchUpInside" id="ilF-A0-UFd"/>
-                                </connections>
-                            </button>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="XJV-la-oin">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="XJV-la-oin">
                                 <rect key="frame" x="0.0" y="56" width="414" height="664"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <searchBar key="tableHeaderView" contentMode="redraw" id="VVe-Yp-te0">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -484,9 +468,12 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N8d-Ee-1ww">
-                                                    <rect key="frame" x="339" y="27" width="44" height="31"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N8d-Ee-1ww">
+                                                    <rect key="frame" x="339" y="26" width="44" height="31"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="31" id="CyC-vb-vMh"/>
+                                                        <constraint firstAttribute="width" constant="44" id="jsb-Te-n54"/>
+                                                    </constraints>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="gray" image="plus" catalog="system"/>
                                                     <connections>
@@ -499,7 +486,9 @@
                                                 <constraint firstAttribute="trailingMargin" secondItem="cQW-sU-TgT" secondAttribute="trailing" id="Rz7-Mk-c4F"/>
                                                 <constraint firstAttribute="bottom" secondItem="yRu-sw-0iD" secondAttribute="bottom" id="Xnr-XM-BAe"/>
                                                 <constraint firstItem="cQW-sU-TgT" firstAttribute="centerY" secondItem="yRu-sw-0iD" secondAttribute="centerY" id="Xzs-JC-JJx"/>
+                                                <constraint firstItem="N8d-Ee-1ww" firstAttribute="centerY" secondItem="nWT-3k-MUw" secondAttribute="centerY" id="ahw-4x-2R1"/>
                                                 <constraint firstItem="yRu-sw-0iD" firstAttribute="leading" secondItem="nWT-3k-MUw" secondAttribute="leading" constant="20" symbolic="YES" id="ebk-Jx-P4O"/>
+                                                <constraint firstAttribute="trailing" secondItem="N8d-Ee-1ww" secondAttribute="trailing" constant="31" id="n6s-Ej-zNg"/>
                                                 <constraint firstItem="cQW-sU-TgT" firstAttribute="leading" secondItem="yRu-sw-0iD" secondAttribute="trailing" constant="6" id="tnQ-bl-Nqr"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -511,14 +500,32 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gdu-WZ-Hq0">
+                                <rect key="frame" x="20" y="728" width="374" height="80"/>
+                                <color key="backgroundColor" name="CTBlue"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="0QG-wl-Edn"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Start Game">
+                                    <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="32"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="didTapStartGame:" destination="fe4-Zq-3V1" eventType="touchUpInside" id="ilF-A0-UFd"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="sth-Zb-FDi"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="gdu-WZ-Hq0" firstAttribute="centerX" secondItem="sth-Zb-FDi" secondAttribute="centerX" id="2Uq-Pq-D5q"/>
-                            <constraint firstItem="sth-Zb-FDi" firstAttribute="bottom" secondItem="gdu-WZ-Hq0" secondAttribute="bottom" constant="34" id="8Ll-Ji-aXa"/>
-                            <constraint firstItem="gdu-WZ-Hq0" firstAttribute="leading" secondItem="sth-Zb-FDi" secondAttribute="leading" constant="20" id="Oac-Kp-Kyy"/>
-                            <constraint firstItem="sth-Zb-FDi" firstAttribute="trailing" secondItem="gdu-WZ-Hq0" secondAttribute="trailing" constant="20" id="dob-U4-Tuy"/>
+                            <constraint firstItem="sth-Zb-FDi" firstAttribute="trailing" secondItem="gdu-WZ-Hq0" secondAttribute="trailing" constant="20" id="73U-s2-Hqv"/>
+                            <constraint firstItem="XJV-la-oin" firstAttribute="leading" secondItem="sth-Zb-FDi" secondAttribute="leading" id="AaH-69-nWt"/>
+                            <constraint firstItem="gdu-WZ-Hq0" firstAttribute="leading" secondItem="sth-Zb-FDi" secondAttribute="leading" constant="20" id="CJS-qf-Lcm"/>
+                            <constraint firstItem="XJV-la-oin" firstAttribute="top" secondItem="sth-Zb-FDi" secondAttribute="top" id="SMZ-zd-Fig"/>
+                            <constraint firstItem="gdu-WZ-Hq0" firstAttribute="firstBaseline" secondItem="XJV-la-oin" secondAttribute="baseline" constant="45.5" symbolType="layoutAnchor" id="Y9Z-bH-JZe"/>
+                            <constraint firstItem="sth-Zb-FDi" firstAttribute="bottom" secondItem="gdu-WZ-Hq0" secondAttribute="bottom" constant="34" id="hdW-Fj-GIV"/>
+                            <constraint firstItem="XJV-la-oin" firstAttribute="trailing" secondItem="sth-Zb-FDi" secondAttribute="trailing" id="xQ9-MJ-gSY"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="New Game" id="iLJ-qa-TMg">

@@ -195,6 +195,7 @@
     if (self.game == nil) {
         [self.timer invalidate];
         [self.updateTimer invalidate];
+        [self.hostTimer invalidate];
         [self completionAlert];
     }
     else {
@@ -361,6 +362,7 @@
     if (correct) {
         [self.timer invalidate];
         [self.updateTimer invalidate];
+        [self.hostTimer invalidate];
         [self updatePlayerData];
         [self removeGameData];
         [self completionAlert];
@@ -398,6 +400,7 @@
 - (IBAction)didTapClose:(id)sender {
     [self.timer invalidate];
     [self.updateTimer invalidate];
+    [self.hostTimer invalidate];
     [self dismissViewControllerAnimated:true completion:nil];
 }
 

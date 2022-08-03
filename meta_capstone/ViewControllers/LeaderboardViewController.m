@@ -27,6 +27,7 @@
 
 - (void)getLeaderboard {
     PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
+    [query whereKey:@"totalGames" notEqualTo:@0];
     [query orderByAscending:@"avgTime"];
     
     NSArray *users = [query findObjects];
