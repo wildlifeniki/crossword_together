@@ -27,7 +27,10 @@
     PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
     [query whereKey:@"fbID" equalTo:game[@"hostID"]];
     self.hostUserLabel.text = [NSString stringWithFormat:@"Host: %@", [query findObjects].firstObject[@"name"]];
-    self.boardFillLabel.text = [NSString stringWithFormat:@"Board is %@ percent filled", game[@"percentComplete"]];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"HH:mm 'on' MM/dd";
+    self.boardFillLabel.text = [NSString stringWithFormat:@"Game started at %@", [dateFormatter stringFromDate:game.createdAt]];
 }
 
 @end

@@ -16,13 +16,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="LaunchLogo" translatesAutoresizingMaskIntoConstraints="NO" id="w3W-TT-40Z">
-                                <rect key="frame" x="123" y="303" width="168" height="147"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchLogo" translatesAutoresizingMaskIntoConstraints="NO" id="w3W-TT-40Z">
+                                <rect key="frame" x="123" y="307.5" width="168" height="147"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="147" id="2dI-j7-BjF"/>
+                                    <constraint firstAttribute="width" constant="168" id="cHZ-He-x1M"/>
+                                </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Crossword Together" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uyp-8R-RHc">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Crossword Together" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uyp-8R-RHc">
                                 <rect key="frame" x="103" y="434" width="209" height="29"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -30,6 +32,12 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Uyp-8R-RHc" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="0hO-7U-Wzn"/>
+                            <constraint firstItem="w3W-TT-40Z" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="1qL-Ul-qPO"/>
+                            <constraint firstItem="Uyp-8R-RHc" firstAttribute="top" secondItem="w3W-TT-40Z" secondAttribute="bottom" constant="-16" id="Fka-wH-wrm"/>
+                            <constraint firstItem="Uyp-8R-RHc" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="hnl-cv-nkw"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -38,7 +46,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="LaunchLogo" width="180" height="180"/>
+        <image name="LaunchLogo" width="90" height="90"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

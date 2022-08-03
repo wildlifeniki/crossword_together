@@ -195,6 +195,7 @@
     if (self.game == nil) {
         [self.timer invalidate];
         [self.updateTimer invalidate];
+        [self.hostTimer invalidate];
         [self completionAlert];
     }
     else {
@@ -307,7 +308,7 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     BoardTileCell *cell = (BoardTileCell *)[collectionView cellForItemAtIndexPath:indexPath];
     cell.inputView.delegate = cell;
-    cell.inputView.backgroundColor = [UIColor systemGray5Color];
+    cell.inputView.backgroundColor = [UIColor colorNamed:@"CTYellow"];
 
     if ([self.game[@"hostID"] isEqualToString:self.currUser[@"fbID"]]) {
         [cell.inputView becomeFirstResponder];
@@ -361,6 +362,7 @@
     if (correct) {
         [self.timer invalidate];
         [self.updateTimer invalidate];
+        [self.hostTimer invalidate];
         [self updatePlayerData];
         [self removeGameData];
         [self completionAlert];
@@ -398,6 +400,7 @@
 - (IBAction)didTapClose:(id)sender {
     [self.timer invalidate];
     [self.updateTimer invalidate];
+    [self.hostTimer invalidate];
     [self dismissViewControllerAnimated:true completion:nil];
 }
 

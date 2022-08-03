@@ -17,6 +17,10 @@
 
 @implementation LeaderboardViewController
 
+- (void)viewDidAppear:(BOOL)animated {
+    [self.tableView reloadData];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -27,6 +31,7 @@
 
 - (void)getLeaderboard {
     PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
+    [query whereKey:@"totalGames" notEqualTo:@0];
     [query orderByAscending:@"avgTime"];
     
     NSArray *users = [query findObjects];

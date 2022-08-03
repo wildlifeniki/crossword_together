@@ -23,11 +23,19 @@
 
 @implementation SelfProfileViewController
 
+- (void)viewDidAppear:(BOOL)animated {
+    [self setProfileData];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.tableView.dataSource = self;
+    [self setProfileData];
     
+}
+
+- (void)setProfileData {
     NSMutableArray *recentsIDs;
     
     PFQuery *idQuery = [PFQuery queryWithClassName:@"AppInfo"];
@@ -41,11 +49,11 @@
     NSArray *userObjects = [query findObjects];
     if ([userObjects count] != 0) {
         recentsIDs = userObjects.firstObject[@"recentlyPlayedWith"];
+
         self.selfProfileTitle.title = userObjects.firstObject[@"name"];
         self.totalGamesLabel.text = [NSString stringWithFormat:@"Total Games: %@", userObjects.firstObject[@"totalGames"]];
         self.bestTimeLabel.text = [NSString stringWithFormat:@"Best Time: %@s", userObjects.firstObject[@"bestTime"]];
         self.avgTimeLabel.text = [NSString stringWithFormat:@"Average Time: %@s", userObjects.firstObject[@"avgTime"]];
-
         
         //get profile picture
         FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
@@ -60,7 +68,7 @@
     }
     
     [self getRecentlyPlayedWith: recentsIDs];
-    
+
 }
 
 - (void)getRecentlyPlayedWith : (NSMutableArray *)recentsIDs {
@@ -81,7 +89,6 @@
     [cell setCellInfo:self.recentsArray[indexPath.row]];
     return cell;
 }
-
 
 - (IBAction)didTapLogout:(id)sender {
     NSLog(@"tapped logout");
