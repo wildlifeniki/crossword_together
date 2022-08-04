@@ -304,7 +304,6 @@
 
 //initialize board ui
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    
     self.xIndex = (int)([indexPath item] % 10);
     self.yIndex = (int)([indexPath item] / 10);
     
@@ -374,11 +373,10 @@
 
 - (IBAction)didTapCheck:(id)sender {
     BOOL correct = YES;
-    
+    [self refreshTilesArray];
     //check if all tiles have correct input
-    for (NSMutableArray *row in self.game[@"tilesArray"]) {
-        for (NSString *tileID in row) {
-            PFObject *tile = [[PFQuery queryWithClassName:@"Tile"] getObjectWithId:tileID];
+    for (NSMutableArray *row in self.tilesArray) {
+        for (PFObject *tile in row) {
             if ([tile[@"fillable"] boolValue]) {
                 if (![tile[@"correctLetter"] isEqualToString:tile[@"inputLetter"]]) {
                     correct = NO;
@@ -387,7 +385,6 @@
         }
     }
     
-    //if correct, make alert saying everything is correct (ok closes alert and controller)
     if (correct) {
         [self.timer invalidate];
         [self.updateTimer invalidate];
@@ -397,7 +394,6 @@
         [self completionAlert];
     }
     
-    //if not correct, make alert saying everything is not correct yet (ok just closes alert)
     else {
         FCAlertView *incorrectAlert = [[FCAlertView alloc] init];
         [incorrectAlert showAlertWithTitle:@"Not Quite..."
@@ -478,9 +474,12 @@
             if (![playerID isEqualToString:player[@"fbID"]])
                 [newRecentIDs addObject:playerID];
         }
-        player[@"recentlyPlayedWith"] = [newRecentIDs arrayByAddingObjectsFromArray:recentIDs];
-        
-        [player save]; //comment if testing without updating backend
+        recentIDs = [NSMutableArray arrayWithArray:[newRecentIDs arrayByAddingObjectsFromArray:recentIDs]];
+        if (recentIDs.count >= 10) {
+            recentIDs = [NSMutableArray arrayWithArray:[recentIDs subarrayWithRange:NSMakeRange(0, 10)]];
+        }
+        player[@"recentlyPlayedWith"] = recentIDs;
+        [player save];
     }
 }
 
@@ -498,7 +497,7 @@
             user[@"activeGames"] = activeGames;
         if (pendingInvites != nil)
             user[@"pendingInvites"] = pendingInvites;
-        [user save]; //comment if testing without updating backend
+        [user save];
     }
     
     //remove tiles
@@ -508,7 +507,7 @@
     }
     
     //remove game object
-    [self.game delete]; //comment if testing without updating backend
+    [self.game delete];
 }
 
 - (void) createBoard: (NSArray *)words {
