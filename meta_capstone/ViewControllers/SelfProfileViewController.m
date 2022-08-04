@@ -77,7 +77,6 @@
 
     NSArray *users = [query findObjects];
     self.recentsArray = [NSMutableArray arrayWithArray:users];
-
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

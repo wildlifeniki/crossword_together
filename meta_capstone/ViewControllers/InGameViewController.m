@@ -38,6 +38,8 @@
     //initialize timer
     self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
     [self.timer fire];
+    
+    self.emptyTile = [[[PFQuery queryWithClassName:@"Tile"] whereKey:@"fillable" equalTo:@NO] findObjects].firstObject; //init emptyTile object
         
     //if no board already in database, create empty board
     if (self.game[@"tilesArray"] == nil) {
@@ -93,7 +95,6 @@
         self.yIndex = 0;
         
         //initialize tilesArray with all unfillable tiles
-        self.emptyTile = [[[PFQuery queryWithClassName:@"Tile"] whereKey:@"fillable" equalTo:@NO] findObjects].firstObject; //init emptyTile object
         int size = 10; //to make square grid
         
         //fill inner array
@@ -117,6 +118,7 @@
         NSArray *words = [self.wordCluePairs allKeys];
         [self createBoard:words];
     }
+    [self refreshTilesArray];
     
     //if user is not the host, remove check button
     if ([self.game[@"hostID"] isEqualToString:self.currUser[@"fbID"]]) {
@@ -148,6 +150,7 @@
     self.game = [[PFQuery queryWithClassName:@"Game"] getObjectWithId:self.game.objectId];
     if ([self.game[@"updated"] boolValue]) {
         self.game[@"updated"] = @NO;
+        [self refreshTilesArray];
         [self.boardCollectionView reloadData];
     }
 }
@@ -258,10 +261,35 @@
     }
 }
 
+//query all tiles in game, set to tilesArray
+- (void) refreshTilesArray {
+    self.game = [[PFQuery queryWithClassName:@"Game"] getObjectWithId:self.game.objectId];
+    NSArray *availableTilesInGame = [[[PFQuery queryWithClassName:@"Tile"] whereKey:@"gameID" equalTo:self.game.objectId] findObjects];
+    NSMutableArray *tilesArray = [NSMutableArray arrayWithArray:@[]];
+    
+    NSArray *tileIDsArray = self.game[@"tilesArray"];
+    for (NSArray *tileIDsRow in tileIDsArray) {
+        NSMutableArray *tilesRow = [NSMutableArray arrayWithArray:@[]];
+        for (NSString *tileID in tileIDsRow) {
+            [tilesRow addObject:[self findTileInArrayWithID:availableTilesInGame :tileID]];
+        }
+        [tilesArray addObject:[NSArray arrayWithArray:tilesRow]];
+    }
+    self.tilesArray = tilesArray;
+}
+
+- (PFObject *) findTileInArrayWithID : (NSArray *)tiles : (NSString *)tileID {
+    for (PFObject* tile in tiles) {
+        if ([tile.objectId isEqualToString:tileID])
+            return tile;
+    }
+    return self.emptyTile;
+}
+
+//query individual tile
 - (PFObject *) getTileAtIndex : (int) xIndex : (int) yIndex {
-    NSMutableArray *innerArray = [self.game[@"tilesArray"] objectAtIndex:yIndex];
-    NSString *tileID = [innerArray objectAtIndex:xIndex];
-    return [[PFQuery queryWithClassName:@"Tile"] getObjectWithId:tileID];
+    NSMutableArray *innerArray = [self.tilesArray objectAtIndex:yIndex];
+    return [innerArray objectAtIndex:xIndex];
 }
 
 - (void) setTileAtIndex : (PFObject *) tile : (int) xIndex : (int) yIndex {
@@ -271,6 +299,7 @@
     [tilesArray replaceObjectAtIndex:yIndex withObject:innerArray];
     self.game[@"tilesArray"] = tilesArray;
     [self.game save];
+    [self refreshTilesArray];
 }
 
 //initialize board ui
