@@ -18,6 +18,7 @@
 @implementation LeaderboardViewController
 
 - (void)viewDidAppear:(BOOL)animated {
+    [self getLeaderboard];
     [self.tableView reloadData];
 }
 

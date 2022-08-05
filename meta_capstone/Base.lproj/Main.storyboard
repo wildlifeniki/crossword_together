@@ -317,17 +317,16 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Board is 00% filled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kJb-Zx-Rb9">
-                                                    <rect key="frame" x="92" y="59" width="302" height="17"/>
+                                                    <rect key="frame" x="92" y="59" width="121.5" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" systemColor="systemGrayColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="kJb-Zx-Rb9" firstAttribute="leading" secondItem="Zk9-yn-xvH" secondAttribute="trailing" constant="8" symbolic="YES" id="2ie-Q1-0og"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="kJb-Zx-Rb9" secondAttribute="trailing" id="3Pn-Ra-gDS"/>
+                                                <constraint firstItem="kJb-Zx-Rb9" firstAttribute="leading" secondItem="BMw-Hd-81S" secondAttribute="leading" id="0zv-Cx-9Vh"/>
+                                                <constraint firstItem="kJb-Zx-Rb9" firstAttribute="top" secondItem="BMw-Hd-81S" secondAttribute="bottom" constant="3" id="8G7-QZ-QNW"/>
                                                 <constraint firstItem="Zk9-yn-xvH" firstAttribute="top" secondItem="La3-XD-Mem" secondAttribute="topMargin" id="Eq6-oT-cOo"/>
-                                                <constraint firstItem="kJb-Zx-Rb9" firstAttribute="baseline" secondItem="Zk9-yn-xvH" secondAttribute="firstBaseline" id="J1h-uV-aK8"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="Zk9-yn-xvH" secondAttribute="bottom" id="JiO-29-taz"/>
                                                 <constraint firstItem="BMw-Hd-81S" firstAttribute="leading" secondItem="Zk9-yn-xvH" secondAttribute="trailing" constant="8" symbolic="YES" id="WeT-nJ-DSG"/>
                                                 <constraint firstItem="Zk9-yn-xvH" firstAttribute="leading" secondItem="La3-XD-Mem" secondAttribute="leadingMargin" id="ZTN-fa-HM0"/>
