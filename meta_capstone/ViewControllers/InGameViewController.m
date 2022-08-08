@@ -312,6 +312,7 @@
     cell.game = self.game;
     cell.user = self.currUser;
     cell.tile = tile;
+    cell.inputView.delegate = cell.inputView;
     
     if ([cell.tile[@"fillable"] boolValue]) {
         [cell.contentView.layer setBorderColor:[UIColor blackColor].CGColor];
