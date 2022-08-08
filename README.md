@@ -28,12 +28,12 @@ Crossword app that allows people to collaborate on puzzles by inviting people to
 * User logs in to view profile or start new game
 * Can view profile stats and log out from profile page
 * Leaderboard ranked by in-app stats
-* Start new crossword game, option to check validity of board and autochecks when puzzle is complete
+* Start new crossword game, option to check validity of board and has manual check to see when puzzle is complete
 * Start new game and send invites to other users (username search function to add users)
 * Tap on active game to enter game
 * Allow player to request control of board and only active host can make changes on board
 * Any player can tap on tiles to view clue for corresponding word
-* Zoom in and out of board
+* Zoom in and out of board (not implementing)
 
 **Optional Nice-to-have Stories**
 * Have recently played with users showing when search bar is empty in invite screen
@@ -116,47 +116,35 @@ Note: all parse models come with unique objectId, updatedAt date, createdAt date
    | activePlayerIDs | Array | list of ids of players who have accepted invites (allowed to enter board) |
    | hostID | String | id of current host (starts as creator of game) |
    | inviteID | String | id of user who created the game (and therefore sent invites) |
-   | Words | Array | list of words on gameboard |
-   | Time | Number | current time |
-   | percentComplete | Number | how full the board is |
+   | time | Number | current time |
    | isCorrect | Boolean | indication if all words correct|
+   | tilesArray | Array | 2d array of tile objectids that represent the board |
+   | updated | Boolean | flag to show a change has been made, and non-host players will refresh |
+   | requestedBy | String | id of user requesting host status |
+   | requestingHost | Boolean | indication whether someone is requesting host status |
 
 #### AppInfo (Parse)
    | Property      | Type     | Description |
    | ------------- | -------- | ------------|
    | fbID | String | id of user logged in |
    | invitedIDs | Array | array of ids of users invited to new game being created (cleared when canceled/invites sent)|
-   
-#### Player
-   | Property      | Type     | Description |
-   | ------------- | -------- | ------------|
-   | Id | String | unique id for the player |
-   | User | pointer to user | user when they are in a game |
-   | isHost | Boolean | indication whether player has control over board |
-   | color | String | color of word once shared to entire game |
-   | isRequestingHost | Boolean | indication if player is trying to get control over board |
 
 #### Pieces/tiles in board
    | Property      | Type     | Description |
    | ------------- | -------- | ------------|
-   | Id | String | unique id for the player |
-   | input | String | letter input by host |
-   | goal_letter | String | correct letter for tile |
-   | isCorrect | Boolean | input is correct |
-
-
-#### Word in board 
-   | Property      | Type     | Description |
-   | ------------- | -------- | ------------|
-   | Id | String | unique id for the word |
-   | Clue | String | hint for word |
-   | Tiles | Array | list of tile objects (letters that make up word)|
-   | isCorrect | Boolean | indication if all tiles correct |
+   | xIndex | Number | number indicating which column the tile is in |
+   | yIndex | Number | number indicating which row the tile is in |
+   | correctLetter | String | the expected letter for this tile |
+   | inputLetter | String | the most recent input from the host for the letter |
+   | acrossClue | String | clue linked with this tile associated with a word that goes across |
+   | downClue | String | clue linked with this tile associated with a word that goes down |
+   | fillable | Boolean | indicates whether this tile takes an input or not (if not, it is an empty tile and does not show up on the board |
+   | gameID | String | the id of the game this tile is on the board for |
 
 
 ### Technically Ambiguous Problems
 #### Game Board Screen
-   - Creating a custom view that depicts tiles in a grid pattern for a crossword. Making it so a user can enter a letter in a tile and move along a word seamlessly to continue entering letters.
+   - Creating a custom view that depicts tiles in a grid pattern for a crossword. Making it so a user can enter a letter in a tile and view related clues depending on which tile a user is tapped into.
    - Allow changes from host to be updated and shown to all users present in the game
    - Display different clues based on selecting different words 
 
