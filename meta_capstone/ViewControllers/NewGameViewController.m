@@ -22,6 +22,7 @@
 @property (nonatomic, strong) PFObject *game;
 @property (nonatomic, strong) NSMutableArray *tilesArray;
 @property (strong, nonatomic) PFObject *emptyTile;
+@property (strong, nonatomic) NSMutableArray *usableWords;
 
 @end
 
@@ -252,35 +253,37 @@
 
 - (void) createBoard: (NSArray *)words {
     //remove word once added
-    NSMutableArray *usableWords = [NSMutableArray arrayWithArray:words];
+    self.usableWords = [NSMutableArray arrayWithArray:words];
     
     //pick random word to go across top
-    NSUInteger randomIndex = arc4random() % usableWords.count;
+    NSUInteger randomIndex = arc4random() % self.usableWords.count;
     NSString *firstWord = [words objectAtIndex:randomIndex];
-    [usableWords removeObject:firstWord];
+    [self.usableWords removeObject:firstWord];
     [self createTiles:firstWord :0 :0 :YES];
     
-    //pick random letter in first word
     NSUInteger secondStart = arc4random() % firstWord.length; //(secondStart, 0)
-    NSString *secondLetter = [firstWord substringWithRange:NSMakeRange(secondStart, 1)];
-    NSArray *secondOptions = [usableWords filteredArrayUsingPredicate: [NSPredicate predicateWithFormat:@"SELF BEGINSWITH %@", secondLetter]];
-    //pick random word to go down from letter
-    randomIndex = arc4random() % secondOptions.count;
-    NSString *secondWord = [secondOptions objectAtIndex:randomIndex];
-    [usableWords removeObject:secondWord];
-    [self createTiles:secondWord :(int) secondStart :0 :NO];
+    NSString *secondWord = [self setUpWord:secondStart :-1 :NO :firstWord :0 :0];
 
-    //pick random letter in second word (not first or second)
-    NSUInteger thirdStartY = (arc4random() % (secondWord.length - 2) + 2); //(??, thirdStartY)
-    NSString *thirdLetter = [secondWord substringWithRange:NSMakeRange(thirdStartY, 1)];
-    NSDictionary *thirdOptionsLocations = [self arrayOfValidStringsWithLetterAtIndex:usableWords :thirdLetter :secondStart];
-    NSArray *thirdOptions = [thirdOptionsLocations allKeys];
+    NSUInteger thirdStart = (arc4random() % (secondWord.length - 2) + 2); //(??, thirdStartY)
+    NSString *thirdWord = [self setUpWord:-1 :thirdStart :YES :secondWord :secondStart :0];
+}
+
+-(NSString *) setUpWord : (NSUInteger)xStart : (NSUInteger)yStart : (BOOL)across : (NSString *)prevWord : (NSUInteger)xPrevStart : (NSUInteger)yPrevStart {
+    NSString *crossLetter;
+    if (across) { crossLetter = [prevWord substringWithRange:NSMakeRange(yStart, 1)]; }
+    else { crossLetter = [prevWord substringWithRange:NSMakeRange(xStart, 1)]; }
+    NSUInteger crossIndex;
+    if (across) { crossIndex = xPrevStart; }
+    else { crossIndex = yPrevStart; }
+    NSDictionary *availableWordStartPairs = [self arrayOfValidStringsWithLetterAtIndex:self.usableWords :crossLetter :crossIndex];
+    NSArray *availableWords = [availableWordStartPairs allKeys];
     //pick random word to go across from letter
-    randomIndex = arc4random() % thirdOptions.count;
-    NSString *thirdWord = [thirdOptions objectAtIndex:randomIndex];
-    NSArray *thirdStartXLocations = [thirdOptionsLocations objectForKey:thirdWord];
-    [usableWords removeObject:thirdWord];
-    [self createTiles:thirdWord :  [[thirdStartXLocations objectAtIndex:arc4random() % thirdStartXLocations.count] intValue]:(int) thirdStartY :YES];
+    NSString *newWord = [availableWords objectAtIndex:(arc4random() % availableWords.count)];
+    NSArray *availableStarts = [availableWordStartPairs objectForKey:newWord];
+    [self.usableWords removeObject:newWord];
+    if (across) { [self createTiles:newWord :[[availableStarts objectAtIndex:arc4random() % availableStarts.count] intValue]:(int)yStart :YES]; }
+    else { [self createTiles:newWord :(int)xStart :[[availableStarts objectAtIndex:arc4random() % availableStarts.count] intValue]: NO]; }
+    return newWord;
 }
 
 - (NSDictionary *)arrayOfValidStringsWithLetterAtIndex : (NSArray *)words : (NSString *)letter : (NSUInteger)index {
