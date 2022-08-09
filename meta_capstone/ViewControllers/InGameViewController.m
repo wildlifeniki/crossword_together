@@ -16,7 +16,6 @@
 @property (strong, nonatomic) IBOutlet UICollectionView *boardCollectionView;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *checkButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *requestHostButton;
-@property (nonatomic, strong) NSDictionary *wordCluePairs;
 @property (nonatomic, strong) NSMutableArray *tilesArray;
 @property (assign, nonatomic) int xIndex;
 @property (assign, nonatomic) int yIndex;
@@ -41,83 +40,6 @@
     
     self.emptyTile = [[[PFQuery queryWithClassName:@"Tile"] whereKey:@"fillable" equalTo:@NO] findObjects].firstObject; //init emptyTile object
         
-    //if no board already in database, create empty board
-    if (self.game[@"tilesArray"] == nil) {
-        //initialize dictionary
-        self.wordCluePairs = [NSDictionary dictionaryWithObjectsAndKeys:
-                              @"iPhone company", @"apple",
-                              @"Bunch of produce", @"banana",
-                              @"Nose on a snowman", @"carrot",
-                              @"Jurassic animal", @"dinosaur",
-                              @"Mystery", @"enigma",
-                              @"Suspicious", @"fishy",
-                              @"Silverback", @"gorilla",
-                              @"They eat marbles in a classic children's game", @"hippos",
-                              @"South American lizard",@"iguana",
-                              @"Schoolyard activity",@"jumprope",
-                              @"Queen's mate",@"king",
-                              @"Uncool",@"lame",
-                              @"Sahara sight",@"mirage",
-                              @"Big fall",@"niagra",
-                              @"Pearly stone",@"opal",
-                              @"Pablo from The Backyardigans",@"penguin",
-                              @"Chill", @"relax",
-                              @"Spring Flower",@"tulip",
-                              @"Rihanna song from 2007",@"umbrella",
-                              @"Colorful",@"vivid",
-                              @"Wants badly",@"yearns",
-                              @"Ladybug snack",@"aphid",
-                              @"High fiber ingredient",@"bran",
-                              @"Waxy coloring utensil",@"crayon",
-                              @"Uncertainty",@"doubt",
-                              @"Mammoth cousin",@"elephant",
-                              @"Collects teeth",@"fairy",
-                              @"Lush",@"green",
-                              @"Lift up",@"hoist",
-                              @"Collapse",@"implode",
-                              @"Card that may be wild",@"joker",
-                              @"Chess piece that looks like a horse",@"knight",
-                              @"Not dead",@"living",
-                              @"Banana consumer",@"monkey",
-                              @"Bright sign",@"neon",
-                              @"Disneyland's county",@"orange",
-                              @"Royal color",@"purple",
-                              @"What bread does",@"rises",
-                              @"Dunce",@"stupid",
-                              @"Letter after Sierra",@"tango",
-                              @"Horse's mythical relative",@"unicorn",
-                              @"Starbucks cup size",@"venti",
-                              @"Canary color",@"yellow",
-                              nil];
-        
-        //initalize indexes for collectionview
-        self.xIndex = 0;
-        self.yIndex = 0;
-        
-        //initialize tilesArray with all unfillable tiles
-        int size = 10; //to make square grid
-        
-        //fill inner array
-        NSMutableArray *innerArray = [[NSMutableArray alloc] initWithCapacity: size];
-        for (int j = 0; j < size; j++) {
-            [innerArray insertObject:self.emptyTile.objectId atIndex:j];
-        }
-        
-        //add inner array to tilesArray
-        NSMutableArray *tilesArray = [[NSMutableArray alloc] initWithCapacity: size];
-        for (int i = 0; i < size; i++) {
-            [tilesArray insertObject:[NSMutableArray arrayWithArray:innerArray] atIndex:i];
-        }
-        self.game[@"tilesArray"] = tilesArray;
-        self.game[@"waiting"] = @NO;
-        [self.game removeObjectForKey:@"requestingHost"];
-        [self.game removeObjectForKey:@"requestedBy"];
-        [self.game save];
-        
-        //create word tiles and add to array
-        NSArray *words = [self.wordCluePairs allKeys];
-        [self createBoard:words];
-    }
     [self refreshTilesArray];
     
     //if user is not the host, remove check button
@@ -223,41 +145,6 @@
                 [self presentViewController:alert animated:YES completion:nil];
             }
         }
-    }
-}
-
-- (void) createTiles: (NSString *)word : (int) xIndex : (int) yIndex : (BOOL) across {
-    NSMutableArray *wordLetters = [NSMutableArray arrayWithArray:@[]];
-    
-    //split word string into substrings of 1 capital letter
-    NSString *capitalWord = [word uppercaseString];
-    for (int i = 0; i < capitalWord.length; i++) {
-        NSString *letter = [capitalWord substringWithRange:(NSMakeRange(i, 1))];
-        [wordLetters addObject:letter];
-    }
-    
-    //create tiles for each letter and put them in correct spot in the array
-    for (NSString *letter in wordLetters) {
-        //check if fillable tile already in spot, if so, just edit that tile
-        PFObject *checkTile = [self getTileAtIndex:xIndex :yIndex];
-        PFObject *tile = [PFObject objectWithClassName:@"Tile"];
-        if (![checkTile[@"fillable"] boolValue]) {
-            tile[@"fillable"] = @YES;
-            tile[@"xIndex"] = [NSNumber numberWithInt:xIndex];
-            tile[@"yIndex"] = [NSNumber numberWithInt:yIndex];
-            tile[@"correctLetter"] = letter;
-            tile[@"inputLetter"] = @"";
-            tile[@"gameID"] = self.game.objectId;
-        }
-        else
-            tile = checkTile;
-        if (across) { tile[@"acrossClue"] = [self.wordCluePairs valueForKey:word]; }
-        else { tile[@"downClue"] = [self.wordCluePairs valueForKey:word]; }
-        [tile save];
-
-        [self setTileAtIndex:tile :[tile[@"xIndex"] intValue]  :[tile[@"yIndex"] intValue]];
-        if (across) { xIndex++; }
-        else { yIndex++; }
     }
 }
 
@@ -509,59 +396,6 @@
     
     //remove game object
     [self.game delete];
-}
-
-- (void) createBoard: (NSArray *)words {
-    //remove word once added
-    NSMutableArray *usableWords = [NSMutableArray arrayWithArray:words];
-    
-    //pick random word to go across top
-    NSUInteger randomIndex = arc4random() % usableWords.count;
-    NSString *firstWord = [words objectAtIndex:randomIndex];
-    [usableWords removeObject:firstWord];
-    [self createTiles:firstWord :0 :0 :YES];
-    
-    //pick random letter in first word
-    NSUInteger secondStart = arc4random() % firstWord.length; //(secondStart, 0)
-    NSString *secondLetter = [firstWord substringWithRange:NSMakeRange(secondStart, 1)];
-    NSArray *secondOptions = [usableWords filteredArrayUsingPredicate: [NSPredicate predicateWithFormat:@"SELF BEGINSWITH %@", secondLetter]];
-    //pick random word to go down from letter
-    randomIndex = arc4random() % secondOptions.count;
-    NSString *secondWord = [secondOptions objectAtIndex:randomIndex];
-    [usableWords removeObject:secondWord];
-    [self createTiles:secondWord :(int) secondStart :0 :NO];
-
-    //pick random letter in second word (not first or second)
-    NSUInteger thirdStartY = (arc4random() % (secondWord.length - 2) + 2); //(??, thirdStartY)
-    NSString *thirdLetter = [secondWord substringWithRange:NSMakeRange(thirdStartY, 1)];
-    NSDictionary *thirdOptionsLocations = [self arrayOfValidStringsWithLetterAtIndex:usableWords :thirdLetter :secondStart];
-    NSArray *thirdOptions = [thirdOptionsLocations allKeys];
-    //pick random word to go across from letter
-    randomIndex = arc4random() % thirdOptions.count;
-    NSString *thirdWord = [thirdOptions objectAtIndex:randomIndex];
-    NSArray *thirdStartXLocations = [thirdOptionsLocations objectForKey:thirdWord];
-    [usableWords removeObject:thirdWord];
-    [self createTiles:thirdWord :  [[thirdStartXLocations objectAtIndex:arc4random() % thirdStartXLocations.count] intValue]:(int) thirdStartY :YES];
-}
-
-- (NSDictionary *)arrayOfValidStringsWithLetterAtIndex : (NSArray *)words : (NSString *)letter : (NSUInteger)index {
-    NSMutableDictionary *validWords = [NSMutableDictionary dictionary];
-    for (NSString *word in words) {
-        NSMutableArray *validStart = [NSMutableArray arrayWithArray:@[]];
-        NSString *padding = [@"" stringByPaddingToLength:10 - word.length withString:@"0" startingAtIndex:0];
-        for (int i = 0; i <= padding.length; i++) {
-            NSString *front = [padding substringToIndex:i];
-            NSString *back = [padding substringFromIndex:i];
-            NSString *testWord = [NSString stringWithFormat:@"%@%@%@", front, word, back];
-            if ([[testWord substringWithRange:NSMakeRange(index, 1)] isEqualToString:letter]) {
-                [validStart addObject:[NSNumber numberWithInt:(int) (front.length)]];
-            }
-        }
-        if (validStart.count != 0) {
-            [validWords setObject:validStart forKey:word];
-        }
-    }
-    return validWords;
 }
 
 @end
