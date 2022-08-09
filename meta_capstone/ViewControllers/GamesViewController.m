@@ -34,8 +34,8 @@
 @implementation GamesViewController
 
 - (void)viewDidAppear:(BOOL)animated {
-    [self.gamesTableView reloadData];
-    [self.invitesTableView reloadData];
+    [self getActiveGames];
+    [self getPendingInvites];
 }
 
 - (void)viewDidLoad {
@@ -80,19 +80,17 @@
 
 - (void)getActiveGames {
     NSMutableArray *gameIDs = [NSMutableArray arrayWithArray:self.currUser[@"activeGames"]];
-
     [self getRespectiveTable:gameIDs :YES];
     
-    [self.gamesTableView reloadData];
+    [self.gamesTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
     [self.gameRefreshControl endRefreshing];
 }
 
 - (void)getPendingInvites {
     NSMutableArray *inviteGameIDs = [NSMutableArray arrayWithArray:self.currUser[@"pendingInvites"]];
-
     [self getRespectiveTable:inviteGameIDs :NO];
     
-    [self.invitesTableView reloadData];
+    [self.invitesTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
     [self.inviteRefreshControl endRefreshing];
 }
 
