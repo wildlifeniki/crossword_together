@@ -6,10 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIViewController+TileMethods.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NewGameViewController : UIViewController
+@interface NewGameViewController : UIViewController_TileMethods
 
 @end
 

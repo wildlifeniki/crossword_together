@@ -35,6 +35,7 @@
 		7E901B302882239D00C34BEA /* SearchUserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E901B2F2882239D00C34BEA /* SearchUserCell.m */; };
 		7ED07A82288F1C3500DF6DB5 /* BoardTileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED07A81288F1C3500DF6DB5 /* BoardTileCell.m */; };
 		7ED16BBD2887567200E999A4 /* InGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED16BBC2887567200E999A4 /* InGameViewController.m */; };
+		7ED28F8028A319C8007CC821 /* UIViewController+TileMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED28F7F28A319C8007CC821 /* UIViewController+TileMethods.m */; };
 		807BDA1571383951FC66A50C /* Pods_meta_capstoneTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 392B41199053CF98C3CA7144 /* Pods_meta_capstoneTests.framework */; };
 		8D69A46299E92FF3E94639A9 /* Pods_meta_capstone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C8C0553A4D2C202E659169C /* Pods_meta_capstone.framework */; };
 /* End PBXBuildFile section */
@@ -116,6 +117,8 @@
 		7ED07A81288F1C3500DF6DB5 /* BoardTileCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoardTileCell.m; sourceTree = "<group>"; };
 		7ED16BBB2887567200E999A4 /* InGameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InGameViewController.h; sourceTree = "<group>"; };
 		7ED16BBC2887567200E999A4 /* InGameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InGameViewController.m; sourceTree = "<group>"; };
+		7ED28F7E28A319C8007CC821 /* UIViewController+TileMethods.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TileMethods.h"; path = "ViewControllers/UIViewController+TileMethods.h"; sourceTree = "<group>"; };
+		7ED28F7F28A319C8007CC821 /* UIViewController+TileMethods.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TileMethods.m"; path = "ViewControllers/UIViewController+TileMethods.m"; sourceTree = "<group>"; };
 		8C8C0553A4D2C202E659169C /* Pods_meta_capstone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_meta_capstone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C42136471466BBEC7967B215 /* Pods-meta_capstoneTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-meta_capstoneTests.debug.xcconfig"; path = "Target Support Files/Pods-meta_capstoneTests/Pods-meta_capstoneTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -206,6 +209,8 @@
 				7E07F3D32874B95D008DFE55 /* LaunchScreen.storyboard */,
 				7E07F3D62874B95D008DFE55 /* Info.plist */,
 				7E07F3D72874B95D008DFE55 /* main.m */,
+				7ED28F7E28A319C8007CC821 /* UIViewController+TileMethods.h */,
+				7ED28F7F28A319C8007CC821 /* UIViewController+TileMethods.m */,
 				7ED07A80288F1C3500DF6DB5 /* BoardTileCell.h */,
 				7ED07A81288F1C3500DF6DB5 /* BoardTileCell.m */,
 				7E901B2E2882239D00C34BEA /* SearchUserCell.h */,
@@ -538,6 +543,7 @@
 				7E901B2A287F5FDE00C34BEA /* PendingInviteCell.m in Sources */,
 				7E07F3CA2874B95C008DFE55 /* SceneDelegate.m in Sources */,
 				7E901B1E287CC90700C34BEA /* LeaderboardCell.m in Sources */,
+				7ED28F8028A319C8007CC821 /* UIViewController+TileMethods.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

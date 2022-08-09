@@ -9,6 +9,7 @@
 #import "Tile.h"
 #import "BoardTileCell.h"
 #import "FCAlertView/FCAlertView.h"
+#import "Parse/Parse.h"
 
 @interface InGameViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 
@@ -16,14 +17,12 @@
 @property (strong, nonatomic) IBOutlet UICollectionView *boardCollectionView;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *checkButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *requestHostButton;
-@property (nonatomic, strong) NSMutableArray *tilesArray;
 @property (assign, nonatomic) int xIndex;
 @property (assign, nonatomic) int yIndex;
 @property (strong, nonatomic) NSTimer *timer;
 @property (strong, nonatomic) NSTimer *updateTimer;
 @property (strong, nonatomic) NSTimer *hostTimer;
 @property (strong, nonatomic) BoardTileCell *prevSelectedCell;
-@property (strong, nonatomic) PFObject *emptyTile;
 
 @end
 

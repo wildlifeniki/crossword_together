@@ -6,18 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Parse/Parse.h"
+#import "UIViewController+TileMethods.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface InGameViewController : UIViewController
+@interface InGameViewController : UIViewController_TileMethods
 
-@property (nonatomic, strong) PFObject *game;
 @property (nonatomic, strong) PFObject *currUser;
-
-- (void) createBoard: (NSArray *)words;
-
-- (NSDictionary *)arrayOfValidStringsWithLetterAtIndex : (NSArray *)words : (NSString *)letter : (NSUInteger)index;
 
 @end
 

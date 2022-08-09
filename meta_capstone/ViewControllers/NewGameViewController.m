@@ -18,11 +18,7 @@
 @property (strong, nonatomic) NSMutableArray *usersArray;
 @property (strong, nonatomic) NSMutableArray *filteredUsersArray;
 @property (strong, nonatomic) NSMutableArray *inviteUsers;
-@property (nonatomic, strong) NSDictionary *wordCluePairs;
-@property (nonatomic, strong) PFObject *game;
-@property (nonatomic, strong) NSMutableArray *tilesArray;
-@property (strong, nonatomic) PFObject *emptyTile;
-@property (strong, nonatomic) NSMutableArray *usableWords;
+
 
 @end
 
@@ -339,45 +335,6 @@
         if (across) { xIndex++; }
         else { yIndex++; }
     }
-}
-
-- (PFObject *) getTileAtIndex : (int) xIndex : (int) yIndex {
-    NSMutableArray *innerArray = [self.tilesArray objectAtIndex:yIndex];
-    return [innerArray objectAtIndex:xIndex];
-}
-
-- (void) setTileAtIndex : (PFObject *) tile : (int) xIndex : (int) yIndex {
-    NSMutableArray *tilesArray = self.game[@"tilesArray"];
-    NSMutableArray *innerArray = [tilesArray objectAtIndex:yIndex];
-    [innerArray replaceObjectAtIndex:xIndex withObject:tile.objectId];
-    [tilesArray replaceObjectAtIndex:yIndex withObject:innerArray];
-    self.game[@"tilesArray"] = tilesArray;
-    [self.game save];
-    [self refreshTilesArray];
-}
-
-- (void) refreshTilesArray {
-    self.game = [[PFQuery queryWithClassName:@"Game"] getObjectWithId:self.game.objectId];
-    NSArray *availableTilesInGame = [[[PFQuery queryWithClassName:@"Tile"] whereKey:@"gameID" equalTo:self.game.objectId] findObjects];
-    NSMutableArray *tilesArray = [NSMutableArray arrayWithArray:@[]];
-    
-    NSArray *tileIDsArray = self.game[@"tilesArray"];
-    for (NSArray *tileIDsRow in tileIDsArray) {
-        NSMutableArray *tilesRow = [NSMutableArray arrayWithArray:@[]];
-        for (NSString *tileID in tileIDsRow) {
-            [tilesRow addObject:[self findTileInArrayWithID:availableTilesInGame :tileID]];
-        }
-        [tilesArray addObject:[NSArray arrayWithArray:tilesRow]];
-    }
-    self.tilesArray = tilesArray;
-}
-
-- (PFObject *) findTileInArrayWithID : (NSArray *)tiles : (NSString *)tileID {
-    for (PFObject* tile in tiles) {
-        if ([tile.objectId isEqualToString:tileID])
-            return tile;
-    }
-    return self.emptyTile;
 }
 
 @end
