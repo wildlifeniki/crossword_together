@@ -28,12 +28,14 @@ PODS:
     - Parse/Core (= 1.19.3)
   - Parse/Core (1.19.3):
     - Bolts/Tasks (= 1.9.1)
+  - SWTableViewCell (0.3.7)
 
 DEPENDENCIES:
   - AFNetworking
   - FBSDKLoginKit
   - FCAlertView
   - Parse
+  - SWTableViewCell
 
 SPEC REPOS:
   trunk:
@@ -45,6 +47,7 @@ SPEC REPOS:
     - FBSDKLoginKit
     - FCAlertView
     - Parse
+    - SWTableViewCell
 
 SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
@@ -55,7 +58,8 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: 787de205d524c3a4b17d527916f1d066e4361660
   FCAlertView: fdddd63381898c1d1a5a20c9f084fbd2c6d12f8b
   Parse: 0abb63a0ff6fa34a3f64b81d595a294e2ece143a
+  SWTableViewCell: 2a94aadc9d47b2b611fa064566bf57948b95b579
 
-PODFILE CHECKSUM: 43c753b1e6fae9b40fb73b46dc75435189ba9578
+PODFILE CHECKSUM: 1af19dd4790c76b15ff231b7d91e872cd4a95708
 
 COCOAPODS: 1.11.3

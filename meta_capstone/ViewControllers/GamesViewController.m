@@ -15,6 +15,7 @@
 #import "ActiveGameCell.h"
 #import "PendingInviteCell.h"
 #import "InGameViewController.h"
+#import "SWTableViewCell/SWTableViewCell.h"
 
 @interface GamesViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -115,15 +116,8 @@
         [cell setCellInfo:self.invitesArray[indexPath.row]];
         
         cell.viewController = self;
-        
-        UISwipeGestureRecognizer *rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:cell action:@selector(deleteInvite)];
-        rightSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
-        [cell addGestureRecognizer:rightSwipe];
-        
-        UISwipeGestureRecognizer *leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:cell action:@selector(acceptInvite)];
-        leftSwipe.direction = UISwipeGestureRecognizerDirectionRight;
-        [cell addGestureRecognizer:leftSwipe];
-        
+        cell.rightUtilityButtons = [self rightButtons];
+        cell.delegate = self;
         return cell;
     }
     else {
@@ -131,6 +125,18 @@
         [cell setCellInfo:self.gamesArray[indexPath.row]];
         return cell;
     }
+}
+
+- (void)swipeableTableViewCell:(PendingInviteCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index {
+    [cell deleteInvite];
+}
+
+- (NSArray *)rightButtons {
+    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
+                                                title:@"Delete"];
+    return rightUtilityButtons;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

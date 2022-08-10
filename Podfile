@@ -10,6 +10,7 @@ target 'meta_capstone' do
   pod 'FBSDKLoginKit'
   pod 'Parse'
   pod 'FCAlertView'
+  pod 'SWTableViewCell'
 
   target 'meta_capstoneTests' do
     inherit! :search_paths

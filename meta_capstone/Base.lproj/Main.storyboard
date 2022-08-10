@@ -363,7 +363,10 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Invitation from: username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0TS-sD-Xmq">
-                                                    <rect key="frame" x="20" y="11" width="194" height="24"/>
+                                                    <rect key="frame" x="40" y="11" width="194" height="24"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="24" id="jqJ-Xo-bhU"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -382,8 +385,9 @@
                                                 <constraint firstItem="t5W-gY-waA" firstAttribute="centerY" secondItem="0TS-sD-Xmq" secondAttribute="centerY" id="1Va-RV-q9w"/>
                                                 <constraint firstAttribute="trailing" secondItem="t5W-gY-waA" secondAttribute="trailing" constant="20" symbolic="YES" id="Tdl-dy-gbQ"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="0TS-sD-Xmq" secondAttribute="bottom" id="TlA-Gr-6qG"/>
-                                                <constraint firstItem="0TS-sD-Xmq" firstAttribute="leading" secondItem="eFU-aR-08x" secondAttribute="leadingMargin" id="n98-22-VTS"/>
+                                                <constraint firstItem="0TS-sD-Xmq" firstAttribute="leading" secondItem="eFU-aR-08x" secondAttribute="leadingMargin" constant="20" id="mpL-eO-fiV"/>
                                                 <constraint firstItem="0TS-sD-Xmq" firstAttribute="top" secondItem="eFU-aR-08x" secondAttribute="topMargin" id="nGG-cn-lsL"/>
+                                                <constraint firstItem="0TS-sD-Xmq" firstAttribute="centerY" secondItem="eFU-aR-08x" secondAttribute="centerY" id="ySm-9l-J24"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
