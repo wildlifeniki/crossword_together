@@ -46,14 +46,6 @@
     self.gamesTableView.dataSource = self;
     self.invitesTableView.dataSource = self;
     
-    //get current user
-    PFQuery *idQuery = [PFQuery queryWithClassName:@"AppInfo"];
-    [idQuery fromLocalDatastore];
-    NSArray *idObjects = [idQuery findObjects];
-    PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
-    [query whereKey:@"fbID" equalTo:idObjects.firstObject[@"fbID"]];
-    self.currUser = [query findObjects].firstObject;
-
     [self getActiveGames];
     [self getPendingInvites];
     
@@ -79,18 +71,27 @@
         self.invitesArray = [NSMutableArray arrayWithArray:[query findObjects]];
 }
 
+- (void) updateCurrentUser {
+    PFQuery *idQuery = [PFQuery queryWithClassName:@"AppInfo"];
+    [idQuery fromLocalDatastore];
+    NSArray *idObjects = [idQuery findObjects];
+    PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
+    [query whereKey:@"fbID" equalTo:idObjects.firstObject[@"fbID"]];
+    self.currUser = [query findObjects].firstObject;
+}
+
 - (void)getActiveGames {
+    [self updateCurrentUser];
     NSMutableArray *gameIDs = [NSMutableArray arrayWithArray:self.currUser[@"activeGames"]];
     [self getRespectiveTable:gameIDs :YES];
-    
     [self.gamesTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
     [self.gameRefreshControl endRefreshing];
 }
 
 - (void)getPendingInvites {
+    [self updateCurrentUser];
     NSMutableArray *inviteGameIDs = [NSMutableArray arrayWithArray:self.currUser[@"pendingInvites"]];
     [self getRespectiveTable:inviteGameIDs :NO];
-    
     [self.invitesTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
     [self.inviteRefreshControl endRefreshing];
 }

@@ -21,7 +21,8 @@
 @property (assign, nonatomic) int yIndex;
 @property (strong, nonatomic) NSTimer *timer;
 @property (strong, nonatomic) NSTimer *updateTimer;
-@property (strong, nonatomic) NSTimer *hostTimer;
+@property (strong, nonatomic) NSTimer *hostRequestTimer;
+@property (strong, nonatomic) NSTimer *hostAcceptTimer;
 @property (strong, nonatomic) BoardTileCell *prevSelectedCell;
 
 @end
@@ -35,7 +36,6 @@
     
     //initialize timer
     self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
-    [self.timer fire];
     
     self.emptyTile = [[[PFQuery queryWithClassName:@"Tile"] whereKey:@"fillable" equalTo:@NO] findObjects].firstObject; //init emptyTile object
         
@@ -45,13 +45,13 @@
     if ([self.game[@"hostID"] isEqualToString:self.currUser[@"fbID"]]) {
         self.navigationItem.rightBarButtonItem = nil;
         self.navigationItem.rightBarButtonItem = self.checkButton;
-        self.hostTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(checkHostRequest) userInfo:nil repeats:YES];
+        self.hostRequestTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(checkHostRequest) userInfo:nil repeats:YES];
     }
     else {
         self.navigationItem.rightBarButtonItem = nil;
         self.navigationItem.rightBarButtonItem = self.requestHostButton;
         self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(checkUpdate) userInfo:nil repeats:YES];
-        self.hostTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(checkHostAccept) userInfo:nil repeats:YES];
+        self.hostAcceptTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(checkHostAccept) userInfo:nil repeats:YES];
     }
 }
 
@@ -117,10 +117,15 @@
     self.game = [[PFQuery queryWithClassName:@"Game"] getObjectWithId:self.game.objectId];    
     //check if game has been finished
     if (self.game == nil) {
-        [self.timer invalidate];
-        [self.updateTimer invalidate];
-        [self.hostTimer invalidate];
-        [self completionAlert];
+            [self.timer invalidate];
+            [self.updateTimer invalidate];
+            [self.hostAcceptTimer invalidate];
+            [self.hostRequestTimer invalidate];
+            self.timer = nil;
+            self.updateTimer = nil;
+            self.hostAcceptTimer = nil;
+            self.hostRequestTimer = nil;
+            [self completionAlert];
     }
     else {
         NSString *requesting = self.game[@"requestingHost"];
@@ -273,12 +278,17 @@
     }
     
     if (correct) {
-        [self.timer invalidate];
-        [self.updateTimer invalidate];
-        [self.hostTimer invalidate];
-        [self updatePlayerData];
-        [self removeGameData];
-        [self completionAlert];
+            [self.timer invalidate];
+            [self.updateTimer invalidate];
+            [self.hostAcceptTimer invalidate];
+            [self.hostRequestTimer invalidate];
+            self.timer = nil;
+            self.updateTimer = nil;
+            self.hostAcceptTimer = nil;
+            self.hostRequestTimer = nil;
+            [self updatePlayerData];
+            [self removeGameData];
+            [self completionAlert];
     }
     
     else {
@@ -310,9 +320,14 @@
 }
 
 - (IBAction)didTapClose:(id)sender {
-    [self.timer invalidate];
-    [self.updateTimer invalidate];
-    [self.hostTimer invalidate];
+        [self.timer invalidate];
+        [self.updateTimer invalidate];
+        [self.hostAcceptTimer invalidate];
+        [self.hostRequestTimer invalidate];
+        self.timer = nil;
+        self.updateTimer = nil;
+        self.hostAcceptTimer = nil;
+        self.hostRequestTimer = nil;
     [self dismissViewControllerAnimated:true completion:nil];
 }
 
