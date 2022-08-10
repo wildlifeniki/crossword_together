@@ -114,6 +114,8 @@
         PendingInviteCell *cell = [tableView dequeueReusableCellWithIdentifier:@"inviteCell" forIndexPath:indexPath];
         [cell setCellInfo:self.invitesArray[indexPath.row]];
         
+        cell.viewController = self;
+        
         UISwipeGestureRecognizer *rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:cell action:@selector(deleteInvite)];
         rightSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
         [cell addGestureRecognizer:rightSwipe];
@@ -125,7 +127,6 @@
         return cell;
     }
     else {
-        NSLog(@"neither cell");
         ActiveGameCell *cell = [tableView dequeueReusableCellWithIdentifier:@"gameCell" forIndexPath:indexPath];
         [cell setCellInfo:self.gamesArray[indexPath.row]];
         return cell;

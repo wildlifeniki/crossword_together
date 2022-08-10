@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GamesViewController : UIViewController
 
+- (void)getActiveGames;
+- (void)getPendingInvites;
+
 @end
 
 NS_ASSUME_NONNULL_END

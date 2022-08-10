@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Parse/Parse.h"
+#import "GamesViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (strong, nonatomic) PFObject *game;
 @property (strong, nonatomic) PFObject *selfUser;
+@property (strong, nonatomic) GamesViewController *viewController;
 
 - (void)setCellInfo:(PFObject *)game;
 - (void)deleteInvite;
