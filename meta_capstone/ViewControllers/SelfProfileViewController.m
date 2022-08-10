@@ -63,6 +63,7 @@
         [request startWithCompletion:^(id<FBSDKGraphRequestConnecting>  _Nullable connection, id  _Nullable result, NSError * _Nullable error) {
             NSURL *url = [NSURL URLWithString:[[[(NSDictionary*) result objectForKey:@"picture"] objectForKey:@"data"] objectForKey:@"url"]];
             self.selfProfileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+            self.selfProfileImage.layer.cornerRadius = self.selfProfileImage.frame.size.width / 2;
         }];
         
     }

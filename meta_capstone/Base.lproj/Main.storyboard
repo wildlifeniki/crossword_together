@@ -221,8 +221,8 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recently Played:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Xq-Fd-86g">
-                                <rect key="frame" x="20" y="224" width="232" height="36"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recently Played With:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Xq-Fd-86g">
+                                <rect key="frame" x="20" y="224" width="304.5" height="36"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -396,15 +396,16 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2zw-iV-LLa">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2zw-iV-LLa">
                                 <rect key="frame" x="20" y="732" width="374" height="80"/>
-                                <color key="backgroundColor" name="CTBlue"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="NHC-lz-X9N"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="New Game">
+                                    <backgroundConfiguration key="background">
+                                        <color key="backgroundColor" name="CTBlue"/>
+                                    </backgroundConfiguration>
                                     <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="32"/>
                                 </buttonConfiguration>
                                 <connections>
@@ -442,7 +443,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="XJV-la-oin">
-                                <rect key="frame" x="0.0" y="88" width="414" height="665.5"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="652"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <searchBar key="tableHeaderView" contentMode="redraw" id="VVe-Yp-te0">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -505,13 +506,15 @@
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gdu-WZ-Hq0">
                                 <rect key="frame" x="20" y="748" width="374" height="80"/>
-                                <color key="backgroundColor" name="CTBlue"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="0QG-wl-Edn"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Start Game">
+                                    <backgroundConfiguration key="background">
+                                        <color key="backgroundColor" name="CTBlue"/>
+                                    </backgroundConfiguration>
                                     <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="32"/>
                                 </buttonConfiguration>
                                 <connections>
@@ -526,7 +529,7 @@
                             <constraint firstItem="XJV-la-oin" firstAttribute="leading" secondItem="sth-Zb-FDi" secondAttribute="leading" id="AaH-69-nWt"/>
                             <constraint firstItem="gdu-WZ-Hq0" firstAttribute="leading" secondItem="sth-Zb-FDi" secondAttribute="leading" constant="20" id="CJS-qf-Lcm"/>
                             <constraint firstItem="XJV-la-oin" firstAttribute="top" secondItem="sth-Zb-FDi" secondAttribute="top" id="SMZ-zd-Fig"/>
-                            <constraint firstItem="gdu-WZ-Hq0" firstAttribute="firstBaseline" secondItem="XJV-la-oin" secondAttribute="baseline" constant="45.5" symbolType="layoutAnchor" id="Y9Z-bH-JZe"/>
+                            <constraint firstItem="gdu-WZ-Hq0" firstAttribute="top" secondItem="XJV-la-oin" secondAttribute="bottom" constant="8" symbolic="YES" id="cAi-ZC-0RC"/>
                             <constraint firstItem="sth-Zb-FDi" firstAttribute="bottom" secondItem="gdu-WZ-Hq0" secondAttribute="bottom" constant="34" id="hdW-Fj-GIV"/>
                             <constraint firstItem="XJV-la-oin" firstAttribute="trailing" secondItem="sth-Zb-FDi" secondAttribute="trailing" id="xQ9-MJ-gSY"/>
                         </constraints>
@@ -547,7 +550,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="skR-d0-JQk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4632" y="-858"/>
+            <point key="canvasLocation" x="4631.884057971015" y="-858.48214285714278"/>
         </scene>
         <!--Board-->
         <scene sceneID="jot-Ib-OPk">
@@ -590,7 +593,7 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Clues" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4AX-u7-GsN">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4AX-u7-GsN">
                                 <rect key="frame" x="20" y="448" width="374" height="26.5"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="20" id="urm-tE-5Bd"/>
@@ -657,7 +660,6 @@
                         <segue destination="9xO-Ph-p3q" kind="relationship" relationship="viewControllers" id="Iwz-Ti-sR3"/>
                         <segue destination="Lmv-j7-ZDP" kind="relationship" relationship="viewControllers" id="qrW-Bb-NKe"/>
                         <segue destination="CFZ-yl-Epr" kind="relationship" relationship="viewControllers" id="MvE-lv-bby"/>
-                        <segue destination="Mcz-OX-coB" kind="relationship" relationship="viewControllers" id="4Jq-JI-oDk"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3ah-fe-BPe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

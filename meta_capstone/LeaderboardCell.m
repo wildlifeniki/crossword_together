@@ -18,7 +18,6 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
     // Configure the view for the selected state
 }
 
@@ -35,6 +34,10 @@
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting>  _Nullable connection, id  _Nullable result, NSError * _Nullable error) {
         NSURL *url = [NSURL URLWithString:[[[(NSDictionary*) result objectForKey:@"picture"] objectForKey:@"data"] objectForKey:@"url"]];
         self.userImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+        self.userImage.layer.cornerRadius = self.userImage.frame.size.width / 2;
+        if (error != nil) {
+            self.userImage.image = [UIImage systemImageNamed:@"person.circle"];
+        }
     }];
 }
 
