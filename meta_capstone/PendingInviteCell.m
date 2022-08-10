@@ -8,6 +8,7 @@
 #import "PendingInviteCell.h"
 #import "FBSDKCoreKit/FBSDKCoreKit.h"
 #import "Parse/Parse.h"
+#import "GamesViewController.h"
 
 @implementation PendingInviteCell
 
@@ -44,11 +45,7 @@
 - (void)deleteInvite {
     [self.selfUser removeObject:self.game.objectId forKey:@"pendingInvites"];
     [self.selfUser save];
-    [UIView animateWithDuration:1.0 animations:^{
-        self.contentView.backgroundColor = [UIColor redColor];
-    } completion:NULL];
-    
-
+    [self.viewController getPendingInvites];
 }
 
 - (void)acceptInvite {
@@ -57,11 +54,9 @@
     [self.selfUser save];
     [self.game addObject:self.selfUser[@"fbID"] forKey:@"activePlayerIDs"];
     [self.game save];
-    [UIView animateWithDuration:1.0 animations:^{
-        self.contentView.backgroundColor = [UIColor blueColor];
-    } completion:NULL];
+    [self.viewController getPendingInvites];
+    [self.viewController getActiveGames];
 }
-
 
 //accepting invite means: game gets added to active games for user, updates active games table, user gets added to active players for game
 - (IBAction)didTapAccept:(id)sender {

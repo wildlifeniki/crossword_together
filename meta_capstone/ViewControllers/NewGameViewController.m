@@ -19,6 +19,7 @@
 @property (strong, nonatomic) NSMutableArray *filteredUsersArray;
 @property (strong, nonatomic) NSMutableArray *inviteUsers;
 
+
 @end
 
 @implementation NewGameViewController
@@ -44,6 +45,13 @@
                                                object:nil];
     
     [self getUsers];
+    
+    //initialize dictionary
+    self.wordCluePairs = [[NSMutableDictionary alloc] init];
+    NSArray *wordClueObjects = [[PFQuery queryWithClassName:@"WordClue"] findObjects];
+    for (PFObject *pair in wordClueObjects) {
+        [self.wordCluePairs setObject:pair[@"clue"] forKey:pair[@"word"]];
+    }
 }
 
 
@@ -135,7 +143,7 @@
 }
 
 - (IBAction)didTapStartGame:(id)sender {
-    PFObject *game = [PFObject objectWithClassName:@"Game"]; //this contains data for each user
+    self.game = [PFObject objectWithClassName:@"Game"]; //this contains data for each user
     
     //find current user
     PFQuery *idQuery = [PFQuery queryWithClassName:@"AppInfo"];
@@ -146,32 +154,147 @@
 
     //create game object with current user as active player, invite, and host
     NSString *currUserID = currUser[@"fbID"];
-    game[@"activePlayerIDs"] = [NSMutableArray arrayWithArray:@[currUserID]];
-    game[@"hostID"] = currUserID;
-    game[@"inviteID"] = currUserID;
-    game[@"percentComplete"] = @0;
-    game[@"time"] = @0;
+    self.game[@"activePlayerIDs"] = [NSMutableArray arrayWithArray:@[currUserID]];
+    self.game[@"hostID"] = currUserID;
+    self.game[@"inviteID"] = currUserID;
+    self.game[@"percentComplete"] = @0;
+    self.game[@"time"] = @0;
     
-    [game save];
+    [self.game save];
     
-    //get game id
-    PFQuery *gameQuery = [PFQuery queryWithClassName:@"Game"];
-    [gameQuery orderByDescending:@"createdAt"];
-    game = [gameQuery findObjects].firstObject;
+    [self setGameTilesArray];
 
     //add game id to active games list of current user
-    [currUser addObject:game.objectId forKey:@"activeGames"];
+    [currUser addObject:self.game.objectId forKey:@"activeGames"];
     [currUser save];
 
     //add game id to pending invites list of invite users
     for (PFObject *user in self.inviteUsers) {
-        [user addObject:game.objectId forKey:@"pendingInvites"];
+        [user addObject:self.game.objectId forKey:@"pendingInvites"];
         [user save];
     }
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self updateParseInvites : YES];
     [self dismissViewControllerAnimated:true completion:nil];
+}
+
+- (void) setGameTilesArray {
+    //initialize tilesArray with all unfillable tiles
+    int size = 10; //to make square grid
+    
+    self.emptyTile = [[[PFQuery queryWithClassName:@"Tile"] whereKey:@"fillable" equalTo:@NO] findObjects].firstObject;
+    
+    //fill inner array
+    NSMutableArray *innerArray = [[NSMutableArray alloc] initWithCapacity: size];
+    for (int j = 0; j < size; j++) {
+        [innerArray insertObject:self.emptyTile.objectId atIndex:j];
+    }
+    
+    //add inner array to tilesArray
+    NSMutableArray *tilesArray = [[NSMutableArray alloc] initWithCapacity: size];
+    for (int i = 0; i < size; i++) {
+        [tilesArray insertObject:[NSMutableArray arrayWithArray:innerArray] atIndex:i];
+    }
+    self.game[@"tilesArray"] = tilesArray;
+    self.game[@"waiting"] = @NO;
+    [self.game removeObjectForKey:@"requestingHost"];
+    [self.game removeObjectForKey:@"requestedBy"];
+    [self.game save];
+    
+    //create word tiles and add to array
+    NSArray *words = [self.wordCluePairs allKeys];
+    [self createBoard:words];
+}
+
+- (void) createBoard: (NSArray *)words {
+    //remove word once added
+    self.usableWords = [NSMutableArray arrayWithArray:words];
+    
+    //pick random word to go across top
+    NSUInteger randomIndex = arc4random() % self.usableWords.count;
+    NSString *firstWord = [words objectAtIndex:randomIndex];
+    [self.usableWords removeObject:firstWord];
+    [self createTiles:firstWord :0 :0 :YES];
+    
+    NSUInteger secondStart = arc4random() % firstWord.length; //(secondStart, 0)
+    NSString *secondWord = [self setUpWord:secondStart :-1 :NO :firstWord :0 :0];
+
+    NSUInteger thirdStart = (arc4random() % (secondWord.length - 2) + 2); //(??, thirdStartY)
+    NSString *thirdWord = [self setUpWord:-1 :thirdStart :YES :secondWord :secondStart :0];
+}
+
+-(NSString *) setUpWord : (NSUInteger)xStart : (NSUInteger)yStart : (BOOL)across : (NSString *)prevWord : (NSUInteger)xPrevStart : (NSUInteger)yPrevStart {
+    NSString *crossLetter;
+    if (across) { crossLetter = [prevWord substringWithRange:NSMakeRange(yStart, 1)]; }
+    else { crossLetter = [prevWord substringWithRange:NSMakeRange(xStart, 1)]; }
+    NSUInteger crossIndex;
+    if (across) { crossIndex = xPrevStart; }
+    else { crossIndex = yPrevStart; }
+    NSDictionary *availableWordStartPairs = [self arrayOfValidStringsWithLetterAtIndex:self.usableWords :crossLetter :crossIndex];
+    NSArray *availableWords = [availableWordStartPairs allKeys];
+    //pick random word to go across from letter
+    NSString *newWord = [availableWords objectAtIndex:(arc4random() % availableWords.count)];
+    NSArray *availableStarts = [availableWordStartPairs objectForKey:newWord];
+    [self.usableWords removeObject:newWord];
+    if (across) { [self createTiles:newWord :[[availableStarts objectAtIndex:arc4random() % availableStarts.count] intValue]:(int)yStart :YES]; }
+    else { [self createTiles:newWord :(int)xStart :[[availableStarts objectAtIndex:arc4random() % availableStarts.count] intValue]: NO]; }
+    return newWord;
+}
+
+- (NSDictionary *)arrayOfValidStringsWithLetterAtIndex : (NSArray *)words : (NSString *)letter : (NSUInteger)index {
+    NSMutableDictionary *validWords = [NSMutableDictionary dictionary];
+    for (NSString *word in words) {
+        NSMutableArray *validStart = [NSMutableArray arrayWithArray:@[]];
+        NSString *padding = [@"" stringByPaddingToLength:10 - word.length withString:@"0" startingAtIndex:0];
+        for (int i = 0; i <= padding.length; i++) {
+            NSString *front = [padding substringToIndex:i];
+            NSString *back = [padding substringFromIndex:i];
+            NSString *testWord = [NSString stringWithFormat:@"%@%@%@", front, word, back];
+            if ([[testWord substringWithRange:NSMakeRange(index, 1)] isEqualToString:letter]) {
+                [validStart addObject:[NSNumber numberWithInt:(int) (front.length)]];
+            }
+        }
+        if (validStart.count != 0) {
+            [validWords setObject:validStart forKey:word];
+        }
+    }
+    return validWords;
+}
+
+- (void) createTiles: (NSString *)word : (int) xIndex : (int) yIndex : (BOOL) across {
+    NSMutableArray *wordLetters = [NSMutableArray arrayWithArray:@[]];
+    
+    //split word string into substrings of 1 capital letter
+    NSString *capitalWord = [word uppercaseString];
+    for (int i = 0; i < capitalWord.length; i++) {
+        NSString *letter = [capitalWord substringWithRange:(NSMakeRange(i, 1))];
+        [wordLetters addObject:letter];
+    }
+    
+    //create tiles for each letter and put them in correct spot in the array
+    for (NSString *letter in wordLetters) {
+        //check if fillable tile already in spot, if so, just edit that tile
+        PFObject *checkTile = [self getTileAtIndex:xIndex :yIndex];
+        PFObject *tile = [PFObject objectWithClassName:@"Tile"];
+        if (![checkTile[@"fillable"] boolValue]) {
+            tile[@"fillable"] = @YES;
+            tile[@"xIndex"] = [NSNumber numberWithInt:xIndex];
+            tile[@"yIndex"] = [NSNumber numberWithInt:yIndex];
+            tile[@"correctLetter"] = letter;
+            tile[@"inputLetter"] = @"";
+            tile[@"gameID"] = self.game.objectId;
+        }
+        else
+            tile = checkTile;
+        if (across) { tile[@"acrossClue"] = [self.wordCluePairs valueForKey:word]; }
+        else { tile[@"downClue"] = [self.wordCluePairs valueForKey:word]; }
+        [tile save];
+
+        [self setTileAtIndex:tile :[tile[@"xIndex"] intValue]  :[tile[@"yIndex"] intValue]];
+        if (across) { xIndex++; }
+        else { yIndex++; }
+    }
 }
 
 @end

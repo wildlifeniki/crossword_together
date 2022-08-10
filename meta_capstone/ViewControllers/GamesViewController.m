@@ -15,6 +15,7 @@
 #import "ActiveGameCell.h"
 #import "PendingInviteCell.h"
 #import "InGameViewController.h"
+#import "SWTableViewCell/SWTableViewCell.h"
 
 @interface GamesViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -34,8 +35,8 @@
 @implementation GamesViewController
 
 - (void)viewDidAppear:(BOOL)animated {
-    [self.gamesTableView reloadData];
-    [self.invitesTableView reloadData];
+    [self getActiveGames];
+    [self getPendingInvites];
 }
 
 - (void)viewDidLoad {
@@ -45,14 +46,6 @@
     self.gamesTableView.dataSource = self;
     self.invitesTableView.dataSource = self;
     
-    //get current user
-    PFQuery *idQuery = [PFQuery queryWithClassName:@"AppInfo"];
-    [idQuery fromLocalDatastore];
-    NSArray *idObjects = [idQuery findObjects];
-    PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
-    [query whereKey:@"fbID" equalTo:idObjects.firstObject[@"fbID"]];
-    self.currUser = [query findObjects].firstObject;
-
     [self getActiveGames];
     [self getPendingInvites];
     
@@ -78,21 +71,28 @@
         self.invitesArray = [NSMutableArray arrayWithArray:[query findObjects]];
 }
 
-- (void)getActiveGames {
-    NSMutableArray *gameIDs = [NSMutableArray arrayWithArray:self.currUser[@"activeGames"]];
+- (void) updateCurrentUser {
+    PFQuery *idQuery = [PFQuery queryWithClassName:@"AppInfo"];
+    [idQuery fromLocalDatastore];
+    NSArray *idObjects = [idQuery findObjects];
+    PFQuery *query = [PFQuery queryWithClassName:@"AppUser"];
+    [query whereKey:@"fbID" equalTo:idObjects.firstObject[@"fbID"]];
+    self.currUser = [query findObjects].firstObject;
+}
 
+- (void)getActiveGames {
+    [self updateCurrentUser];
+    NSMutableArray *gameIDs = [NSMutableArray arrayWithArray:self.currUser[@"activeGames"]];
     [self getRespectiveTable:gameIDs :YES];
-    
-    [self.gamesTableView reloadData];
+    [self.gamesTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
     [self.gameRefreshControl endRefreshing];
 }
 
 - (void)getPendingInvites {
+    [self updateCurrentUser];
     NSMutableArray *inviteGameIDs = [NSMutableArray arrayWithArray:self.currUser[@"pendingInvites"]];
-
     [self getRespectiveTable:inviteGameIDs :NO];
-    
-    [self.invitesTableView reloadData];
+    [self.invitesTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
     [self.inviteRefreshControl endRefreshing];
 }
 
@@ -116,22 +116,28 @@
         PendingInviteCell *cell = [tableView dequeueReusableCellWithIdentifier:@"inviteCell" forIndexPath:indexPath];
         [cell setCellInfo:self.invitesArray[indexPath.row]];
         
-        UISwipeGestureRecognizer *rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:cell action:@selector(deleteInvite)];
-        rightSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
-        [cell addGestureRecognizer:rightSwipe];
-        
-        UISwipeGestureRecognizer *leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:cell action:@selector(acceptInvite)];
-        leftSwipe.direction = UISwipeGestureRecognizerDirectionRight;
-        [cell addGestureRecognizer:leftSwipe];
-        
+        cell.viewController = self;
+        cell.rightUtilityButtons = [self rightButtons];
+        cell.delegate = self;
         return cell;
     }
     else {
-        NSLog(@"neither cell");
         ActiveGameCell *cell = [tableView dequeueReusableCellWithIdentifier:@"gameCell" forIndexPath:indexPath];
         [cell setCellInfo:self.gamesArray[indexPath.row]];
         return cell;
     }
+}
+
+- (void)swipeableTableViewCell:(PendingInviteCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index {
+    [cell deleteInvite];
+}
+
+- (NSArray *)rightButtons {
+    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
+                                                title:@"Delete"];
+    return rightUtilityButtons;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

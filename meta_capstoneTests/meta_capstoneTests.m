@@ -46,11 +46,4 @@
     XCTAssertTrue(first.intValue <= last.intValue);
 }
 
-- (void)testGeneratingCrosswords {
-    InGameViewController *inGameVC = [[InGameViewController alloc] init];
-    NSArray *testWords = @[@"apple", @"banana", @"carrot", @"dinosaur", @"enigma", @"fishy", @"gorilla", @"hippo", @"iguana", @"jaguar", @"king", @"lame", @"mirage", @"nicer", @"opal", @"penguin", @"red", @"tyrant", @"umbrella", @"vivid", @"yearn", @"aphid", @"blue", @"crayon", @"doubt", @"elephant", @"fairy", @"green", @"hoist", @"implode", @"joker", @"knight", @"living", @"monkey", @"neon", @"orange", @"purple", @"royal", @"stupid", @"think", @"unicorn", @"veins", @"yellow"];
-    [inGameVC createBoard: testWords];
-    NSDictionary *valid = [inGameVC arrayOfValidStringsWithLetterAtIndex:testWords :@"a": 1];
-}
-
 @end
