@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableArray *tilesArray;
 @property (strong, nonatomic) PFObject *emptyTile;
 @property (strong, nonatomic) NSMutableArray *usableWords;
-@property (nonatomic, strong) NSDictionary *wordCluePairs;
+@property (nonatomic, strong) NSMutableDictionary *wordCluePairs;
 @property (nonatomic, strong) PFObject *game;
 
 - (PFObject *) getTileAtIndex : (int) xIndex : (int) yIndex;

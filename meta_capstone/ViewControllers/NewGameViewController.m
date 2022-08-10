@@ -45,6 +45,13 @@
                                                object:nil];
     
     [self getUsers];
+    
+    //initialize dictionary
+    self.wordCluePairs = [[NSMutableDictionary alloc] init];
+    NSArray *wordClueObjects = [[PFQuery queryWithClassName:@"WordClue"] findObjects];
+    for (PFObject *pair in wordClueObjects) {
+        [self.wordCluePairs setObject:pair[@"clue"] forKey:pair[@"word"]];
+    }
 }
 
 
@@ -173,53 +180,6 @@
 }
 
 - (void) setGameTilesArray {
-    //initialize dictionary
-    self.wordCluePairs = [NSDictionary dictionaryWithObjectsAndKeys:
-                          @"iPhone company", @"apple",
-                          @"Bunch of produce", @"banana",
-                          @"Nose on a snowman", @"carrot",
-                          @"Jurassic animal", @"dinosaur",
-                          @"Mystery", @"enigma",
-                          @"Suspicious", @"fishy",
-                          @"Silverback", @"gorilla",
-                          @"They eat marbles in a classic children's game", @"hippos",
-                          @"South American lizard",@"iguana",
-                          @"Schoolyard activity",@"jumprope",
-                          @"Queen's mate",@"king",
-                          @"Uncool",@"lame",
-                          @"Sahara sight",@"mirage",
-                          @"Big fall",@"niagra",
-                          @"Pearly stone",@"opal",
-                          @"Pablo from The Backyardigans",@"penguin",
-                          @"Chill", @"relax",
-                          @"Spring Flower",@"tulip",
-                          @"Rihanna song from 2007",@"umbrella",
-                          @"Colorful",@"vivid",
-                          @"Wants badly",@"yearns",
-                          @"Ladybug snack",@"aphid",
-                          @"High fiber ingredient",@"bran",
-                          @"Waxy coloring utensil",@"crayon",
-                          @"Uncertainty",@"doubt",
-                          @"Mammoth cousin",@"elephant",
-                          @"Collects teeth",@"fairy",
-                          @"Lush",@"green",
-                          @"Lift up",@"hoist",
-                          @"Collapse",@"implode",
-                          @"Card that may be wild",@"joker",
-                          @"Chess piece that looks like a horse",@"knight",
-                          @"Not dead",@"living",
-                          @"Banana consumer",@"monkey",
-                          @"Bright sign",@"neon",
-                          @"Disneyland's county",@"orange",
-                          @"Royal color",@"purple",
-                          @"What bread does",@"rises",
-                          @"Dunce",@"stupid",
-                          @"Letter after Sierra",@"tango",
-                          @"Horse's mythical relative",@"unicorn",
-                          @"Starbucks cup size",@"venti",
-                          @"Canary color",@"yellow",
-                          nil];
-    
     //initialize tilesArray with all unfillable tiles
     int size = 10; //to make square grid
     
