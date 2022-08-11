@@ -33,17 +33,11 @@
     dateFormatter.dateFormat = @"HH:mm 'on' MM/dd";
     self.boardFillLabel.text = [NSString stringWithFormat:@"Game started at %@", [dateFormatter stringFromDate:game.createdAt]];
     
-    //get profile picture
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-    initWithGraphPath:[NSString stringWithFormat:@"/%@?fields=picture.type(large)", host[@"fbID"]]
-        parameters:nil
-        HTTPMethod:@"GET"];
-    [request startWithCompletion:^(id<FBSDKGraphRequestConnecting>  _Nullable connection, id  _Nullable result, NSError * _Nullable error) {
-        NSURL *url = [NSURL URLWithString:[[[(NSDictionary*) result objectForKey:@"picture"] objectForKey:@"data"] objectForKey:@"url"]];
-        self.hostProfileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-        self.hostProfileImage.layer.cornerRadius = self.hostProfileImage.frame.size.width / 2;
-
-    }];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?redirect=false&type=large", host[@"fbID"]]];
+    NSDictionary *s = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:url] options:0 error:nil];
+    NSURL *picUrl = [NSURL URLWithString:[[s objectForKey:@"data"] objectForKey:@"url"]];
+    self.hostProfileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:picUrl]];
+    self.hostProfileImage.layer.cornerRadius = self.hostProfileImage.frame.size.width / 2;
 }
 
 @end

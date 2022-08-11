@@ -26,19 +26,11 @@
     self.userTimeLabel.text = [NSString stringWithFormat:@"Avg time: %@s", user[@"avgTime"]];
     self.rankLabel.text = [NSString stringWithFormat:@"#%ld", (long) rank];
     
-    //get profile picture
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-    initWithGraphPath:[NSString stringWithFormat:@"/%@?fields=picture.type(large)", user[@"fbID"]]
-        parameters:nil
-        HTTPMethod:@"GET"];
-    [request startWithCompletion:^(id<FBSDKGraphRequestConnecting>  _Nullable connection, id  _Nullable result, NSError * _Nullable error) {
-        NSURL *url = [NSURL URLWithString:[[[(NSDictionary*) result objectForKey:@"picture"] objectForKey:@"data"] objectForKey:@"url"]];
-        self.userImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-        self.userImage.layer.cornerRadius = self.userImage.frame.size.width / 2;
-        if (error != nil) {
-            self.userImage.image = [UIImage systemImageNamed:@"person.circle"];
-        }
-    }];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?redirect=false&type=large", user[@"fbID"]]];
+    NSDictionary *s = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:url] options:0 error:nil];
+    NSURL *picUrl = [NSURL URLWithString:[[s objectForKey:@"data"] objectForKey:@"url"]];
+    self.userImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:picUrl]];
+    self.userImage.layer.cornerRadius = self.userImage.frame.size.width / 2;
 }
 
 @end

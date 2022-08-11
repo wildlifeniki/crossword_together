@@ -24,16 +24,11 @@
 - (void)setCellInfo:(PFObject *)user {
     self.profileUserLabel.text = user[@"name"];
     
-    //get profile picture
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-    initWithGraphPath:[NSString stringWithFormat:@"/%@?fields=picture.type(large)", user[@"fbID"]]
-        parameters:nil
-        HTTPMethod:@"GET"];
-    [request startWithCompletion:^(id<FBSDKGraphRequestConnecting>  _Nullable connection, id  _Nullable result, NSError * _Nullable error) {
-        NSURL *url = [NSURL URLWithString:[[[(NSDictionary*) result objectForKey:@"picture"] objectForKey:@"data"] objectForKey:@"url"]];
-        self.profileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-        self.profileImage.layer.cornerRadius = self.profileImage.frame.size.width / 2;
-    }];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?redirect=false&type=large", user[@"fbID"]]];
+    NSDictionary *s = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:url] options:0 error:nil];
+    NSURL *picUrl = [NSURL URLWithString:[[s objectForKey:@"data"] objectForKey:@"url"]];
+    self.profileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:picUrl]];
+    self.profileImage.layer.cornerRadius = self.profileImage.frame.size.width / 2;
 }
 
 @end
