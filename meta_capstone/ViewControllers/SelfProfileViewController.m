@@ -32,7 +32,6 @@
     
     self.tableView.dataSource = self;
     [self setProfileData];
-    
 }
 
 - (void)setProfileData {
@@ -60,11 +59,9 @@
         NSURL *picUrl = [NSURL URLWithString:[[s objectForKey:@"data"] objectForKey:@"url"]];
         self.selfProfileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:picUrl]];
         self.selfProfileImage.layer.cornerRadius = self.selfProfileImage.frame.size.width / 2;
-        
     }
     
     [self getRecentlyPlayedWith: recentsIDs];
-
 }
 
 - (void)getRecentlyPlayedWith : (NSMutableArray *)recentsIDs {
@@ -73,6 +70,7 @@
 
     NSArray *users = [query findObjects];
     self.recentsArray = [NSMutableArray arrayWithArray:users];
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

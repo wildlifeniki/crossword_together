@@ -26,10 +26,7 @@
     self.userTimeLabel.text = [NSString stringWithFormat:@"Avg time: %@s", user[@"avgTime"]];
     self.rankLabel.text = [NSString stringWithFormat:@"#%ld", (long) rank];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?redirect=false&type=large", user[@"fbID"]]];
-    NSDictionary *s = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:url] options:0 error:nil];
-    NSURL *picUrl = [NSURL URLWithString:[[s objectForKey:@"data"] objectForKey:@"url"]];
-    self.userImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:picUrl]];
+    self.userImage.image = [self getProfilePictureForUser:user[@"fbID"]];
     self.userImage.layer.cornerRadius = self.userImage.frame.size.width / 2;
 }
 

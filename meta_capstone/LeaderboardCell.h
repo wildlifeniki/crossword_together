@@ -7,10 +7,11 @@
 
 #import <UIKit/UIKit.h>
 #import "Parse/Parse.h"
+#import "TableViewCell+ProfileMethods.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LeaderboardCell : UITableViewCell
+@interface LeaderboardCell : TableViewCell_ProfileMethods
 @property (strong, nonatomic) IBOutlet UILabel *rankLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *userImage;
 @property (strong, nonatomic) IBOutlet UILabel *userNameLabel;

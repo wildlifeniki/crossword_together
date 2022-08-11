@@ -33,10 +33,7 @@
     dateFormatter.dateFormat = @"HH:mm 'on' MM/dd";
     self.boardFillLabel.text = [NSString stringWithFormat:@"Game started at %@", [dateFormatter stringFromDate:game.createdAt]];
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?redirect=false&type=large", host[@"fbID"]]];
-    NSDictionary *s = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:url] options:0 error:nil];
-    NSURL *picUrl = [NSURL URLWithString:[[s objectForKey:@"data"] objectForKey:@"url"]];
-    self.hostProfileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:picUrl]];
+    self.hostProfileImage.image = [self getProfilePictureForUser:host[@"fbID"]];
     self.hostProfileImage.layer.cornerRadius = self.hostProfileImage.frame.size.width / 2;
 }
 

@@ -19,7 +19,6 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [self getLeaderboard];
-    [self.tableView reloadData];
 }
 
 - (void)viewDidLoad {
@@ -37,6 +36,7 @@
     
     NSArray *users = [query findObjects];
     self.usersArray = [NSMutableArray arrayWithArray:users];
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
