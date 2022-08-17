@@ -32,7 +32,6 @@
     
     self.tableView.dataSource = self;
     [self setProfileData];
-    
 }
 
 - (void)setProfileData {
@@ -55,20 +54,14 @@
         self.bestTimeLabel.text = [NSString stringWithFormat:@"Best Time: %@s", userObjects.firstObject[@"bestTime"]];
         self.avgTimeLabel.text = [NSString stringWithFormat:@"Average Time: %@s", userObjects.firstObject[@"avgTime"]];
         
-        //get profile picture
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-        initWithGraphPath:[NSString stringWithFormat:@"/%@?fields=picture.type(large)", self.currUserID]
-            parameters:nil
-            HTTPMethod:@"GET"];
-        [request startWithCompletion:^(id<FBSDKGraphRequestConnecting>  _Nullable connection, id  _Nullable result, NSError * _Nullable error) {
-            NSURL *url = [NSURL URLWithString:[[[(NSDictionary*) result objectForKey:@"picture"] objectForKey:@"data"] objectForKey:@"url"]];
-            self.selfProfileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-        }];
-        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?redirect=false&type=large", self.currUserID]];
+        NSDictionary *s = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfURL:url] options:0 error:nil];
+        NSURL *picUrl = [NSURL URLWithString:[[s objectForKey:@"data"] objectForKey:@"url"]];
+        self.selfProfileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:picUrl]];
+        self.selfProfileImage.layer.cornerRadius = self.selfProfileImage.frame.size.width / 2;
     }
     
     [self getRecentlyPlayedWith: recentsIDs];
-
 }
 
 - (void)getRecentlyPlayedWith : (NSMutableArray *)recentsIDs {
@@ -77,6 +70,7 @@
 
     NSArray *users = [query findObjects];
     self.recentsArray = [NSMutableArray arrayWithArray:users];
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

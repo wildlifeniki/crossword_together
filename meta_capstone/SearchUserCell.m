@@ -45,17 +45,8 @@
         [self.inviteButton setImage:[UIImage systemImageNamed:@"plus"] forState:UIControlStateNormal];
     
     self.profileUserLabel.text = user[@"name"];
-    
-    //get profile picture
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-    initWithGraphPath:[NSString stringWithFormat:@"/%@?fields=picture.type(large)", user[@"fbID"]]
-        parameters:nil
-        HTTPMethod:@"GET"];
-    [request startWithCompletion:^(id<FBSDKGraphRequestConnecting>  _Nullable connection, id  _Nullable result, NSError * _Nullable error) {
-        NSURL *url = [NSURL URLWithString:[[[(NSDictionary*) result objectForKey:@"picture"] objectForKey:@"data"] objectForKey:@"url"]];
-        self.profileImage.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-    }];
-
+    self.profileImage.image = [self getProfilePictureForUser:user[@"fbID"]];
+    self.profileImage.layer.cornerRadius = self.profileImage.frame.size.width / 2;
 }
 
 - (IBAction)didTapAdd:(id)sender {

@@ -7,10 +7,11 @@
 
 #import <UIKit/UIKit.h>
 #import "Parse/Parse.h"
+#import "TableViewCell+ProfileMethods.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SimpleProfileCell : UITableViewCell
+@interface SimpleProfileCell : TableViewCell_ProfileMethods
 
 @property (strong, nonatomic) IBOutlet UIImageView *profileImage;
 @property (strong, nonatomic) IBOutlet UILabel *profileUserLabel;
