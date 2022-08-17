@@ -1,12 +1,10 @@
-# EXAMPLE GROUP PROJECT README
-
-# Crosswords
+# Crossword Together
 
 ## Table of Contents
-1. [Overview](#Overview)
-1. [Product Spec](#Product-Spec)
-1. [Wireframes](#Wireframes)
-1. [Schema](#Schema)
+1. [Overview](https://github.com/wildlifeniki/crossword_together/edit/main/README.md#overview)
+1. [Product Spec](https://github.com/wildlifeniki/crossword_together/edit/main/README.md#product-spec)
+1. [Wireframes](https://github.com/wildlifeniki/crossword_together/edit/main/README.md#wireframes)
+1. [Schema](https://github.com/wildlifeniki/crossword_together/edit/main/README.md#schema)
 
 ## Overview
 ### Description
@@ -129,7 +127,7 @@ Note: all parse models come with unique objectId, updatedAt date, createdAt date
    | fbID | String | id of user logged in |
    | invitedIDs | Array | array of ids of users invited to new game being created (cleared when canceled/invites sent)|
 
-#### Pieces/tiles in board
+#### Pieces/tiles in board (Parse)
    | Property      | Type     | Description |
    | ------------- | -------- | ------------|
    | xIndex | Number | number indicating which column the tile is in |
@@ -140,6 +138,12 @@ Note: all parse models come with unique objectId, updatedAt date, createdAt date
    | downClue | String | clue linked with this tile associated with a word that goes down |
    | fillable | Boolean | indicates whether this tile takes an input or not (if not, it is an empty tile and does not show up on the board |
    | gameID | String | the id of the game this tile is on the board for |
+   
+#### WordClue (Parse)
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | word | String | word connected to given clue |
+   | clue | String | clue connected to given word |
 
 
 ### Technically Ambiguous Problems
@@ -147,7 +151,6 @@ Note: all parse models come with unique objectId, updatedAt date, createdAt date
    - Creating a custom view that depicts tiles in a grid pattern for a crossword. Making it so a user can enter a letter in a tile and view related clues depending on which tile a user is tapped into.
    - Allow changes from host to be updated and shown to all users present in the game
    - Display different clues based on selecting different words 
-
 #### Crossword Algorithm
  - Implement a database of word/clue pairs
  - Write an alogrithm that can take words and assign them to tiles in basic crossword format
